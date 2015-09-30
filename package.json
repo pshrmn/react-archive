@@ -1,0 +1,19 @@
+{
+  "name": "annotated-meals",
+  "version": "0.0.1",
+  "description": "write down recipes while watching youtube cooking videos",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/psherman/annotated-meals.git"
+  },
+  "author": "Paul Sherman",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/psherman/annotated-meals/issues"
+  },
+  "homepage": "https://github.com/psherman/annotated-meals#readme"
+}
