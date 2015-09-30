@@ -33,11 +33,17 @@ var Video = React.createClass({
       vidID: vidID
     });
   },
+  removePlayer: function removePlayer() {
+    this.setState({
+      vidID: ""
+    });
+  },
   _renderSetup: function _renderSetup() {
     return React.createElement(YTForm, { onSubmit: this.updateURL });
   },
   _renderPlayer: function _renderPlayer() {
-    return React.createElement(YTPlayer, { id: this.state.vidID });
+    return React.createElement(YTPlayer, { id: this.state.vidID,
+      onRemove: this.removePlayer });
   },
   render: function render() {
     return this.state.vidID ? this._renderPlayer() : this._renderSetup();
@@ -94,7 +100,16 @@ var YTPlayer = React.createClass({
   },
   render: function render() {
     var url = "https://www.youtube.com/embed/" + this.props.id;
-    return React.createElement("iframe", { width: "560", height: "315", src: url, frameborder: "0" });
+    return React.createElement(
+      "div",
+      { className: "yt-player" },
+      React.createElement("iframe", { width: "560", height: "315", src: url, frameBorder: "0" }),
+      React.createElement(
+        "button",
+        { onClick: this.props.onRemove },
+        "Remove"
+      )
+    );
   }
 });
 
