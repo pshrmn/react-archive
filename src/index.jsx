@@ -6,8 +6,19 @@ var Annotater = React.createClass({
   render: function() {
     return (
       <div className="annotater">
+        <Description />
         <Video />
         <Recipe />
+      </div>
+    );
+  }
+});
+
+var Description = React.createClass({
+  render: function() {
+    return (
+      <div className="description">
+        Quickly write down the ingredients and instructions for a recipe.
       </div>
     );
   }

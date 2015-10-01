@@ -67,8 +67,21 @@
 	    return _react2["default"].createElement(
 	      "div",
 	      { className: "annotater" },
+	      _react2["default"].createElement(Description, null),
 	      _react2["default"].createElement(_video2["default"], null),
 	      _react2["default"].createElement(_recipe2["default"], null)
+	    );
+	  }
+	});
+
+	var Description = _react2["default"].createClass({
+	  displayName: "Description",
+
+	  render: function render() {
+	    return _react2["default"].createElement(
+	      "div",
+	      { className: "description" },
+	      "Quickly write down the ingredients and instructions for a recipe."
 	    );
 	  }
 	});
@@ -109,7 +122,6 @@
 	    return nextState.vidID !== this.state.vidID;
 	  },
 	  updateURL: function updateURL(fullURL) {
-	    event.preventDefault();
 	    var parts = fullURL.split("/");
 	    var vidID = parts[parts.length - 1];
 	    this.setState({
@@ -137,6 +149,11 @@
 	        "h3",
 	        null,
 	        "Video"
+	      ),
+	      _react2["default"].createElement(
+	        "p",
+	        null,
+	        "To get the url for a video click on the \"Share\" button beneath the video's description. This will give you a url that begins with \"https://youtu.be/\" and ends with the video's ID. Copy this url and paste it into the text box below\""
 	      ),
 	      value
 	    );
@@ -173,6 +190,7 @@
 	        "form",
 	        null,
 	        _react2["default"].createElement("input", { type: "text",
+	          placeholder: "https://youtu.be/...",
 	          value: this.state.url,
 	          onChange: this._handleURL }),
 	        _react2["default"].createElement(
@@ -238,6 +256,12 @@
 	    return _react2["default"].createElement(
 	      "div",
 	      { className: "recipe" },
+	      _react2["default"].createElement(
+	        "h2",
+	        null,
+	        "Recipe"
+	      ),
+	      _react2["default"].createElement("input", { type: "text", placeholder: "Recipe Name..." }),
 	      _react2["default"].createElement(_ingredients2["default"], null),
 	      _react2["default"].createElement(_steps2["default"], null)
 	    );

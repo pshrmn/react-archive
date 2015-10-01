@@ -10,7 +10,6 @@ export default React.createClass({
     return nextState.vidID !== this.state.vidID;
   },
   updateURL: function(fullURL) {
-    event.preventDefault();
     var parts = fullURL.split("/");
     var vidID = parts[parts.length-1];
     this.setState({
@@ -38,6 +37,9 @@ export default React.createClass({
     return (
       <div className="yt">
         <h3>Video</h3>
+        <p>
+          To get the url for a video click on the "Share" button beneath the video's description. This will give you a url that begins with "https://youtu.be/" and ends with the video's ID. Copy this url and paste it into the text box below"
+        </p>
         {value}
       </div>
     );
@@ -69,6 +71,7 @@ var YTForm = React.createClass({
       <div>
         <form>
           <input type="text"
+                 placeholder="https://youtu.be/..."
                  value={this.state.url}
                  onChange={this._handleURL} />
           <button onClick={this.getVideo}>Load Video</button>
