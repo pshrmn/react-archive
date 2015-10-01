@@ -5,3 +5,17 @@ button {
 input {
   width: 500px;
 }
+
+@media print {
+  .yt {
+    display: none;
+  }
+
+  input {
+    display: none;
+  }
+
+  button {
+    display: none;
+  }
+}
