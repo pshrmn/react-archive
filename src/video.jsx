@@ -34,7 +34,13 @@ export default React.createClass({
     );
   },
   render: function() {
-    return this.state.vidID ? this._renderPlayer() : this._renderSetup();
+    var value = this.state.vidID ? this._renderPlayer() : this._renderSetup();
+    return (
+      <div className="yt">
+        <h3>Video</h3>
+        {value}
+      </div>
+    );
   }
 });
 
