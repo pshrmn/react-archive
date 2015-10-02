@@ -67,21 +67,8 @@
 	    return _react2["default"].createElement(
 	      "div",
 	      { className: "annotater" },
-	      _react2["default"].createElement(Description, null),
 	      _react2["default"].createElement(_video2["default"], null),
 	      _react2["default"].createElement(_recipe2["default"], null)
-	    );
-	  }
-	});
-
-	var Description = _react2["default"].createClass({
-	  displayName: "Description",
-
-	  render: function render() {
-	    return _react2["default"].createElement(
-	      "div",
-	      { className: "description" },
-	      "Quickly write down the ingredients and instructions for a recipe."
 	    );
 	  }
 	});
@@ -150,12 +137,52 @@
 	        null,
 	        "Video"
 	      ),
+	      value,
+	      _react2["default"].createElement(YTHelp, null)
+	    );
+	  }
+	});
+
+	var YTHelp = _react2["default"].createClass({
+	  displayName: "YTHelp",
+
+	  getInitialState: function getInitialState() {
+	    return {
+	      show: false
+	    };
+	  },
+	  shouldComponentUpdate: function shouldComponentUpdate(nextProps, nextState) {
+	    return nextState.show !== this.state.show;
+	  },
+	  toggleHelp: function toggleHelp(event) {
+	    event.preventDefault();
+	    this.setState({
+	      show: !this.state.show
+	    });
+	  },
+	  render: function render() {
+	    var msg;
+	    var title;
+	    if (this.state.show) {
+	      title = "Hide Help";
+	      msg = "To get the correct url for a YouTube video, click on the \"Share\" button beneath the video's " + "description. This will give you a url that begins with \"https://youtu.be/\" and ends with " + "the video's ID. Copy this url and paste it into the text box below";
+	    } else {
+	      title = "Show Help";
+	      msg = "";
+	    }
+	    return _react2["default"].createElement(
+	      "div",
+	      null,
+	      _react2["default"].createElement(
+	        "button",
+	        { onClick: this.toggleHelp },
+	        title
+	      ),
 	      _react2["default"].createElement(
 	        "p",
 	        null,
-	        "To get the url for a video click on the \"Share\" button beneath the video's description. This will give you a url that begins with \"https://youtu.be/\" and ends with the video's ID. Copy this url and paste it into the text box below\""
-	      ),
-	      value
+	        msg
+	      )
 	    );
 	  }
 	});
@@ -261,7 +288,7 @@
 	        null,
 	        "Recipe"
 	      ),
-	      _react2["default"].createElement("input", { type: "text", placeholder: "Recipe Name..." }),
+	      _react2["default"].createElement("input", { className: "recipe-name", type: "text", placeholder: "Recipe Name..." }),
 	      _react2["default"].createElement(_ingredients2["default"], null),
 	      _react2["default"].createElement(_steps2["default"], null)
 	    );

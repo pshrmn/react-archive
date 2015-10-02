@@ -1,3 +1,21 @@
+html {
+  font-family: "Noto Serif", serif;
+}
+
+header {
+  width: 60vw;
+  margin: 0 auto;
+}
+
+header h1, header p {
+  margin: 0;
+}
+
+#content {
+  width: 60vw;
+  margin: 0 auto;
+}
+
 button {
   margin-left: 10px;
 }
@@ -6,16 +24,24 @@ input {
   width: 500px;
 }
 
+.recipe-name {
+  font-size: 1.5em;
+}
+
 @media print {
-  .yt, .description {
+  /* hide items that don't need to be included when printed */
+  .yt, .description, header, button, h2{
     display: none;
   }
 
   input {
-    display: none;
+    border: 0;
   }
 
-  button {
-    display: none;
+  /* make sure recipe is left-aligned */
+  #content {
+    width: 100vw;
+    margin: 0;
   }
+
 }

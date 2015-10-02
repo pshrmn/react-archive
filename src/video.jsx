@@ -37,14 +37,50 @@ export default React.createClass({
     return (
       <div className="yt">
         <h3>Video</h3>
-        <p>
-          To get the url for a video click on the "Share" button beneath the video's description. This will give you a url that begins with "https://youtu.be/" and ends with the video's ID. Copy this url and paste it into the text box below"
-        </p>
         {value}
+        <YTHelp />
       </div>
     );
   }
 });
+
+var YTHelp = React.createClass({
+  getInitialState: function() {
+    return {
+      show: false
+    };
+  },
+  shouldComponentUpdate: function(nextProps, nextState) {
+    return nextState.show !== this.state.show;
+  },
+  toggleHelp: function(event) {
+    event.preventDefault();
+    this.setState({
+      show: !this.state.show
+    });
+  },
+  render: function() {
+    var msg;
+    var title;
+    if ( this.state.show ) {
+      title = "Hide Help";
+      msg = "To get the correct url for a YouTube video, click on the \"Share\" button beneath the video's " + 
+        "description. This will give you a url that begins with \"https://youtu.be/\" and ends with " +
+        "the video's ID. Copy this url and paste it into the text box below";
+    } else {
+      title = "Show Help";
+      msg = "";
+    }
+    return (
+      <div>
+        <button onClick={this.toggleHelp}>{title}</button>
+        <p>
+          {msg}
+        </p>
+      </div>
+    );
+  }
+})
 
 var YTForm = React.createClass({
   getInitialState: function() {

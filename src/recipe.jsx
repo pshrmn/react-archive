@@ -7,7 +7,7 @@ export default React.createClass({
     return (
       <div className="recipe">
         <h2>Recipe</h2>
-        <input type="text" placeholder="Recipe Name..." />
+        <input className="recipe-name" type="text" placeholder="Recipe Name..." />
         <Ingredients />
         <Steps />
       </div>
