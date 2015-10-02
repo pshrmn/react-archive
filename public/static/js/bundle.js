@@ -109,10 +109,40 @@
 	    return nextState.vidID !== this.state.vidID;
 	  },
 	  updateURL: function updateURL(fullURL) {
-	    var parts = fullURL.split("/");
-	    var vidID = parts[parts.length - 1];
+	    /*
+	     * This can take either a youtube.com url and look for the v parameter
+	     * or a youtu.be url and use the last part of the url
+	     */
+	    var id = "";
+	    var a = document.createElement("a");
+	    a.href = fullURL;
+	    switch (a.hostname) {
+	      case "www.youtube.com":
+	        if (a.search === "") {
+	          break;
+	        }
+	        var parts = a.search.slice(1).split("&");
+	        parts.some(function (p) {
+	          var keyVal = p.split("=");
+	          if (keyVal[0] === "v") {
+	            id = keyVal[1];
+	            return true;
+	          }
+	          return false;
+	        });
+	        break;
+	      case "youtu.be":
+	        var parts = fullURL.split("/");
+	        id = parts[parts.length - 1];
+	        break;
+	    }
+
+	    if (id === "") {
+	      return;
+	    }
+
 	    this.setState({
-	      vidID: vidID
+	      vidID: id
 	    });
 	  },
 	  removePlayer: function removePlayer() {
@@ -165,7 +195,7 @@
 	    var title;
 	    if (this.state.show) {
 	      title = "Hide Help";
-	      msg = "To get the correct url for a YouTube video, click on the \"Share\" button beneath the video's " + "description. This will give you a url that begins with \"https://youtu.be/\" and ends with " + "the video's ID. Copy this url and paste it into the text box below";
+	      msg = "To get the correct url for a YouTube video, either copy the url from the address bar " + "or click on the \"Share\" button beneath the video's " + "description. This will give you a url that begins with \"https://youtu.be/\" and ends with " + "the video's ID. Copy this url and paste it into the text box below. Some videos have embedding " + "disabled, in which case you will unfortunately need to have the video open in a separate " + "tab or window.";
 	    } else {
 	      title = "Show Help";
 	      msg = "";
@@ -217,7 +247,7 @@
 	        "form",
 	        null,
 	        _react2["default"].createElement("input", { type: "text",
-	          placeholder: "https://youtu.be/...",
+	          placeholder: "www.youtube.com or youtu.be",
 	          value: this.state.url,
 	          onChange: this._handleURL }),
 	        _react2["default"].createElement(
