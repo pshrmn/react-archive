@@ -1,60 +1,51 @@
 html {
-  font-family: "Noto Serif", serif;
-}
+  font-family: "Noto Serif", serif; }
 
 header {
-  width: 60vw;
-  margin: 0 auto;
-}
-
-header h1, header p {
-  margin: 0;
-}
-
-#content {
-  width: 60vw;
-  margin: 0 auto;
-}
+  margin-bottom: 15px; }
+  header h1, header p {
+    margin: 0; }
 
 button {
-  margin-left: 10px;
-}
+  margin-left: 10px; }
 
 label {
-  text-transform: capitalize;
-}
+  text-transform: capitalize; }
 
 input {
-  width: 500px;
-}
+  width: 500px; }
 
 textarea {
   min-width: 500px;
-  min-height: 250px;
-}
+  min-height: 250px; }
 
 input, textarea {
-  display: block;
-}
+  display: block; }
+
+.recipe, .live-editor {
+  display: inline-block;
+  width: 50%;
+  vertical-align: top;
+  box-sizing: border-box; }
+
+.recipe {
+  padding: 25px;
+  border: 1px solid #ccc; }
 
 .recipe-name {
-  font-size: 1.5em;
-}
+  font-size: 1.5em; }
 
 @media print {
-  /* hide items that don't need to be included when printed */
-  .yt, .description, header, button, h2{
-    display: none;
-  }
-
-  input {
-    border: 0;
-  }
-
+  .live-editor, header {
+    display: none; }
+  html, body {
+    width: 100%; }
+  .recipe {
+    width: 100%;
+    display: block; }
+    .recipe * {
+      width: 100%; }
   /* make sure recipe is left-aligned */
   #content {
     width: 100vw;
-    margin: 0;
-  }
-
-}
+    margin: 0; } }

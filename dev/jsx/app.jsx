@@ -14,7 +14,6 @@ var Annotater = React.createClass({
     };
   },
   submit: function(obj) {
-    console.log(obj);
     this.setState({
       recipe: obj
     });

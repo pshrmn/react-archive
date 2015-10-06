@@ -11,7 +11,9 @@ export default React.createClass({
   },
   submit: function(name, value) {
     if ( name === "ingredients" || name === "instructions" ) {
-      value = value.split("\n");
+      value = value.split("\n").filter(function(line){
+        return line !== "";
+      });
     }
     this.state[name] = value;
     this.props.submit(this.state);

@@ -1,11 +1,12 @@
 {
   "name": "annotated-meals",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "write down recipes while watching youtube cooking videos",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "webpack": "webpack"
+    "sass": "node-sass dev/scss/** -o public/static/css/**",
+    "autoprefix": "postcss --use autoprefixer --autoprefixer.browsers \"last 2 versions\" public/static/css/index.css --dir public/static/css/"
   },
   "engines": {
     "node": "4.x",
@@ -22,8 +23,11 @@
   },
   "homepage": "https://github.com/psherman/annotated-meals#readme",
   "devDependencies": {
+    "autoprefixer": "^6.0.3",
     "babel": "^5.8.23",
     "babel-loader": "^5.3.2",
+    "node-sass": "^3.3.3",
+    "postcss-cli": "^2.1.0",
     "webpack": "^1.12.2"
   }
 }

@@ -1,0 +1,74 @@
+html {
+  font-family: "Noto Serif", serif;
+}
+
+header {
+  margin-bottom: 15px;
+
+  h1, p {
+    margin: 0;
+  }
+}
+
+button {
+  margin-left: 10px;
+}
+
+label {
+  text-transform: capitalize;
+}
+
+input {
+  width: 500px;
+}
+
+textarea {
+  min-width: 500px;
+  min-height: 250px;
+}
+
+input, textarea {
+  display: block;
+}
+
+.recipe, .live-editor {
+  display: inline-block;
+  width: 50%;
+  vertical-align: top;
+  box-sizing: border-box;
+}
+
+.recipe {
+  padding: 25px;
+  border: 1px solid #ccc;
+}
+
+.recipe-name {
+  font-size: 1.5em;
+}
+
+@media print {
+  .live-editor, header {
+    display: none;
+  }
+
+  html, body {
+    width: 100%;
+  }
+
+  .recipe {
+    width: 100%;
+    display: block;
+
+    * {
+      width: 100%;
+    }
+  }
+
+  /* make sure recipe is left-aligned */
+  #content {
+    width: 100vw;
+    margin: 0;
+  }
+
+}
