@@ -52,23 +52,40 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _video = __webpack_require__(2);
+	var _liveeditor = __webpack_require__(2);
 
-	var _video2 = _interopRequireDefault(_video);
+	var _liveeditor2 = _interopRequireDefault(_liveeditor);
 
-	var _recipe = __webpack_require__(3);
+	var _recipe = __webpack_require__(5);
 
 	var _recipe2 = _interopRequireDefault(_recipe);
 
 	var Annotater = _react2["default"].createClass({
 	  displayName: "Annotater",
 
+	  getInitialState: function getInitialState() {
+	    return {
+	      recipe: {
+	        name: "",
+	        url: "",
+	        ingredients: [],
+	        instructions: []
+	      }
+	    };
+	  },
+	  submit: function submit(obj) {
+	    console.log(obj);
+	    this.setState({
+	      recipe: obj
+	    });
+	  },
 	  render: function render() {
 	    return _react2["default"].createElement(
 	      "div",
 	      { className: "annotater" },
-	      _react2["default"].createElement(_video2["default"], null),
-	      _react2["default"].createElement(_recipe2["default"], null)
+	      _react2["default"].createElement(_liveeditor2["default"], { submit: this.submit,
+	        url: this.state.recipe.url }),
+	      _react2["default"].createElement(_recipe2["default"], this.state.recipe)
 	    );
 	  }
 	});
@@ -97,186 +114,26 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _video = __webpack_require__(3);
+
+	var _video2 = _interopRequireDefault(_video);
+
+	var _recipeform = __webpack_require__(4);
+
+	var _recipeform2 = _interopRequireDefault(_recipeform);
+
 	exports["default"] = _react2["default"].createClass({
-	  displayName: "video",
+	  displayName: "liveeditor",
 
-	  getInitialState: function getInitialState() {
-	    return {
-	      vidID: ""
-	    };
-	  },
-	  shouldComponentUpdate: function shouldComponentUpdate(nextProps, nextState) {
-	    return nextState.vidID !== this.state.vidID;
-	  },
-	  updateURL: function updateURL(fullURL) {
-	    /*
-	     * This can take either a youtube.com url and look for the v parameter
-	     * or a youtu.be url and use the last part of the url
-	     */
-	    var id = "";
-	    var a = document.createElement("a");
-	    a.href = fullURL;
-	    switch (a.hostname) {
-	      case "www.youtube.com":
-	        if (a.search === "") {
-	          break;
-	        }
-	        var parts = a.search.slice(1).split("&");
-	        parts.some(function (p) {
-	          var keyVal = p.split("=");
-	          if (keyVal[0] === "v") {
-	            id = keyVal[1];
-	            return true;
-	          }
-	          return false;
-	        });
-	        break;
-	      case "youtu.be":
-	        var parts = fullURL.split("/");
-	        id = parts[parts.length - 1];
-	        break;
-	    }
-
-	    if (id === "") {
-	      return;
-	    }
-
-	    this.setState({
-	      vidID: id
-	    });
-	  },
-	  removePlayer: function removePlayer() {
-	    this.setState({
-	      vidID: ""
-	    });
-	  },
-	  _renderSetup: function _renderSetup() {
-	    return _react2["default"].createElement(YTForm, { onSubmit: this.updateURL });
-	  },
-	  _renderPlayer: function _renderPlayer() {
-	    return _react2["default"].createElement(YTPlayer, { id: this.state.vidID,
-	      onRemove: this.removePlayer });
-	  },
-	  render: function render() {
-	    var value = this.state.vidID ? this._renderPlayer() : this._renderSetup();
-	    return _react2["default"].createElement(
-	      "div",
-	      { className: "yt" },
-	      _react2["default"].createElement(
-	        "h3",
-	        null,
-	        "Video"
-	      ),
-	      value,
-	      _react2["default"].createElement(YTHelp, null)
-	    );
-	  }
-	});
-
-	var YTHelp = _react2["default"].createClass({
-	  displayName: "YTHelp",
-
-	  getInitialState: function getInitialState() {
-	    return {
-	      show: false
-	    };
-	  },
-	  shouldComponentUpdate: function shouldComponentUpdate(nextProps, nextState) {
-	    return nextState.show !== this.state.show;
-	  },
-	  toggleHelp: function toggleHelp(event) {
-	    event.preventDefault();
-	    this.setState({
-	      show: !this.state.show
-	    });
-	  },
-	  render: function render() {
-	    var msg;
-	    var title;
-	    if (this.state.show) {
-	      title = "Hide Help";
-	      msg = "To get the correct url for a YouTube video, either copy the url from the address bar " + "or click on the \"Share\" button beneath the video's " + "description. This will give you a url that begins with \"https://youtu.be/\" and ends with " + "the video's ID. Copy this url and paste it into the text box below. Some videos have embedding " + "disabled, in which case you will unfortunately need to have the video open in a separate " + "tab or window.";
-	    } else {
-	      title = "Show Help";
-	      msg = "";
-	    }
-	    return _react2["default"].createElement(
-	      "div",
-	      null,
-	      _react2["default"].createElement(
-	        "button",
-	        { onClick: this.toggleHelp },
-	        title
-	      ),
-	      _react2["default"].createElement(
-	        "p",
-	        null,
-	        msg
-	      )
-	    );
-	  }
-	});
-
-	var YTForm = _react2["default"].createClass({
-	  displayName: "YTForm",
-
-	  getInitialState: function getInitialState() {
-	    return {
-	      url: ""
-	    };
-	  },
-	  reset: function reset() {
-	    this.setState({
-	      url: ""
-	    });
-	  },
-	  getVideo: function getVideo(event) {
-	    event.preventDefault();
-	    this.props.onSubmit(this.state.url);
-	  },
-	  _handleURL: function _handleURL(event) {
-	    this.setState({
-	      url: event.target.value
-	    });
+	  submit: function submit(obj) {
+	    this.props.submit(obj);
 	  },
 	  render: function render() {
 	    return _react2["default"].createElement(
 	      "div",
-	      null,
-	      _react2["default"].createElement(
-	        "form",
-	        null,
-	        _react2["default"].createElement("input", { type: "text",
-	          placeholder: "www.youtube.com or youtu.be",
-	          value: this.state.url,
-	          onChange: this._handleURL }),
-	        _react2["default"].createElement(
-	          "button",
-	          { onClick: this.getVideo },
-	          "Load Video"
-	        )
-	      )
-	    );
-	  }
-	});
-
-	var YTPlayer = _react2["default"].createClass({
-	  displayName: "YTPlayer",
-
-	  shouldComponentUpdate: function shouldComponentUpdate(nextProps, nextState) {
-	    return nextProps.id !== this.props.id;
-	  },
-	  render: function render() {
-	    var url = "https://www.youtube.com/embed/" + this.props.id;
-	    return _react2["default"].createElement(
-	      "div",
-	      { className: "yt-player" },
-	      _react2["default"].createElement("iframe", { width: "560", height: "315", src: url, frameBorder: "0" }),
-	      _react2["default"].createElement(
-	        "button",
-	        { onClick: this.props.onRemove },
-	        "Remove"
-	      )
+	      { className: "live-editor" },
+	      _react2["default"].createElement(_video2["default"], { url: this.props.url }),
+	      _react2["default"].createElement(_recipeform2["default"], { submit: this.submit })
 	    );
 	  }
 	});
@@ -298,32 +155,72 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _ingredients = __webpack_require__(4);
-
-	var _ingredients2 = _interopRequireDefault(_ingredients);
-
-	var _steps = __webpack_require__(5);
-
-	var _steps2 = _interopRequireDefault(_steps);
-
 	exports["default"] = _react2["default"].createClass({
-	  displayName: "recipe",
+	  displayName: "video",
 
+	  propTypes: {
+	    url: _react2["default"].PropTypes.string.isRequired
+	  },
+	  getInitialState: function getInitialState() {
+	    return {
+	      vidID: ""
+	    };
+	  },
+	  shouldComponentUpdate: function shouldComponentUpdate(nextProps, nextState) {
+	    return nextState.vidID !== this.state.vidID;
+	  },
+	  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+	    var vidID = getVideoID(nextProps.url) || "";
+	    this.setState({
+	      vidID: vidID
+	    });
+	  },
 	  render: function render() {
+	    var url = "https://www.youtube.com/embed/" + this.state.vidID;
+	    var iframe = this.state.vidID === "" ? null : _react2["default"].createElement("iframe", { width: "560", height: "315", src: url, frameBorder: "0" });
 	    return _react2["default"].createElement(
 	      "div",
-	      { className: "recipe" },
-	      _react2["default"].createElement(
-	        "h2",
-	        null,
-	        "Recipe"
-	      ),
-	      _react2["default"].createElement("input", { className: "recipe-name", type: "text", placeholder: "Recipe Name..." }),
-	      _react2["default"].createElement(_ingredients2["default"], null),
-	      _react2["default"].createElement(_steps2["default"], null)
+	      { className: "yt" },
+	      iframe
 	    );
 	  }
 	});
+
+	function getVideoID(url) {
+	  /*
+	  * This can take either a youtube.com url and look for the v parameter
+	  * or a youtu.be url and use the last part of the url
+	  */
+	  var id = "";
+	  var a = document.createElement("a");
+	  a.href = url;
+	  switch (a.hostname) {
+	    case "www.youtube.com":
+	      if (a.search === "") {
+	        break;
+	      }
+	      var parts = a.search.slice(1).split("&");
+	      parts.some(function (p) {
+	        var keyVal = p.split("=");
+	        if (keyVal[0] === "v") {
+	          id = keyVal[1];
+	          return true;
+	        }
+	        return false;
+	      });
+	      break;
+	    case "youtu.be":
+	      var parts = url.split("/");
+	      id = parts[parts.length - 1];
+	      break;
+	  }
+
+	  if (id === "") {
+	    return;
+	  }
+
+	  return id;
+	}
 	module.exports = exports["default"];
 
 /***/ },
@@ -338,106 +235,121 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 	var _react = __webpack_require__(1);
 
 	var _react2 = _interopRequireDefault(_react);
 
 	exports["default"] = _react2["default"].createClass({
-	  displayName: "ingredients",
+	  displayName: "recipeform",
 
 	  getInitialState: function getInitialState() {
 	    return {
-	      ingredients: []
+	      name: "",
+	      url: "",
+	      ingredients: [],
+	      instructions: []
 	    };
 	  },
-	  addIngredient: function addIngredient(value) {
-	    var newIngredients = this.state.ingredients.concat(value);
-	    this.setState({
-	      ingredients: newIngredients
-	    });
-	  },
-	  removeIngredient: function removeIngredient(index) {
-	    this.state.ingredients.splice(index, 1);
-	    this.setState({
-	      ingredients: this.state.ingredients
-	    });
+	  submit: function submit(name, value) {
+	    if (name === "ingredients" || name === "instructions") {
+	      value = value.split("\n");
+	    }
+	    this.state[name] = value;
+	    this.props.submit(this.state);
+	    this.setState(_defineProperty({}, name, value));
 	  },
 	  render: function render() {
-	    var ingredients = this.state.ingredients.map(function (value, index) {
-	      return _react2["default"].createElement(Ingredient, { value: value,
-	        key: index,
-	        index: index,
-	        onRemove: this.removeIngredient });
-	    }, this);
 	    return _react2["default"].createElement(
 	      "div",
-	      { className: "ingredients" },
-	      _react2["default"].createElement(
-	        "h3",
-	        null,
-	        "Ingredients"
-	      ),
-	      _react2["default"].createElement(
-	        "ul",
-	        null,
-	        ingredients
-	      ),
-	      _react2["default"].createElement(IngredientInput, { onAdd: this.addIngredient })
+	      { className: "recipe-form" },
+	      _react2["default"].createElement(UserInput, { name: "name",
+	        submit: this.submit }),
+	      _react2["default"].createElement(UserInput, { name: "url",
+	        submit: this.submit }),
+	      _react2["default"].createElement(UserTextarea, { name: "ingredients",
+	        submit: this.submit }),
+	      _react2["default"].createElement(UserTextarea, { name: "instructions",
+	        submit: this.submit })
 	    );
 	  }
 	});
 
-	var Ingredient = _react2["default"].createClass({
-	  displayName: "Ingredient",
+	var UserInput = _react2["default"].createClass({
+	  displayName: "UserInput",
 
-	  shouldComponentUpdate: function shouldComponentUpdate(nextProps, nextState) {
-	    return nextProps.value !== this.props.value;
+	  getInitialState: function getInitialState() {
+	    return {
+	      value: ""
+	    };
 	  },
-	  remove: function remove(event) {
-	    event.preventDefault();
-	    this.props.onRemove(this.props.index);
+	  handleChange: function handleChange(event) {
+	    this.setState({
+	      value: event.target.value
+	    });
+	  },
+	  handleBlur: function handleBlur(event) {
+	    this.props.submit(this.props.name, this.state.value);
+	  },
+	  handleSubmit: function handleSubmit(event) {
+	    if (event.which === 13) {
+	      this.props.submit(this.props.name, this.state.value);
+	    }
 	  },
 	  render: function render() {
 	    return _react2["default"].createElement(
-	      "li",
-	      { className: "ingredient" },
-	      this.props.value,
+	      "div",
+	      null,
 	      _react2["default"].createElement(
-	        "button",
-	        { onClick: this.remove },
-	        String.fromCharCode(215)
+	        "label",
+	        null,
+	        this.props.name,
+	        _react2["default"].createElement("input", { type: "text",
+	          value: this.state.value,
+	          onChange: this.handleChange,
+	          onBlur: this.handleBlur,
+	          onKeyDown: this.handleSubmit })
 	      )
 	    );
 	  }
 	});
 
-	var IngredientInput = _react2["default"].createClass({
-	  displayName: "IngredientInput",
+	var UserTextarea = _react2["default"].createClass({
+	  displayName: "UserTextarea",
 
 	  getInitialState: function getInitialState() {
 	    return {
 	      value: ""
 	    };
 	  },
-	  updateValue: function updateValue(event) {
+	  handleChange: function handleChange(event) {
+	    //this.props.submit(this.props.name, event.target.value);
 	    this.setState({
 	      value: event.target.value
 	    });
 	  },
-	  addStep: function addStep(event) {
-	    event.preventDefault();
-	    this.props.onAdd(this.state.value);
-	    this.setState({
-	      value: ""
-	    });
+	  handleBlur: function handleBlur(event) {
+	    this.props.submit(this.props.name, this.state.value);
+	  },
+	  handleSubmit: function handleSubmit(event) {
+	    if (event.which === 13) {
+	      this.props.submit(this.props.name, this.state.value);
+	    }
 	  },
 	  render: function render() {
 	    return _react2["default"].createElement(
-	      "form",
-	      { onSubmit: this.addStep },
-	      _react2["default"].createElement("input", { type: "text",
-	        value: this.state.value,
-	        onChange: this.updateValue })
+	      "div",
+	      null,
+	      _react2["default"].createElement(
+	        "label",
+	        null,
+	        this.props.name,
+	        _react2["default"].createElement("textarea", { value: this.state.value,
+	          onChange: this.handleChange,
+	          onBlur: this.handleBlur,
+	          onKeyDown: this.handleSubmit })
+	      )
 	    );
 	  }
 	});
@@ -459,36 +371,127 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	exports["default"] = _react2["default"].createClass({
-	  displayName: "steps",
+	var _ingredients = __webpack_require__(6);
 
-	  getInitialState: function getInitialState() {
-	    return {
-	      steps: []
-	    };
-	  },
-	  addStep: function addStep(step) {
-	    var newSteps = this.state.steps.concat(step);
-	    this.setState({
-	      steps: newSteps
-	    });
-	  },
-	  removeStep: function removeStep(index) {
-	    this.state.steps.splice(index, 1);
-	    this.setState({
-	      steps: this.state.steps
-	    });
+	var _ingredients2 = _interopRequireDefault(_ingredients);
+
+	var _instructions = __webpack_require__(7);
+
+	var _instructions2 = _interopRequireDefault(_instructions);
+
+	exports["default"] = _react2["default"].createClass({
+	  displayName: "recipe",
+
+	  propTypes: {
+	    name: _react2["default"].PropTypes.string.isRequired,
+	    url: _react2["default"].PropTypes.string.isRequired,
+	    ingredients: _react2["default"].PropTypes.array.isRequired,
+	    instructions: _react2["default"].PropTypes.array.isRequired
 	  },
 	  render: function render() {
-	    var steps = this.state.steps.map(function (s, i) {
-	      return _react2["default"].createElement(Step, { key: i,
-	        value: s,
-	        index: i,
-	        onRemove: this.removeStep });
+	    var ingredients = this.props.ingredients;
+	    var instructions = this.props.instructions;
+	    return _react2["default"].createElement(
+	      "div",
+	      { className: "recipe" },
+	      _react2["default"].createElement(
+	        "h2",
+	        null,
+	        this.props.name
+	      ),
+	      _react2["default"].createElement(
+	        "h3",
+	        null,
+	        this.props.url
+	      ),
+	      _react2["default"].createElement(_ingredients2["default"], { ingredients: ingredients }),
+	      _react2["default"].createElement(_instructions2["default"], { instructions: instructions })
+	    );
+	  }
+	});
+	module.exports = exports["default"];
+
+/***/ },
+/* 6 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	exports["default"] = _react2["default"].createClass({
+	  displayName: "ingredients",
+
+	  propTypes: {
+	    ingredients: _react2["default"].PropTypes.array.isRequired
+	  },
+	  render: function render() {
+	    var ingredients = this.props.ingredients.map(function (v, i) {
+	      return _react2["default"].createElement(
+	        "li",
+	        { key: i },
+	        v
+	      );
 	    }, this);
 	    return _react2["default"].createElement(
 	      "div",
-	      { className: "steps" },
+	      { className: "ingredients" },
+	      _react2["default"].createElement(
+	        "h3",
+	        null,
+	        "Ingredients"
+	      ),
+	      _react2["default"].createElement(
+	        "ul",
+	        null,
+	        ingredients
+	      )
+	    );
+	  }
+	});
+	module.exports = exports["default"];
+
+/***/ },
+/* 7 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	exports["default"] = _react2["default"].createClass({
+	  displayName: "instructions",
+
+	  propTypes: {
+	    instructions: _react2["default"].PropTypes.array.isRequired
+	  },
+	  render: function render() {
+	    var instructions = this.props.instructions.map(function (s, i) {
+	      return _react2["default"].createElement(
+	        "li",
+	        { key: i },
+	        s
+	      );
+	    }, this);
+	    return _react2["default"].createElement(
+	      "div",
+	      { className: "instructions" },
 	      _react2["default"].createElement(
 	        "h3",
 	        null,
@@ -497,60 +500,8 @@
 	      _react2["default"].createElement(
 	        "ol",
 	        null,
-	        steps
-	      ),
-	      _react2["default"].createElement(StepInput, { onAdd: this.addStep })
-	    );
-	  }
-	});
-
-	var Step = _react2["default"].createClass({
-	  displayName: "Step",
-
-	  removeStep: function removeStep() {
-	    this.props.onRemove(this.props.index);
-	  },
-	  render: function render() {
-	    return _react2["default"].createElement(
-	      "li",
-	      { className: "step" },
-	      this.props.value,
-	      _react2["default"].createElement(
-	        "button",
-	        { onClick: this.removeStep },
-	        "Remove"
+	        instructions
 	      )
-	    );
-	  }
-	});
-
-	var StepInput = _react2["default"].createClass({
-	  displayName: "StepInput",
-
-	  getInitialState: function getInitialState() {
-	    return {
-	      value: ""
-	    };
-	  },
-	  updateValue: function updateValue(event) {
-	    this.setState({
-	      value: event.target.value
-	    });
-	  },
-	  addStep: function addStep(event) {
-	    event.preventDefault();
-	    this.props.onAdd(this.state.value);
-	    this.setState({
-	      value: ""
-	    });
-	  },
-	  render: function render() {
-	    return _react2["default"].createElement(
-	      "form",
-	      { onSubmit: this.addStep },
-	      _react2["default"].createElement("input", { type: "text",
-	        value: this.state.value,
-	        onChange: this.updateValue })
 	    );
 	  }
 	});

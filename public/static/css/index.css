@@ -20,8 +20,21 @@ button {
   margin-left: 10px;
 }
 
+label {
+  text-transform: capitalize;
+}
+
 input {
   width: 500px;
+}
+
+textarea {
+  min-width: 500px;
+  min-height: 250px;
+}
+
+input, textarea {
+  display: block;
 }
 
 .recipe-name {
