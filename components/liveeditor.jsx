@@ -1,6 +1,21 @@
 import React from "react";
+import Video from "./video";
 
 export default React.createClass({
+  submit: function(name, value) {
+    this.props.submit(name, value);
+  },
+  render: function() {
+    return (
+      <div className="live-editor">
+        <Video url={this.props.url} />
+        <RecipeForm submit={this.submit} />
+      </div>
+    );
+  }
+})
+
+var RecipeForm = React.createClass({
   getInitialState: function() {
     return {
       name: "",
@@ -15,8 +30,7 @@ export default React.createClass({
         return line !== "";
       });
     }
-    this.state[name] = value;
-    this.props.submit(this.state);
+    this.props.submit(name, value);
     this.setState({
       [name]: value
     });
