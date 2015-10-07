@@ -1,3 +1,4 @@
 node_modules
 *.log
 .module-cache/
+mockup.png
