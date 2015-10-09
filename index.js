@@ -2,9 +2,9 @@ import React from "react";
 import { createStore } from "redux";
 import { Provider } from "react-redux";
 import App from "./containers/app";
-import configureStore from "./store/configureStore";
+import recipeReducer from './reducers';
 
-let store = configureStore();
+var store = createStore(recipeReducer);
 
 React.render(
   <Provider store={store}>

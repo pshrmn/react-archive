@@ -33,6 +33,8 @@ export default function recipeReducer(state = initialState, action) {
       ingredients: [],
       instructions: []
     });
+  case types.SAVE_RECIPE:
+    return state;
   default:
     return state;
   };

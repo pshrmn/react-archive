@@ -13,10 +13,10 @@ label {
   text-transform: capitalize; }
 
 input {
-  width: 500px; }
+  width: 560px; }
 
 textarea {
-  min-width: 500px;
+  min-width: 560px;
   min-height: 250px; }
 
 input, textarea {

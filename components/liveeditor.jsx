@@ -2,20 +2,6 @@ import React from "react";
 import Video from "./video";
 
 export default React.createClass({
-  submit: function(name, value) {
-    this.props.submit(name, value);
-  },
-  render: function() {
-    return (
-      <div className="live-editor">
-        <Video url={this.props.url} />
-        <RecipeForm submit={this.submit} />
-      </div>
-    );
-  }
-})
-
-var RecipeForm = React.createClass({
   getInitialState: function() {
     return {
       name: "",
@@ -25,23 +11,42 @@ var RecipeForm = React.createClass({
     }
   },
   submit: function(name, value) {
-    if ( name === "ingredients" || name === "instructions" ) {
+    switch (name) {
+    case "name":
+      this.props.actions.setName(value);
+      break;
+    case "url":
+      this.props.actions.setURL(value);
+      break;
+    case "ingredients":
       value = value.split("\n").filter(function(line){
         return line !== "";
       });
+      this.props.actions.setIngredients(value);
+      break;
+    case "instructions":
+      value = value.split("\n").filter(function(line){
+        return line !== "";
+      });
+      this.props.actions.setInstructions(value);
+      break;
     }
-    this.props.submit(name, value);
     this.setState({
       [name]: value
     });
   },
   render: function() {
     return (
-      <div className="recipe-form">
+      <div className="live-editor">
+        <p>
+          <button onClick={() => this.props.actions.saveRecipe()}>Save</button>
+          <button onClick={() => this.props.actions.resetRecipe()}>Reset</button>
+        </p>
         <UserInput name="name"
                    submit={this.submit} />
         <UserInput name="url"
                    submit={this.submit} />
+        <Video url={this.props.url} />
         <UserTextarea name="ingredients"
                       submit={this.submit} />
         <UserTextarea name="instructions"

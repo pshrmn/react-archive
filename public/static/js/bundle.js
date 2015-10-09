@@ -60,11 +60,11 @@
 
 	var _containersApp2 = _interopRequireDefault(_containersApp);
 
-	var _storeConfigureStore = __webpack_require__(31);
+	var _reducers = __webpack_require__(31);
 
-	var _storeConfigureStore2 = _interopRequireDefault(_storeConfigureStore);
+	var _reducers2 = _interopRequireDefault(_reducers);
 
-	var store = (0, _storeConfigureStore2["default"])();
+	var store = (0, _redux.createStore)(_reducers2["default"]);
 
 	_react2["default"].render(_react2["default"].createElement(
 	  _reactRedux.Provider,
@@ -1508,27 +1508,12 @@
 	exports["default"] = _react2["default"].createClass({
 	  displayName: "annotater",
 
-	  submit: function submit(name, value) {
-	    switch (name) {
-	      case "name":
-	        this.props.actions.setName(value);
-	        break;
-	      case "url":
-	        this.props.actions.setURL(value);
-	        break;
-	      case "ingredients":
-	        this.props.actions.setIngredients(value);
-	        break;
-	      case "instructions":
-	        this.props.actions.setInstructions(value);
-	        break;
-	    }
-	  },
 	  render: function render() {
 	    return _react2["default"].createElement(
 	      "div",
 	      { className: "annotater" },
 	      _react2["default"].createElement(_liveeditor2["default"], { url: this.props.url,
+	        actions: this.props.actions,
 	        submit: this.submit }),
 	      _react2["default"].createElement(_recipe2["default"], this.props)
 	    );
@@ -1561,22 +1546,6 @@
 	exports["default"] = _react2["default"].createClass({
 	  displayName: "liveeditor",
 
-	  submit: function submit(name, value) {
-	    this.props.submit(name, value);
-	  },
-	  render: function render() {
-	    return _react2["default"].createElement(
-	      "div",
-	      { className: "live-editor" },
-	      _react2["default"].createElement(_video2["default"], { url: this.props.url }),
-	      _react2["default"].createElement(RecipeForm, { submit: this.submit })
-	    );
-	  }
-	});
-
-	var RecipeForm = _react2["default"].createClass({
-	  displayName: "RecipeForm",
-
 	  getInitialState: function getInitialState() {
 	    return {
 	      name: "",
@@ -1586,22 +1555,57 @@
 	    };
 	  },
 	  submit: function submit(name, value) {
-	    if (name === "ingredients" || name === "instructions") {
-	      value = value.split("\n").filter(function (line) {
-	        return line !== "";
-	      });
+	    switch (name) {
+	      case "name":
+	        this.props.actions.setName(value);
+	        break;
+	      case "url":
+	        this.props.actions.setURL(value);
+	        break;
+	      case "ingredients":
+	        value = value.split("\n").filter(function (line) {
+	          return line !== "";
+	        });
+	        this.props.actions.setIngredients(value);
+	        break;
+	      case "instructions":
+	        value = value.split("\n").filter(function (line) {
+	          return line !== "";
+	        });
+	        this.props.actions.setInstructions(value);
+	        break;
 	    }
-	    this.props.submit(name, value);
 	    this.setState(_defineProperty({}, name, value));
 	  },
 	  render: function render() {
+	    var _this = this;
+
 	    return _react2["default"].createElement(
 	      "div",
-	      { className: "recipe-form" },
+	      { className: "live-editor" },
+	      _react2["default"].createElement(
+	        "p",
+	        null,
+	        _react2["default"].createElement(
+	          "button",
+	          { onClick: function () {
+	              return _this.props.actions.saveRecipe();
+	            } },
+	          "Save"
+	        ),
+	        _react2["default"].createElement(
+	          "button",
+	          { onClick: function () {
+	              return _this.props.actions.resetRecipe();
+	            } },
+	          "Reset"
+	        )
+	      ),
 	      _react2["default"].createElement(UserInput, { name: "name",
 	        submit: this.submit }),
 	      _react2["default"].createElement(UserInput, { name: "url",
 	        submit: this.submit }),
+	      _react2["default"].createElement(_video2["default"], { url: this.props.url }),
 	      _react2["default"].createElement(UserTextarea, { name: "ingredients",
 	        submit: this.submit }),
 	      _react2["default"].createElement(UserTextarea, { name: "instructions",
@@ -1939,6 +1943,7 @@
 	exports.setIngredients = setIngredients;
 	exports.setInstructions = setInstructions;
 	exports.resetRecipe = resetRecipe;
+	exports.saveRecipe = saveRecipe;
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj["default"] = obj; return newObj; } }
 
@@ -1980,6 +1985,12 @@
 	  };
 	}
 
+	function saveRecipe() {
+	  return {
+	    type: types.SAVE_RECIPE
+	  };
+	}
+
 /***/ },
 /* 30 */
 /***/ function(module, exports) {
@@ -1999,46 +2010,11 @@
 	exports.SET_INSTRUCTIONS = SET_INSTRUCTIONS;
 	var RESET_RECIPE = "RESET_RECIPE";
 	exports.RESET_RECIPE = RESET_RECIPE;
+	var SAVE_RECIPE = "SAVE_RECIPE";
+	exports.SAVE_RECIPE = SAVE_RECIPE;
 
 /***/ },
 /* 31 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-	exports['default'] = configureStore;
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-	var _redux = __webpack_require__(2);
-
-	var _reducers = __webpack_require__(32);
-
-	var _reducers2 = _interopRequireDefault(_reducers);
-
-	function configureStore(initialState) {
-	  var store = (0, _redux.createStore)(_reducers2['default'], initialState);
-
-	  /*
-	  if (module.hot) {
-	    // Enable Webpack hot module replacement for reducers
-	    module.hot.accept('../reducers', () => {
-	      const nextReducer = require('../reducers');
-	      store.replaceReducer(nextReducer);
-	    });
-	  }
-	  */
-
-	  return store;
-	}
-
-	module.exports = exports['default'];
-
-/***/ },
-/* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2089,6 +2065,8 @@
 	        ingredients: [],
 	        instructions: []
 	      });
+	    case types.SAVE_RECIPE:
+	      return state;
 	    default:
 	      return state;
 	  };
