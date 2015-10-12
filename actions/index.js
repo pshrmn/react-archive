@@ -29,6 +29,7 @@ export function setInstructions(instructions) {
 }
 
 export function resetRecipe() {
+  console.log("called reset recipe");
   return {
     type: types.RESET_RECIPE
   };

@@ -1491,6 +1491,8 @@
 	  value: true
 	});
 
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 	var _react = __webpack_require__(1);
@@ -1512,9 +1514,9 @@
 	    return _react2["default"].createElement(
 	      "div",
 	      { className: "annotater" },
-	      _react2["default"].createElement(_liveeditor2["default"], { url: this.props.url,
-	        actions: this.props.actions,
-	        submit: this.submit }),
+	      _react2["default"].createElement(_liveeditor2["default"], _extends({ actions: this.props.actions,
+	        submit: this.submit
+	      }, this.props)),
 	      _react2["default"].createElement(_recipe2["default"], this.props)
 	    );
 	  }
@@ -1602,14 +1604,18 @@
 	        )
 	      ),
 	      _react2["default"].createElement(UserInput, { name: "name",
-	        submit: this.submit }),
+	        submit: this.submit,
+	        value: this.props.name }),
 	      _react2["default"].createElement(UserInput, { name: "url",
-	        submit: this.submit }),
+	        submit: this.submit,
+	        value: this.props.url }),
 	      _react2["default"].createElement(_video2["default"], { url: this.props.url }),
 	      _react2["default"].createElement(UserTextarea, { name: "ingredients",
-	        submit: this.submit }),
+	        submit: this.submit,
+	        value: this.props.ingredients.join("\n") }),
 	      _react2["default"].createElement(UserTextarea, { name: "instructions",
-	        submit: this.submit })
+	        submit: this.submit,
+	        value: this.props.instructions.join("\n") })
 	    );
 	  }
 	});
@@ -1619,8 +1625,13 @@
 
 	  getInitialState: function getInitialState() {
 	    return {
-	      value: ""
+	      value: this.props.value || ""
 	    };
+	  },
+	  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+	    this.setState({
+	      value: nextProps.value
+	    });
 	  },
 	  handleChange: function handleChange(event) {
 	    this.setState({
@@ -1660,6 +1671,11 @@
 	    return {
 	      value: ""
 	    };
+	  },
+	  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+	    this.setState({
+	      value: nextProps.value
+	    });
 	  },
 	  handleChange: function handleChange(event) {
 	    //this.props.submit(this.props.name, event.target.value);
@@ -1980,6 +1996,7 @@
 	}
 
 	function resetRecipe() {
+	  console.log("called reset recipe");
 	  return {
 	    type: types.RESET_RECIPE
 	  };

@@ -43,14 +43,18 @@ export default React.createClass({
           <button onClick={() => this.props.actions.resetRecipe()}>Reset</button>
         </p>
         <UserInput name="name"
-                   submit={this.submit} />
+                   submit={this.submit}
+                   value={this.props.name} />
         <UserInput name="url"
-                   submit={this.submit} />
+                   submit={this.submit}
+                   value={this.props.url} />
         <Video url={this.props.url} />
         <UserTextarea name="ingredients"
-                      submit={this.submit} />
+                      submit={this.submit}
+                      value={this.props.ingredients.join("\n")} />
         <UserTextarea name="instructions"
-                      submit={this.submit} />
+                      submit={this.submit}
+                      value={this.props.instructions.join("\n")} />
       </div>
     );
   }
@@ -59,8 +63,13 @@ export default React.createClass({
 var UserInput = React.createClass({
   getInitialState: function() {
     return {
-      value: ""
+      value: this.props.value || ""
     };
+  },
+  componentWillReceiveProps: function(nextProps) {
+    this.setState({
+      value: nextProps.value
+    });
   },
   handleChange: function(event) {
     this.setState({
@@ -96,6 +105,11 @@ var UserTextarea = React.createClass({
     return {
       value: ""
     };
+  },
+  componentWillReceiveProps: function(nextProps) {
+    this.setState({
+      value: nextProps.value
+    });
   },
   handleChange: function(event) {
     //this.props.submit(this.props.name, event.target.value);
