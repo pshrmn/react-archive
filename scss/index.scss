@@ -53,15 +53,23 @@ input, textarea {
   }
 
   html, body {
-    width: 100%;
+
+    /*
+      prevent chrome from printing very narrow
+      there should be a better fix, but this will do for now
+      */
+    * {
+      min-width: 100%;
+    }
   }
 
   .recipe {
     width: 100%;
     display: block;
+    border: 0;
 
     * {
-      width: 100%;
+      min-width: 100%;
     }
   }
 

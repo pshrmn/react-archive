@@ -39,12 +39,18 @@ input, textarea {
   .live-editor, header {
     display: none; }
   html, body {
-    width: 100%; }
+    /*
+      prevent chrome from printing very narrow
+      there should be a better fix, but this will do for now
+      */ }
+    html *, body * {
+      min-width: 100%; }
   .recipe {
     width: 100%;
-    display: block; }
+    display: block;
+    border: 0; }
     .recipe * {
-      width: 100%; }
+      min-width: 100%; }
   /* make sure recipe is left-aligned */
   #content {
     width: 100vw;
