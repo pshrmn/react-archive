@@ -69,7 +69,7 @@
 	var _helpers = __webpack_require__(32);
 
 	var initialState = (0, _helpers.SetupStorage)();
-	var store = (0, _redux.applyMiddleware)(_middlewareStorage.StorageSaver, _middlewareStorage.RecipeLoader)(_redux.createStore)(_reducers2["default"], initialState);
+	var store = (0, _redux.applyMiddleware)(_middlewareStorage.StorageAPI, _middlewareStorage.RecipeLoader)(_redux.createStore)(_reducers2["default"], initialState);
 
 	_react2["default"].render(_react2["default"].createElement(
 	  _reactRedux.Provider,
@@ -2018,6 +2018,13 @@
 	              _this.props.actions.loadRecipe(i);
 	            } },
 	          "Edit"
+	        ),
+	        _react2["default"].createElement(
+	          "button",
+	          { onClick: function () {
+	              _this.props.actions.deleteRecipe(i);
+	            } },
+	          "Delete"
 	        )
 	      );
 	    });
@@ -2053,6 +2060,7 @@
 	exports.resetRecipe = resetRecipe;
 	exports.saveRecipe = saveRecipe;
 	exports.loadRecipe = loadRecipe;
+	exports.deleteRecipe = deleteRecipe;
 	exports.makeRecipe = makeRecipe;
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj["default"] = obj; return newObj; } }
@@ -2112,6 +2120,13 @@
 	  };
 	}
 
+	function deleteRecipe(index) {
+	  return {
+	    type: types.DELETE_RECIPE,
+	    index: index
+	  };
+	}
+
 	function makeRecipe(url) {
 	  return {
 	    type: types.MAKE_RECIPE,
@@ -2142,6 +2157,8 @@
 	exports.SAVE_RECIPE = SAVE_RECIPE;
 	var LOAD_RECIPE = "LOAD_RECIPE";
 	exports.LOAD_RECIPE = LOAD_RECIPE;
+	var DELETE_RECIPE = "DELETE_RECIPE";
+	exports.DELETE_RECIPE = DELETE_RECIPE;
 	var MAKE_RECIPE = "MAKE_RECIPE";
 	exports.MAKE_RECIPE = MAKE_RECIPE;
 
@@ -2286,6 +2303,8 @@
 	      // the middleware will take the action.recipe and either append it to the array
 	      // if it doesn't already exist, or replace the existing version (based on ytID)
 	      return action.recipes;
+	    case types.DELETE_RECIPE:
+	      return action.recipes;
 	    default:
 	      return state;
 	  }
@@ -2315,38 +2334,59 @@
 
 	var ActionTypes = _interopRequireWildcard(_constantsActionTypes);
 
+	function saveRecipes(recipes) {
+	  localStorage.setItem("recipes", JSON.stringify(recipes));
+	}
+
+	function loadRecipes() {
+	  return JSON.parse(localStorage.getItem("recipes"));
+	}
+
+	function recipeIndex(ytID, recipes) {
+	  var index = -1;
+	  for (var i = 0; i < recipes.length; i++) {
+	    if (recipes[i].ytID === ytID) {
+	      index = i;
+	      break;
+	    }
+	  }
+	  return index;
+	}
+
 	/*
 	 * add the recipe to localStorage using the id of the youtube video. If there is already
 	 * a stored recipe with the same youtube video id, replace the existing one with the new one
 	 */
-	var StorageSaver = function StorageSaver(store) {
+	var StorageAPI = function StorageAPI(store) {
 	  return function (next) {
 	    return function (action) {
-	      if (action.type === ActionTypes.SAVE_RECIPE && action.recipe.ytID !== "") {
-	        var storedRecipes = JSON.parse(localStorage.getItem("recipes"));
-	        var recipe = action.recipe;
-	        var ytID = recipe.ytID;
-	        var index = -1;
-	        for (var i = 0; i < storedRecipes.length; i++) {
-	          if (storedRecipes[i].ytID === ytID) {
-	            index = i;
-	            break;
+	      switch (action.type) {
+	        case ActionTypes.SAVE_RECIPE:
+	          if (action.recipe.ytID !== "") {
+	            var _storedRecipes = loadRecipes();
+	            var index = recipeIndex(action.recipe.ytID, _storedRecipes);
+	            if (index !== -1) {
+	              _storedRecipes[index] = action.recipe;
+	            } else {
+	              _storedRecipes.push(action.recipe);
+	            }
+	            action.recipes = _storedRecipes;
+	            saveRecipes(_storedRecipes);
 	          }
-	        }
-	        if (index !== -1) {
-	          storedRecipes[index] = action.recipe;
-	        } else {
-	          storedRecipes.push(recipe);
-	        }
-	        action.recipes = storedRecipes;
-	        localStorage.setItem("recipes", JSON.stringify(storedRecipes));
+	          break;
+	        case ActionTypes.DELETE_RECIPE:
+	          var storedRecipes = loadRecipes();
+	          storedRecipes.splice(action.index);
+	          action.recipes = storedRecipes;
+	          saveRecipes(storedRecipes);
+	          break;
 	      }
 	      return next(action);
 	    };
 	  };
 	};
 
-	exports.StorageSaver = StorageSaver;
+	exports.StorageAPI = StorageAPI;
 	var RecipeLoader = function RecipeLoader(store) {
 	  return function (next) {
 	    return function (action) {

@@ -38,6 +38,7 @@ export default React.createClass({
         <li key={i}>
           {r.name}
           <button onClick={() => { this.props.actions.loadRecipe(i);} }>Edit</button>
+          <button onClick={() => { this.props.actions.deleteRecipe(i);} }>Delete</button>
         </li>
       );
     });

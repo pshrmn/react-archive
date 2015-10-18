@@ -58,6 +58,8 @@ function savedRecipes(state = [], action) {
     // the middleware will take the action.recipe and either append it to the array
     // if it doesn't already exist, or replace the existing version (based on ytID)
     return action.recipes;
+  case types.DELETE_RECIPE:
+    return action.recipes;
   default:
     return state;
   }

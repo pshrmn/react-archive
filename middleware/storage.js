@@ -1,28 +1,49 @@
 import * as ActionTypes from "../constants/ActionTypes";
 
+function saveRecipes(recipes) {
+  localStorage.setItem("recipes", JSON.stringify(recipes));
+}
+
+function loadRecipes(){
+  return JSON.parse(localStorage.getItem("recipes"));
+}
+
+function recipeIndex(ytID, recipes) {
+  let index = -1;
+  for ( var i=0; i<recipes.length; i++ ) {
+    if ( recipes[i].ytID === ytID ) {
+      index = i;
+      break;
+    }
+  }
+  return index;
+}
+
 /*
  * add the recipe to localStorage using the id of the youtube video. If there is already
  * a stored recipe with the same youtube video id, replace the existing one with the new one
  */
-export const StorageSaver = store => next => action => {
-  if ( action.type === ActionTypes.SAVE_RECIPE && action.recipe.ytID !== "" ) {
-    let storedRecipes = JSON.parse(localStorage.getItem("recipes"));
-    let recipe = action.recipe;
-    let ytID = recipe.ytID;
-    let index = -1;
-    for ( var i=0; i<storedRecipes.length; i++ ) {
-      if ( storedRecipes[i].ytID === ytID ) {
-        index = i;
-        break;
+export const StorageAPI = store => next => action => {
+  switch ( action.type ) {
+  case ActionTypes.SAVE_RECIPE:
+    if ( action.recipe.ytID !== "" ) {
+      let storedRecipes = loadRecipes();
+      let index = recipeIndex(action.recipe.ytID, storedRecipes);
+      if ( index !== -1 ) {
+        storedRecipes[index] = action.recipe;
+      } else {
+        storedRecipes.push(action.recipe);
       }
+      action.recipes = storedRecipes;
+      saveRecipes(storedRecipes);
     }
-    if ( index !== -1 ) {
-      storedRecipes[index] = action.recipe;
-    } else {
-      storedRecipes.push(recipe);
-    }
+    break;
+  case ActionTypes.DELETE_RECIPE:
+    let storedRecipes = loadRecipes();
+    storedRecipes.splice(action.index);
     action.recipes = storedRecipes;
-    localStorage.setItem("recipes", JSON.stringify(storedRecipes));
+    saveRecipes(storedRecipes);
+    break;
   }
   return next(action);
 }

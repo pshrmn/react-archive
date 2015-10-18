@@ -50,6 +50,13 @@ export function loadRecipe(index) {
   };
 }
 
+export function deleteRecipe(index) {
+  return {
+    type: types.DELETE_RECIPE,
+    index: index
+  };
+}
+
 export function makeRecipe(url) {
   return {
     type: types.MAKE_RECIPE,
