@@ -37,6 +37,8 @@ function recipe(state = {
     return Object.assign({}, state, {
       instructions: action.instructions
     });
+  case types.LOAD_RECIPE:
+    return Object.assign({}, state, action.recipe);
   case types.RESET_RECIPE:
     return Object.assign({}, state, {
       name: "",

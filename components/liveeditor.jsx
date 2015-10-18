@@ -2,6 +2,15 @@ import React from "react";
 import Video from "./video";
 
 export default React.createClass({
+  getDefaultProps: function() {
+    return {
+      name: "",
+      url: "",
+      ytID: "",
+      ingredients: [],
+      instructions: [],
+    };
+  },
   getInitialState: function() {
     return {
       name: "",

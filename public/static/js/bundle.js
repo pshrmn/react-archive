@@ -60,16 +60,16 @@
 
 	var _containersApp2 = _interopRequireDefault(_containersApp);
 
-	var _reducers = __webpack_require__(32);
+	var _reducers = __webpack_require__(33);
 
 	var _reducers2 = _interopRequireDefault(_reducers);
 
-	var _middlewareStorage = __webpack_require__(33);
+	var _middlewareStorage = __webpack_require__(34);
 
-	var _helpers = __webpack_require__(31);
+	var _helpers = __webpack_require__(32);
 
 	var initialState = (0, _helpers.SetupStorage)();
-	var store = (0, _redux.applyMiddleware)(_middlewareStorage.storageSaver, _middlewareStorage.storageFetcher)(_redux.createStore)(_reducers2["default"], initialState);
+	var store = (0, _redux.applyMiddleware)(_middlewareStorage.StorageSaver, _middlewareStorage.RecipeLoader)(_redux.createStore)(_reducers2["default"], initialState);
 
 	_react2["default"].render(_react2["default"].createElement(
 	  _reactRedux.Provider,
@@ -1440,7 +1440,11 @@
 
 	var _componentsAnnotater2 = _interopRequireDefault(_componentsAnnotater);
 
-	var _actions = __webpack_require__(29);
+	var _componentsRecipemenu = __webpack_require__(29);
+
+	var _componentsRecipemenu2 = _interopRequireDefault(_componentsRecipemenu);
+
+	var _actions = __webpack_require__(30);
 
 	var RecipeActions = _interopRequireWildcard(_actions);
 
@@ -1482,8 +1486,11 @@
 	          " into the Url input below."
 	        )
 	      ),
+	      _react2["default"].createElement(_componentsRecipemenu2["default"], { actions: actions,
+	        savedRecipes: savedRecipes }),
 	      _react2["default"].createElement(_componentsAnnotater2["default"], _extends({ actions: actions
-	      }, recipe))
+	      }, recipe)),
+	      this.props.children
 	    );
 	  }
 	});
@@ -1565,6 +1572,15 @@
 	exports["default"] = _react2["default"].createClass({
 	  displayName: "liveeditor",
 
+	  getDefaultProps: function getDefaultProps() {
+	    return {
+	      name: "",
+	      url: "",
+	      ytID: "",
+	      ingredients: [],
+	      instructions: []
+	    };
+	  },
 	  getInitialState: function getInitialState() {
 	    return {
 	      name: "",
@@ -1804,6 +1820,14 @@
 	    ingredients: _react2["default"].PropTypes.array.isRequired,
 	    instructions: _react2["default"].PropTypes.array.isRequired
 	  },
+	  getDefaultProps: function getDefaultProps() {
+	    return {
+	      name: "",
+	      ytID: "",
+	      ingredients: [],
+	      instructions: []
+	    };
+	  },
 	  render: function render() {
 	    var ingredients = this.props.ingredients;
 	    var instructions = this.props.instructions;
@@ -1933,20 +1957,111 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var AddARecipe = _react2["default"].createClass({
+	  displayName: "AddARecipe",
+
+	  getInitialState: function getInitialState() {
+	    return {
+	      value: ""
+	    };
+	  },
+	  handleChange: function handleChange(event) {
+	    this.setState({
+	      value: event.target.value
+	    });
+	  },
+	  handleSubmit: function handleSubmit(event) {
+	    if (event.which === 13) {
+	      this.props.onSubmit(event.target.value);
+	    }
+	  },
+	  render: function render() {
+	    return _react2["default"].createElement(
+	      "div",
+	      null,
+	      _react2["default"].createElement(
+	        "p",
+	        null,
+	        "Add A Recipe"
+	      ),
+	      _react2["default"].createElement("input", { type: "text",
+	        onChange: this.handleChange,
+	        onKeyDown: this.handleSubmit })
+	    );
+	  }
+	});
+
+	exports["default"] = _react2["default"].createClass({
+	  displayName: "recipemenu",
+
+	  propTypes: {
+	    savedRecipes: _react2["default"].PropTypes.array.isRequired
+	  },
+	  render: function render() {
+	    var _this = this;
+
+	    var recipes = this.props.savedRecipes.map(function (r, i) {
+	      return _react2["default"].createElement(
+	        "li",
+	        { key: i },
+	        r.name,
+	        _react2["default"].createElement(
+	          "button",
+	          { onClick: function () {
+	              _this.props.actions.loadRecipe(i);
+	            } },
+	          "Edit"
+	        )
+	      );
+	    });
+	    // not including this yet
+	    //<AddARecipe onSubmit={this.props.actions.makeRecipe} />
+	    return _react2["default"].createElement(
+	      "div",
+	      { className: "recipe-menu" },
+	      "Saved Recipes:",
+	      _react2["default"].createElement(
+	        "ul",
+	        { className: "saved-recipes" },
+	        recipes
+	      )
+	    );
+	  }
+	});
+	module.exports = exports["default"];
+
+/***/ },
+/* 30 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
 	exports.setName = setName;
 	exports.setVideoID = setVideoID;
 	exports.setIngredients = setIngredients;
 	exports.setInstructions = setInstructions;
 	exports.resetRecipe = resetRecipe;
 	exports.saveRecipe = saveRecipe;
+	exports.loadRecipe = loadRecipe;
+	exports.makeRecipe = makeRecipe;
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj["default"] = obj; return newObj; } }
 
-	var _constantsActionTypes = __webpack_require__(30);
+	var _constantsActionTypes = __webpack_require__(31);
 
 	var types = _interopRequireWildcard(_constantsActionTypes);
 
-	var _helpers = __webpack_require__(31);
+	var _helpers = __webpack_require__(32);
 
 	function setName(name) {
 	  return {
@@ -1990,8 +2105,22 @@
 	  };
 	}
 
+	function loadRecipe(index) {
+	  return {
+	    type: types.LOAD_RECIPE,
+	    index: index
+	  };
+	}
+
+	function makeRecipe(url) {
+	  return {
+	    type: types.MAKE_RECIPE,
+	    url: url
+	  };
+	}
+
 /***/ },
-/* 30 */
+/* 31 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -2013,9 +2142,11 @@
 	exports.SAVE_RECIPE = SAVE_RECIPE;
 	var LOAD_RECIPE = "LOAD_RECIPE";
 	exports.LOAD_RECIPE = LOAD_RECIPE;
+	var MAKE_RECIPE = "MAKE_RECIPE";
+	exports.MAKE_RECIPE = MAKE_RECIPE;
 
 /***/ },
-/* 31 */
+/* 32 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -2077,7 +2208,7 @@
 	}
 
 /***/ },
-/* 32 */
+/* 33 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2090,7 +2221,7 @@
 
 	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i]; return arr2; } else { return Array.from(arr); } }
 
-	var _constantsActionTypes = __webpack_require__(30);
+	var _constantsActionTypes = __webpack_require__(31);
 
 	var types = _interopRequireWildcard(_constantsActionTypes);
 
@@ -2134,6 +2265,8 @@
 	      return Object.assign({}, state, {
 	        instructions: action.instructions
 	      });
+	    case types.LOAD_RECIPE:
+	      return Object.assign({}, state, action.recipe);
 	    case types.RESET_RECIPE:
 	      return Object.assign({}, state, {
 	        name: "",
@@ -2167,7 +2300,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 33 */
+/* 34 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2178,14 +2311,14 @@
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj["default"] = obj; return newObj; } }
 
-	var _constantsActionTypes = __webpack_require__(30);
+	var _constantsActionTypes = __webpack_require__(31);
 
 	var ActionTypes = _interopRequireWildcard(_constantsActionTypes);
 
 	/*
 	 * add the recipe to localStorage using the id of the youtube video
 	 */
-	var storageSaver = function storageSaver(store) {
+	var StorageSaver = function StorageSaver(store) {
 	  return function (next) {
 	    return function (action) {
 	      if (action.type === ActionTypes.SAVE_RECIPE && action.recipe.ytID !== "") {
@@ -2199,18 +2332,22 @@
 	  };
 	};
 
-	exports.storageSaver = storageSaver;
-	/*
-	 * load saved recipes. not yet implemented
-	 */
-	var storageFetcher = function storageFetcher(store) {
+	exports.StorageSaver = StorageSaver;
+	var RecipeLoader = function RecipeLoader(store) {
 	  return function (next) {
 	    return function (action) {
+	      if (action.type === ActionTypes.LOAD_RECIPE) {
+	        var state = store.getState();
+	        var recipe = state.savedRecipes[action.index];
+	        if (recipe) {
+	          action.recipe = recipe;
+	        }
+	      }
 	      return next(action);
 	    };
 	  };
 	};
-	exports.storageFetcher = storageFetcher;
+	exports.RecipeLoader = RecipeLoader;
 
 /***/ }
 /******/ ]);

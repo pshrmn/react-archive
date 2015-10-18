@@ -10,6 +10,10 @@ header {
   }
 }
 
+.recipe-menu {
+  border: 1px solid #ccc;
+}
+
 button {
   margin-left: 10px;
 }
@@ -48,7 +52,7 @@ input, textarea {
 }
 
 @media print {
-  .live-editor, header {
+  .live-editor, header, .recipe-menu {
     display: none;
   }
 

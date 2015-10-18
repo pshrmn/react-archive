@@ -2,6 +2,7 @@ import React from "react";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import Annotater from "../components/annotater";
+import RecipeMenu from "../components/recipemenu";
 import * as RecipeActions from "../actions";
 
 var App = React.createClass({
@@ -21,8 +22,11 @@ var App = React.createClass({
             Quickly write down the ingredients and instructions for a recipe. When you are done you can print the recipe and a simple version of the page listing the recipe title, ingredients, and instructions will be printed. For a quick test, try pasting this link <strong>https://www.youtube.com/watch?v=bjmYkPkjnVo</strong> into the Url input below.
           </p>
         </header> 
+        <RecipeMenu actions={actions}
+                    savedRecipes={savedRecipes} />
         <Annotater actions={actions}
                    {...recipe} />
+        {this.props.children}
       </div>
     );
   }

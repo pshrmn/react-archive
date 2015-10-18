@@ -9,6 +9,14 @@ export default React.createClass({
     ingredients: React.PropTypes.array.isRequired,
     instructions: React.PropTypes.array.isRequired
   },
+  getDefaultProps: function() {
+    return {
+      name: "",
+      ytID: "",
+      ingredients: [],
+      instructions: [],
+    };
+  },
   render: function() {
     var ingredients = this.props.ingredients;
     var instructions = this.props.instructions;

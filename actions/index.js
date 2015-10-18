@@ -42,3 +42,17 @@ export function saveRecipe(recipe) {
     recipe: recipe
   };
 }
+
+export function loadRecipe(index) {
+  return {
+    type: types.LOAD_RECIPE,
+    index: index
+  };
+}
+
+export function makeRecipe(url) {
+  return {
+    type: types.MAKE_RECIPE,
+    url: url
+  };
+}
