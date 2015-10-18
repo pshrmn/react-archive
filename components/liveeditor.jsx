@@ -35,11 +35,21 @@ export default React.createClass({
       [name]: value
     });
   },
+  save: function(event) {
+    event.preventDefault();
+    this.props.actions.saveRecipe({
+      name: this.props.name,
+      url: this.props.url,
+      ytID: this.props.ytID,
+      ingredients: this.props.ingredients,
+      instructions: this.props.instructions
+    });
+  },
   render: function() {
     return (
       <div className="live-editor">
         <p>
-          <button onClick={() => this.props.actions.saveRecipe()}>Save</button>
+          <button onClick={this.save}>Save</button>
           <button onClick={() => this.props.actions.resetRecipe()}>Reset</button>
         </p>
         <UserInput name="name"

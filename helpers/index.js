@@ -1,7 +1,19 @@
 export function SetupStorage() {
-  if ( localStorage.getItem("recipes") === null ) {
-    localStorage.setItem("recipes", "{}");
-  }
+  let storedRecipes = localStorage.getItem("recipes");
+  if ( storedRecipes === null ) {
+    storedRecipes = "[]";
+    localStorage.setItem("recipes", "[]");
+  } 
+  return {
+    recipe: {
+      name: "",
+      ytID: "",
+      url: "",
+      ingredients: [],
+      instructions: []
+    },
+    savedRecipes: JSON.parse(storedRecipes)
+  };
 }
 
 export function VideoID(url) {
@@ -31,10 +43,6 @@ export function VideoID(url) {
     var parts = url.split("/");
     id = parts[parts.length-1];
     break;
-  }
-
-  if ( id === "" ) {
-    return;
   }
 
   return id;

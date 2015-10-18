@@ -1,14 +1,24 @@
 import * as types from "../constants/ActionTypes"
+import { combineReducers } from 'redux';
 
 const initialState = {
+  recipe: {
+    name: "",
+    ytID: "",
+    url: "",
+    ingredients: [],
+    instructions: []
+  },
+  savedRecipes: []
+};
+
+function recipe(state = {
   name: "",
   ytID: "",
   url: "",
   ingredients: [],
   instructions: []
-};
-
-export default function recipeReducer(state = initialState, action) {
+}, action) {
   switch (action.type) {
   case types.SET_NAME:
     return Object.assign({}, state, {
@@ -35,9 +45,23 @@ export default function recipeReducer(state = initialState, action) {
       ingredients: [],
       instructions: []
     });
-  case types.SAVE_RECIPE:
-    return state;
   default:
     return state;
-  };
+  }
 }
+
+function savedRecipes(state = [], action) {
+  switch (action.type) {
+  case types.SAVE_RECIPE:
+    return [...state, action.recipe];
+  default:
+    return state;
+  }
+}
+
+const recipeApp = combineReducers({
+  recipe,
+  savedRecipes
+});
+
+export default recipeApp;

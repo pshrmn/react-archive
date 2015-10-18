@@ -6,11 +6,10 @@ import recipeReducer from './reducers';
 import { storageSaver, storageFetcher } from "./middleware/storage";
 import { SetupStorage } from "./helpers";
 
-SetupStorage();
-
+let initialState = SetupStorage();
 var store = applyMiddleware(
   storageSaver, storageFetcher
-)(createStore)(recipeReducer);
+)(createStore)(recipeReducer, initialState);
 
 React.render(
   <Provider store={store}>

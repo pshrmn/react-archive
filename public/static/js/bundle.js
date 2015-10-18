@@ -68,9 +68,8 @@
 
 	var _helpers = __webpack_require__(31);
 
-	(0, _helpers.SetupStorage)();
-
-	var store = (0, _redux.applyMiddleware)(_middlewareStorage.storageSaver, _middlewareStorage.storageFetcher)(_redux.createStore)(_reducers2["default"]);
+	var initialState = (0, _helpers.SetupStorage)();
+	var store = (0, _redux.applyMiddleware)(_middlewareStorage.storageSaver, _middlewareStorage.storageFetcher)(_redux.createStore)(_reducers2["default"], initialState);
 
 	_react2["default"].render(_react2["default"].createElement(
 	  _reactRedux.Provider,
@@ -1423,6 +1422,8 @@
 	  value: true
 	});
 
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj["default"] = obj; return newObj; } }
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
@@ -1447,43 +1448,50 @@
 	  displayName: "App",
 
 	  propTypes: {
-	    name: _react2["default"].PropTypes.string.isRequired,
-	    url: _react2["default"].PropTypes.string.isRequired,
-	    ytID: _react2["default"].PropTypes.string.isRequired,
-	    ingredients: _react2["default"].PropTypes.array.isRequired,
-	    instructions: _react2["default"].PropTypes.array.isRequired,
+	    recipe: _react2["default"].PropTypes.object.isRequired,
+	    savedRecipes: _react2["default"].PropTypes.array.isRequired,
 	    dispatch: _react2["default"].PropTypes.func.isRequired
 	  },
 	  render: function render() {
 	    var _props = this.props;
-	    var name = _props.name;
-	    var url = _props.url;
-	    var ingredients = _props.ingredients;
-	    var instructions = _props.instructions;
-	    var ytID = _props.ytID;
+	    var recipe = _props.recipe;
+	    var savedRecipes = _props.savedRecipes;
 	    var dispatch = _props.dispatch;
 
 	    var actions = (0, _redux.bindActionCreators)(RecipeActions, dispatch);
 	    return _react2["default"].createElement(
 	      "div",
 	      null,
-	      _react2["default"].createElement(_componentsAnnotater2["default"], { name: name,
-	        url: url,
-	        ytID: ytID,
-	        ingredients: ingredients,
-	        instructions: instructions,
-	        actions: actions })
+	      _react2["default"].createElement(
+	        "header",
+	        null,
+	        _react2["default"].createElement(
+	          "h1",
+	          null,
+	          "Annotated Meals"
+	        ),
+	        _react2["default"].createElement(
+	          "p",
+	          null,
+	          "Quickly write down the ingredients and instructions for a recipe. When you are done you can print the recipe and a simple version of the page listing the recipe title, ingredients, and instructions will be printed. For a quick test, try pasting this link ",
+	          _react2["default"].createElement(
+	            "strong",
+	            null,
+	            "https://www.youtube.com/watch?v=bjmYkPkjnVo"
+	          ),
+	          " into the Url input below."
+	        )
+	      ),
+	      _react2["default"].createElement(_componentsAnnotater2["default"], _extends({ actions: actions
+	      }, recipe))
 	    );
 	  }
 	});
 
 	function mapStateToProps(state) {
 	  return {
-	    name: state.name,
-	    url: state.url,
-	    ytID: state.ytID,
-	    ingredients: state.ingredients,
-	    instructions: state.instructions
+	    recipe: state.recipe,
+	    savedRecipes: state.savedRecipes
 	  };
 	}
 
@@ -1588,6 +1596,16 @@
 	    }
 	    this.setState(_defineProperty({}, name, value));
 	  },
+	  save: function save(event) {
+	    event.preventDefault();
+	    this.props.actions.saveRecipe({
+	      name: this.props.name,
+	      url: this.props.url,
+	      ytID: this.props.ytID,
+	      ingredients: this.props.ingredients,
+	      instructions: this.props.instructions
+	    });
+	  },
 	  render: function render() {
 	    var _this = this;
 
@@ -1599,9 +1617,7 @@
 	        null,
 	        _react2["default"].createElement(
 	          "button",
-	          { onClick: function () {
-	              return _this.props.actions.saveRecipe();
-	            } },
+	          { onClick: this.save },
 	          "Save"
 	        ),
 	        _react2["default"].createElement(
@@ -1962,7 +1978,6 @@
 	}
 
 	function resetRecipe() {
-	  console.log("called reset recipe");
 	  return {
 	    type: types.RESET_RECIPE
 	  };
@@ -2012,9 +2027,21 @@
 	exports.VideoID = VideoID;
 
 	function SetupStorage() {
-	  if (localStorage.getItem("recipes") === null) {
-	    localStorage.setItem("recipes", "{}");
+	  var storedRecipes = localStorage.getItem("recipes");
+	  if (storedRecipes === null) {
+	    storedRecipes = "[]";
+	    localStorage.setItem("recipes", "[]");
 	  }
+	  return {
+	    recipe: {
+	      name: "",
+	      ytID: "",
+	      url: "",
+	      ingredients: [],
+	      instructions: []
+	    },
+	    savedRecipes: JSON.parse(storedRecipes)
+	  };
 	}
 
 	function VideoID(url) {
@@ -2046,10 +2073,6 @@
 	      break;
 	  }
 
-	  if (id === "") {
-	    return;
-	  }
-
 	  return id;
 	}
 
@@ -2062,24 +2085,36 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports["default"] = recipeReducer;
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj["default"] = obj; return newObj; } }
+
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i]; return arr2; } else { return Array.from(arr); } }
 
 	var _constantsActionTypes = __webpack_require__(30);
 
 	var types = _interopRequireWildcard(_constantsActionTypes);
 
+	var _redux = __webpack_require__(2);
+
 	var initialState = {
-	  name: "",
-	  ytID: "",
-	  url: "",
-	  ingredients: [],
-	  instructions: []
+	  recipe: {
+	    name: "",
+	    ytID: "",
+	    url: "",
+	    ingredients: [],
+	    instructions: []
+	  },
+	  savedRecipes: []
 	};
 
-	function recipeReducer(state, action) {
-	  if (state === undefined) state = initialState;
+	function recipe(state, action) {
+	  if (state === undefined) state = {
+	    name: "",
+	    ytID: "",
+	    url: "",
+	    ingredients: [],
+	    instructions: []
+	  };
 
 	  switch (action.type) {
 	    case types.SET_NAME:
@@ -2107,13 +2142,28 @@
 	        ingredients: [],
 	        instructions: []
 	      });
-	    case types.SAVE_RECIPE:
-	      return state;
 	    default:
 	      return state;
-	  };
+	  }
 	}
 
+	function savedRecipes(state, action) {
+	  if (state === undefined) state = [];
+
+	  switch (action.type) {
+	    case types.SAVE_RECIPE:
+	      return [].concat(_toConsumableArray(state), [action.recipe]);
+	    default:
+	      return state;
+	  }
+	}
+
+	var recipeApp = (0, _redux.combineReducers)({
+	  recipe: recipe,
+	  savedRecipes: savedRecipes
+	});
+
+	exports["default"] = recipeApp;
 	module.exports = exports["default"];
 
 /***/ },
@@ -2138,10 +2188,10 @@
 	var storageSaver = function storageSaver(store) {
 	  return function (next) {
 	    return function (action) {
-	      if (action.type === ActionTypes.SAVE_RECIPE) {
-	        var recipe = store.getState();
+	      if (action.type === ActionTypes.SAVE_RECIPE && action.recipe.ytID !== "") {
 	        var storedRecipes = JSON.parse(localStorage.getItem("recipes"));
-	        storedRecipes[recipe.ytID] = recipe;
+	        var recipe = action.recipe;
+	        storedRecipes.push(recipe);
 	        localStorage.setItem("recipes", JSON.stringify(storedRecipes));
 	      }
 	      return next(action);
