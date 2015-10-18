@@ -2219,8 +2219,6 @@
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj["default"] = obj; return newObj; } }
 
-	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i]; return arr2; } else { return Array.from(arr); } }
-
 	var _constantsActionTypes = __webpack_require__(31);
 
 	var types = _interopRequireWildcard(_constantsActionTypes);
@@ -2285,7 +2283,9 @@
 
 	  switch (action.type) {
 	    case types.SAVE_RECIPE:
-	      return [].concat(_toConsumableArray(state), [action.recipe]);
+	      // the middleware will take the action.recipe and either append it to the array
+	      // if it doesn't already exist, or replace the existing version (based on ytID)
+	      return action.recipes;
 	    default:
 	      return state;
 	  }
@@ -2316,7 +2316,8 @@
 	var ActionTypes = _interopRequireWildcard(_constantsActionTypes);
 
 	/*
-	 * add the recipe to localStorage using the id of the youtube video
+	 * add the recipe to localStorage using the id of the youtube video. If there is already
+	 * a stored recipe with the same youtube video id, replace the existing one with the new one
 	 */
 	var StorageSaver = function StorageSaver(store) {
 	  return function (next) {
@@ -2324,7 +2325,20 @@
 	      if (action.type === ActionTypes.SAVE_RECIPE && action.recipe.ytID !== "") {
 	        var storedRecipes = JSON.parse(localStorage.getItem("recipes"));
 	        var recipe = action.recipe;
-	        storedRecipes.push(recipe);
+	        var ytID = recipe.ytID;
+	        var index = -1;
+	        for (var i = 0; i < storedRecipes.length; i++) {
+	          if (storedRecipes[i].ytID === ytID) {
+	            index = i;
+	            break;
+	          }
+	        }
+	        if (index !== -1) {
+	          storedRecipes[index] = action.recipe;
+	        } else {
+	          storedRecipes.push(recipe);
+	        }
+	        action.recipes = storedRecipes;
 	        localStorage.setItem("recipes", JSON.stringify(storedRecipes));
 	      }
 	      return next(action);

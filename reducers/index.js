@@ -55,7 +55,9 @@ function recipe(state = {
 function savedRecipes(state = [], action) {
   switch (action.type) {
   case types.SAVE_RECIPE:
-    return [...state, action.recipe];
+    // the middleware will take the action.recipe and either append it to the array
+    // if it doesn't already exist, or replace the existing version (based on ytID)
+    return action.recipes;
   default:
     return state;
   }
