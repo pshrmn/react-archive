@@ -1,8 +1,8 @@
 import * as types from "../constants/ActionTypes"
 
 const initialState = {
-  id: 0,
   name: "",
+  ytID: "",
   url: "",
   ingredients: [],
   instructions: []
@@ -16,7 +16,8 @@ export default function recipeReducer(state = initialState, action) {
     });
   case types.SET_URL:
     return Object.assign({}, state, {
-      url: action.url
+      url: action.url,
+      ytID: action.ytID
     });
   case types.SET_INGREDIENTS:
     return Object.assign({}, state, {
@@ -30,6 +31,7 @@ export default function recipeReducer(state = initialState, action) {
     return Object.assign({}, state, {
       name: "",
       url: "",
+      ytID: "",
       ingredients: [],
       instructions: []
     });

@@ -60,11 +60,17 @@
 
 	var _containersApp2 = _interopRequireDefault(_containersApp);
 
-	var _reducers = __webpack_require__(31);
+	var _reducers = __webpack_require__(32);
 
 	var _reducers2 = _interopRequireDefault(_reducers);
 
-	var store = (0, _redux.createStore)(_reducers2["default"]);
+	var _middlewareStorage = __webpack_require__(33);
+
+	var _helpers = __webpack_require__(31);
+
+	(0, _helpers.SetupStorage)();
+
+	var store = (0, _redux.applyMiddleware)(_middlewareStorage.storageSaver, _middlewareStorage.storageFetcher)(_redux.createStore)(_reducers2["default"]);
 
 	_react2["default"].render(_react2["default"].createElement(
 	  _reactRedux.Provider,
@@ -1443,6 +1449,7 @@
 	  propTypes: {
 	    name: _react2["default"].PropTypes.string.isRequired,
 	    url: _react2["default"].PropTypes.string.isRequired,
+	    ytID: _react2["default"].PropTypes.string.isRequired,
 	    ingredients: _react2["default"].PropTypes.array.isRequired,
 	    instructions: _react2["default"].PropTypes.array.isRequired,
 	    dispatch: _react2["default"].PropTypes.func.isRequired
@@ -1453,15 +1460,16 @@
 	    var url = _props.url;
 	    var ingredients = _props.ingredients;
 	    var instructions = _props.instructions;
+	    var ytID = _props.ytID;
 	    var dispatch = _props.dispatch;
 
 	    var actions = (0, _redux.bindActionCreators)(RecipeActions, dispatch);
-
 	    return _react2["default"].createElement(
 	      "div",
 	      null,
 	      _react2["default"].createElement(_componentsAnnotater2["default"], { name: name,
 	        url: url,
+	        ytID: ytID,
 	        ingredients: ingredients,
 	        instructions: instructions,
 	        actions: actions })
@@ -1473,6 +1481,7 @@
 	  return {
 	    name: state.name,
 	    url: state.url,
+	    ytID: state.ytID,
 	    ingredients: state.ingredients,
 	    instructions: state.instructions
 	  };
@@ -1562,7 +1571,7 @@
 	        this.props.actions.setName(value);
 	        break;
 	      case "url":
-	        this.props.actions.setURL(value);
+	        this.props.actions.setVideoID(value);
 	        break;
 	      case "ingredients":
 	        value = value.split("\n").filter(function (line) {
@@ -1609,7 +1618,7 @@
 	      _react2["default"].createElement(UserInput, { name: "url",
 	        submit: this.submit,
 	        value: this.props.url }),
-	      _react2["default"].createElement(_video2["default"], { url: this.props.url }),
+	      _react2["default"].createElement(_video2["default"], { ytID: this.props.ytID }),
 	      _react2["default"].createElement(UserTextarea, { name: "ingredients",
 	        submit: this.submit,
 	        value: this.props.ingredients.join("\n") }),
@@ -1729,25 +1738,14 @@
 	  displayName: "video",
 
 	  propTypes: {
-	    url: _react2["default"].PropTypes.string.isRequired
-	  },
-	  getInitialState: function getInitialState() {
-	    return {
-	      vidID: ""
-	    };
+	    ytID: _react2["default"].PropTypes.string.isRequired
 	  },
 	  shouldComponentUpdate: function shouldComponentUpdate(nextProps, nextState) {
-	    return nextState.vidID !== this.state.vidID;
-	  },
-	  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
-	    var vidID = getVideoID(nextProps.url) || "";
-	    this.setState({
-	      vidID: vidID
-	    });
+	    return nextProps.ytID !== this.props.ytID;
 	  },
 	  render: function render() {
-	    var url = "https://www.youtube.com/embed/" + this.state.vidID;
-	    var iframe = this.state.vidID === "" ? null : _react2["default"].createElement("iframe", { width: "560", height: "315", src: url, frameBorder: "0" });
+	    var url = "https://www.youtube.com/embed/" + this.props.ytID;
+	    var iframe = this.props.ytID === "" ? null : _react2["default"].createElement("iframe", { width: "560", height: "315", src: url, frameBorder: "0" });
 	    return _react2["default"].createElement(
 	      "div",
 	      { className: "yt" },
@@ -1755,42 +1753,6 @@
 	    );
 	  }
 	});
-
-	function getVideoID(url) {
-	  /*
-	  * This can take either a youtube.com url and look for the v parameter
-	  * or a youtu.be url and use the last part of the url
-	  */
-	  var id = "";
-	  var a = document.createElement("a");
-	  a.href = url;
-	  switch (a.hostname) {
-	    case "www.youtube.com":
-	      if (a.search === "") {
-	        break;
-	      }
-	      var parts = a.search.slice(1).split("&");
-	      parts.some(function (p) {
-	        var keyVal = p.split("=");
-	        if (keyVal[0] === "v") {
-	          id = keyVal[1];
-	          return true;
-	        }
-	        return false;
-	      });
-	      break;
-	    case "youtu.be":
-	      var parts = url.split("/");
-	      id = parts[parts.length - 1];
-	      break;
-	  }
-
-	  if (id === "") {
-	    return;
-	  }
-
-	  return id;
-	}
 	module.exports = exports["default"];
 
 /***/ },
@@ -1822,13 +1784,14 @@
 
 	  propTypes: {
 	    name: _react2["default"].PropTypes.string.isRequired,
-	    url: _react2["default"].PropTypes.string.isRequired,
+	    ytID: _react2["default"].PropTypes.string.isRequired,
 	    ingredients: _react2["default"].PropTypes.array.isRequired,
 	    instructions: _react2["default"].PropTypes.array.isRequired
 	  },
 	  render: function render() {
 	    var ingredients = this.props.ingredients;
 	    var instructions = this.props.instructions;
+	    var url = this.props.ytID !== "" ? "https://youtu.be/" + this.props.ytID : null;
 	    return _react2["default"].createElement(
 	      "div",
 	      { className: "recipe" },
@@ -1840,7 +1803,7 @@
 	      _react2["default"].createElement(
 	        "h3",
 	        null,
-	        this.props.url
+	        url
 	      ),
 	      _react2["default"].createElement(_ingredients2["default"], { ingredients: ingredients }),
 	      _react2["default"].createElement(_instructions2["default"], { instructions: instructions })
@@ -1955,7 +1918,7 @@
 	  value: true
 	});
 	exports.setName = setName;
-	exports.setURL = setURL;
+	exports.setVideoID = setVideoID;
 	exports.setIngredients = setIngredients;
 	exports.setInstructions = setInstructions;
 	exports.resetRecipe = resetRecipe;
@@ -1967,6 +1930,8 @@
 
 	var types = _interopRequireWildcard(_constantsActionTypes);
 
+	var _helpers = __webpack_require__(31);
+
 	function setName(name) {
 	  return {
 	    type: types.SET_NAME,
@@ -1974,10 +1939,11 @@
 	  };
 	}
 
-	function setURL(url) {
+	function setVideoID(url) {
 	  return {
 	    type: types.SET_URL,
-	    url: url
+	    url: url,
+	    ytID: (0, _helpers.VideoID)(url)
 	  };
 	}
 
@@ -2002,9 +1968,10 @@
 	  };
 	}
 
-	function saveRecipe() {
+	function saveRecipe(recipe) {
 	  return {
-	    type: types.SAVE_RECIPE
+	    type: types.SAVE_RECIPE,
+	    recipe: recipe
 	  };
 	}
 
@@ -2029,9 +1996,65 @@
 	exports.RESET_RECIPE = RESET_RECIPE;
 	var SAVE_RECIPE = "SAVE_RECIPE";
 	exports.SAVE_RECIPE = SAVE_RECIPE;
+	var LOAD_RECIPE = "LOAD_RECIPE";
+	exports.LOAD_RECIPE = LOAD_RECIPE;
 
 /***/ },
 /* 31 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.SetupStorage = SetupStorage;
+	exports.VideoID = VideoID;
+
+	function SetupStorage() {
+	  if (localStorage.getItem("recipes") === null) {
+	    localStorage.setItem("recipes", "{}");
+	  }
+	}
+
+	function VideoID(url) {
+	  /*
+	  * This can take either a youtube.com url and look for the v parameter
+	  * or a youtu.be url and use the last part of the url
+	  */
+	  var id = "";
+	  var a = document.createElement("a");
+	  a.href = url;
+	  switch (a.hostname) {
+	    case "www.youtube.com":
+	      if (a.search === "") {
+	        break;
+	      }
+	      var parts = a.search.slice(1).split("&");
+	      parts.some(function (p) {
+	        var keyVal = p.split("=");
+	        if (keyVal[0] === "v") {
+	          id = keyVal[1];
+	          return true;
+	        }
+	        return false;
+	      });
+	      break;
+	    case "youtu.be":
+	      var parts = url.split("/");
+	      id = parts[parts.length - 1];
+	      break;
+	  }
+
+	  if (id === "") {
+	    return;
+	  }
+
+	  return id;
+	}
+
+/***/ },
+/* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2048,8 +2071,8 @@
 	var types = _interopRequireWildcard(_constantsActionTypes);
 
 	var initialState = {
-	  id: 0,
 	  name: "",
+	  ytID: "",
 	  url: "",
 	  ingredients: [],
 	  instructions: []
@@ -2065,7 +2088,8 @@
 	      });
 	    case types.SET_URL:
 	      return Object.assign({}, state, {
-	        url: action.url
+	        url: action.url,
+	        ytID: action.ytID
 	      });
 	    case types.SET_INGREDIENTS:
 	      return Object.assign({}, state, {
@@ -2079,6 +2103,7 @@
 	      return Object.assign({}, state, {
 	        name: "",
 	        url: "",
+	        ytID: "",
 	        ingredients: [],
 	        instructions: []
 	      });
@@ -2090,6 +2115,52 @@
 	}
 
 	module.exports = exports["default"];
+
+/***/ },
+/* 33 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj["default"] = obj; return newObj; } }
+
+	var _constantsActionTypes = __webpack_require__(30);
+
+	var ActionTypes = _interopRequireWildcard(_constantsActionTypes);
+
+	/*
+	 * add the recipe to localStorage using the id of the youtube video
+	 */
+	var storageSaver = function storageSaver(store) {
+	  return function (next) {
+	    return function (action) {
+	      if (action.type === ActionTypes.SAVE_RECIPE) {
+	        var recipe = store.getState();
+	        var storedRecipes = JSON.parse(localStorage.getItem("recipes"));
+	        storedRecipes[recipe.ytID] = recipe;
+	        localStorage.setItem("recipes", JSON.stringify(storedRecipes));
+	      }
+	      return next(action);
+	    };
+	  };
+	};
+
+	exports.storageSaver = storageSaver;
+	/*
+	 * load saved recipes. not yet implemented
+	 */
+	var storageFetcher = function storageFetcher(store) {
+	  return function (next) {
+	    return function (action) {
+	      return next(action);
+	    };
+	  };
+	};
+	exports.storageFetcher = storageFetcher;
 
 /***/ }
 /******/ ]);

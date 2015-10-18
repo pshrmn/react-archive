@@ -16,7 +16,7 @@ export default React.createClass({
       this.props.actions.setName(value);
       break;
     case "url":
-      this.props.actions.setURL(value);
+      this.props.actions.setVideoID(value);
       break;
     case "ingredients":
       value = value.split("\n").filter(function(line){
@@ -48,7 +48,7 @@ export default React.createClass({
         <UserInput name="url"
                    submit={this.submit}
                    value={this.props.url} />
-        <Video url={this.props.url} />
+        <Video ytID={this.props.ytID} />
         <UserTextarea name="ingredients"
                       submit={this.submit}
                       value={this.props.ingredients.join("\n")} />

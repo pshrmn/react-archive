@@ -1,10 +1,16 @@
 import React from "react";
-import { createStore } from "redux";
+import { createStore, applyMiddleware } from "redux";
 import { Provider } from "react-redux";
 import App from "./containers/app";
 import recipeReducer from './reducers';
+import { storageSaver, storageFetcher } from "./middleware/storage";
+import { SetupStorage } from "./helpers";
 
-var store = createStore(recipeReducer);
+SetupStorage();
+
+var store = applyMiddleware(
+  storageSaver, storageFetcher
+)(createStore)(recipeReducer);
 
 React.render(
   <Provider store={store}>

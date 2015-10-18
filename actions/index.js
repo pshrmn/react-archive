@@ -1,4 +1,5 @@
 import * as types from "../constants/ActionTypes"
+import { VideoID } from "../helpers";
 
 export function setName(name) {
   return {
@@ -7,10 +8,11 @@ export function setName(name) {
   };
 }
 
-export function setURL(url) {
+export function setVideoID(url) {
   return {
     type: types.SET_URL,
-    url: url
+    url: url,
+    ytID: VideoID(url)
   };
 }
 
@@ -35,8 +37,9 @@ export function resetRecipe() {
   };
 }
 
-export function saveRecipe() {
+export function saveRecipe(recipe) {
   return {
-    type: types.SAVE_RECIPE
+    type: types.SAVE_RECIPE,
+    recipe: recipe
   };
 }
