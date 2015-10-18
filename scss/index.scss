@@ -2,6 +2,11 @@ html {
   font-family: "Noto Serif", serif;
 }
 
+#content {
+  width: 80vw;
+  margin: 0 auto;
+}
+
 header {
   margin-bottom: 15px;
 
@@ -11,7 +16,20 @@ header {
 }
 
 .recipe-menu {
+  box-sizing: border-box;
   border: 1px solid #ccc;
+  padding: 15px;
+}
+
+.saved-recipes {
+  list-style: none;
+  display: flex;
+  padding: 0;
+  margin: 0;
+
+  li {
+    padding: 5px;
+  }
 }
 
 button {
@@ -35,9 +53,13 @@ input, textarea {
   display: block;
 }
 
+.annotater {
+  margin: 25px auto;
+}
+
 .recipe, .live-editor {
   display: inline-block;
-  width: 50%;
+  min-width: 600px;
   vertical-align: top;
   box-sizing: border-box;
 }
@@ -65,6 +87,10 @@ input, textarea {
     * {
       min-width: 100%;
     }
+  }
+
+  .annotater {
+    margin: 0;
   }
 
   .recipe {

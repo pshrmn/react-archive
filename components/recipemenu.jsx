@@ -28,6 +28,28 @@ let AddARecipe = React.createClass({
   }
 });
 
+let Thumbnail = React.createClass({
+  render: function() {
+    let { ytID, name, index } = this.props;
+    let { loadRecipe, deleteRecipe } = this.props.actions;
+    let src = `https://i.ytimg.com/vi/${this.props.ytID}/mqdefault.jpg`;
+    return (
+      <li>
+        <div>
+          <img src={src} width="196" height="110"/>
+        </div>
+        <div>
+          {name}
+        </div>
+        <div>
+          <button onClick={() => { loadRecipe(index);} }>Edit</button>
+          <button onClick={() => { deleteRecipe(index);} }>Delete</button>
+        </div>
+      </li>
+    );
+  }
+});
+
 export default React.createClass({
   propTypes: {
     savedRecipes: React.PropTypes.array.isRequired
@@ -35,13 +57,12 @@ export default React.createClass({
   render: function() {
     let recipes = this.props.savedRecipes.map((r, i) => {
       return (
-        <li key={i}>
-          {r.name}
-          <button onClick={() => { this.props.actions.loadRecipe(i);} }>Edit</button>
-          <button onClick={() => { this.props.actions.deleteRecipe(i);} }>Delete</button>
-        </li>
+        <Thumbnail key={i}
+                   index={i}
+                   actions={this.props.actions}
+                   {...r} />
       );
-    });
+    }, this);
     // not including this yet
     //<AddARecipe onSubmit={this.props.actions.makeRecipe} />
     return (

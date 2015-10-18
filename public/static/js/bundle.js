@@ -1958,6 +1958,8 @@
 	  value: true
 	});
 
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 	var _react = __webpack_require__(1);
@@ -1998,6 +2000,54 @@
 	  }
 	});
 
+	var Thumbnail = _react2["default"].createClass({
+	  displayName: "Thumbnail",
+
+	  render: function render() {
+	    var _props = this.props;
+	    var ytID = _props.ytID;
+	    var name = _props.name;
+	    var index = _props.index;
+	    var _props$actions = this.props.actions;
+	    var loadRecipe = _props$actions.loadRecipe;
+	    var deleteRecipe = _props$actions.deleteRecipe;
+
+	    var src = "https://i.ytimg.com/vi/" + this.props.ytID + "/mqdefault.jpg";
+	    return _react2["default"].createElement(
+	      "li",
+	      null,
+	      _react2["default"].createElement(
+	        "div",
+	        null,
+	        _react2["default"].createElement("img", { src: src, width: "196", height: "110" })
+	      ),
+	      _react2["default"].createElement(
+	        "div",
+	        null,
+	        name
+	      ),
+	      _react2["default"].createElement(
+	        "div",
+	        null,
+	        _react2["default"].createElement(
+	          "button",
+	          { onClick: function () {
+	              loadRecipe(index);
+	            } },
+	          "Edit"
+	        ),
+	        _react2["default"].createElement(
+	          "button",
+	          { onClick: function () {
+	              deleteRecipe(index);
+	            } },
+	          "Delete"
+	        )
+	      )
+	    );
+	  }
+	});
+
 	exports["default"] = _react2["default"].createClass({
 	  displayName: "recipemenu",
 
@@ -2008,26 +2058,11 @@
 	    var _this = this;
 
 	    var recipes = this.props.savedRecipes.map(function (r, i) {
-	      return _react2["default"].createElement(
-	        "li",
-	        { key: i },
-	        r.name,
-	        _react2["default"].createElement(
-	          "button",
-	          { onClick: function () {
-	              _this.props.actions.loadRecipe(i);
-	            } },
-	          "Edit"
-	        ),
-	        _react2["default"].createElement(
-	          "button",
-	          { onClick: function () {
-	              _this.props.actions.deleteRecipe(i);
-	            } },
-	          "Delete"
-	        )
-	      );
-	    });
+	      return _react2["default"].createElement(Thumbnail, _extends({ key: i,
+	        index: i,
+	        actions: _this.props.actions
+	      }, r));
+	    }, this);
 	    // not including this yet
 	    //<AddARecipe onSubmit={this.props.actions.makeRecipe} />
 	    return _react2["default"].createElement(
