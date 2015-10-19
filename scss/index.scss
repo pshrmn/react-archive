@@ -17,7 +17,6 @@ header {
 
 .recipe-menu {
   box-sizing: border-box;
-  border: 1px solid #ccc;
   padding: 15px;
 }
 
@@ -27,13 +26,44 @@ header {
   padding: 0;
   margin: 0;
 
-  li {
+  .thumbnail {
+    cursor: pointer;
+    box-sizing: border-box;
+    width: 200px;
+    margin-right: 10px;
+    background: #fff;
+    border: 1px solid #666;
+    position: relative;
+
+    img {
+      width: 198px;
+    }
+  }
+
+  .thumb-info {
+    box-sizing: border-box;
     padding: 5px;
   }
-}
 
-button {
-  margin-left: 10px;
+  .thumb-controls {
+    position: absolute;
+    right: 0;
+    top: 0;
+
+    button {
+      font-size: 1.25em;
+      color: #fff;
+      background: transparent;
+      font-weight: bold;
+      border: 0;
+      vertical-align: top;
+      cursor: pointer;
+    }
+
+    button:hover {
+      color: #f00;
+    }
+  }
 }
 
 label {
@@ -46,7 +76,7 @@ input {
 
 textarea {
   min-width: 560px;
-  min-height: 250px;
+  min-height: 150px;
 }
 
 input, textarea {
@@ -57,7 +87,7 @@ input, textarea {
   margin: 25px auto;
 }
 
-.recipe, .live-editor {
+.print-view, .edit-view {
   display: inline-block;
   min-width: 600px;
   vertical-align: top;
@@ -74,7 +104,7 @@ input, textarea {
 }
 
 @media print {
-  .live-editor, header, .recipe-menu {
+  .edit-view, header, .recipe-menu {
     display: none;
   }
 

@@ -33,17 +33,20 @@ let Thumbnail = React.createClass({
     let { ytID, name, index } = this.props;
     let { loadRecipe, deleteRecipe } = this.props.actions;
     let src = `https://i.ytimg.com/vi/${this.props.ytID}/mqdefault.jpg`;
+    //<button onClick={() => { loadRecipe(index);} }>Edit</button>
     return (
-      <li>
+      <li className="thumbnail" onClick={() => { loadRecipe(index);} } >
         <div>
-          <img src={src} width="196" height="110"/>
+          <img src={src} />
         </div>
-        <div>
+        <div className="thumb-info">
           {name}
         </div>
-        <div>
-          <button onClick={() => { loadRecipe(index);} }>Edit</button>
-          <button onClick={() => { deleteRecipe(index);} }>Delete</button>
+        <div className="thumb-controls">
+          <button title="delete recipe"
+                  onClick={() => { deleteRecipe(index);} }>
+            {String.fromCharCode(215)}
+          </button>
         </div>
       </li>
     );

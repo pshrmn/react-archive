@@ -4,10 +4,6 @@ function saveRecipes(recipes) {
   localStorage.setItem("recipes", JSON.stringify(recipes));
 }
 
-function loadRecipes(){
-  return JSON.parse(localStorage.getItem("recipes"));
-}
-
 function recipeIndex(ytID, recipes) {
   let index = -1;
   for ( var i=0; i<recipes.length; i++ ) {
@@ -27,7 +23,7 @@ export const StorageAPI = store => next => action => {
   switch ( action.type ) {
   case ActionTypes.SAVE_RECIPE:
     if ( action.recipe.ytID !== "" ) {
-      let storedRecipes = loadRecipes();
+      let storedRecipes = store.getState().savedRecipes.slice();
       let index = recipeIndex(action.recipe.ytID, storedRecipes);
       if ( index !== -1 ) {
         storedRecipes[index] = action.recipe;
@@ -39,10 +35,11 @@ export const StorageAPI = store => next => action => {
     }
     break;
   case ActionTypes.DELETE_RECIPE:
-    let storedRecipes = loadRecipes();
-    storedRecipes.splice(action.index);
-    action.recipes = storedRecipes;
-    saveRecipes(storedRecipes);
+    //let storedRecipes = loadRecipes();
+    let savedRecipes = store.getState().savedRecipes.slice();
+    savedRecipes.splice(action.index, 1);
+    action.recipes = savedRecipes;
+    saveRecipes(savedRecipes);
     break;
   }
   return next(action);

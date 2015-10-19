@@ -19,7 +19,10 @@ var App = React.createClass({
         <header>
           <h1>Annotated Meals</h1>
           <p>
-            Quickly write down the ingredients and instructions for a recipe. When you are done you can print the recipe and a simple version of the page listing the recipe title, ingredients, and instructions will be printed. For a quick test, try pasting this link <strong>https://www.youtube.com/watch?v=bjmYkPkjnVo</strong> into the Url input below.
+            Quickly write down the ingredients and instructions for a recipe.
+            When you are done you can print the recipe and a simple version showing
+            only the name, link, and list of ingredients and instructions will be printed.
+            For a quick test, try pasting this link <strong>https://www.youtube.com/watch?v=bjmYkPkjnVo</strong> into the Url input below.
           </p>
         </header> 
         <RecipeMenu actions={actions}

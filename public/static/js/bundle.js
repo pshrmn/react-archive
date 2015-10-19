@@ -1477,7 +1477,7 @@
 	        _react2["default"].createElement(
 	          "p",
 	          null,
-	          "Quickly write down the ingredients and instructions for a recipe. When you are done you can print the recipe and a simple version of the page listing the recipe title, ingredients, and instructions will be printed. For a quick test, try pasting this link ",
+	          "Quickly write down the ingredients and instructions for a recipe. When you are done you can print the recipe and a simple version showing only the name, link, and list of ingredients and instructions will be printed. For a quick test, try pasting this link ",
 	          _react2["default"].createElement(
 	            "strong",
 	            null,
@@ -1527,9 +1527,13 @@
 
 	var _liveeditor2 = _interopRequireDefault(_liveeditor);
 
-	var _recipe = __webpack_require__(26);
+	var _recipe = __webpack_require__(25);
 
 	var _recipe2 = _interopRequireDefault(_recipe);
+
+	var _video = __webpack_require__(28);
+
+	var _video2 = _interopRequireDefault(_video);
 
 	exports["default"] = _react2["default"].createClass({
 	  displayName: "annotater",
@@ -1538,10 +1542,19 @@
 	    return _react2["default"].createElement(
 	      "div",
 	      { className: "annotater" },
-	      _react2["default"].createElement(_liveeditor2["default"], _extends({ actions: this.props.actions,
-	        submit: this.submit
-	      }, this.props)),
-	      _react2["default"].createElement(_recipe2["default"], this.props)
+	      _react2["default"].createElement(
+	        "div",
+	        { className: "edit-view" },
+	        _react2["default"].createElement(_video2["default"], { ytID: this.props.ytID }),
+	        _react2["default"].createElement(_liveeditor2["default"], _extends({ actions: this.props.actions,
+	          submit: this.submit
+	        }, this.props))
+	      ),
+	      _react2["default"].createElement(
+	        "div",
+	        { className: "print-view" },
+	        _react2["default"].createElement(_recipe2["default"], this.props)
+	      )
 	    );
 	  }
 	});
@@ -1564,10 +1577,6 @@
 	var _react = __webpack_require__(1);
 
 	var _react2 = _interopRequireDefault(_react);
-
-	var _video = __webpack_require__(25);
-
-	var _video2 = _interopRequireDefault(_video);
 
 	exports["default"] = _react2["default"].createClass({
 	  displayName: "liveeditor",
@@ -1650,7 +1659,6 @@
 	      _react2["default"].createElement(UserInput, { name: "url",
 	        submit: this.submit,
 	        value: this.props.url }),
-	      _react2["default"].createElement(_video2["default"], { ytID: this.props.ytID }),
 	      _react2["default"].createElement(UserTextarea, { name: "ingredients",
 	        submit: this.submit,
 	        value: this.props.ingredients.join("\n") }),
@@ -1766,48 +1774,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	exports["default"] = _react2["default"].createClass({
-	  displayName: "video",
-
-	  propTypes: {
-	    ytID: _react2["default"].PropTypes.string.isRequired
-	  },
-	  shouldComponentUpdate: function shouldComponentUpdate(nextProps, nextState) {
-	    return nextProps.ytID !== this.props.ytID;
-	  },
-	  render: function render() {
-	    var url = "https://www.youtube.com/embed/" + this.props.ytID;
-	    var iframe = this.props.ytID === "" ? null : _react2["default"].createElement("iframe", { width: "560", height: "315", src: url, frameBorder: "0" });
-	    return _react2["default"].createElement(
-	      "div",
-	      { className: "yt" },
-	      iframe
-	    );
-	  }
-	});
-	module.exports = exports["default"];
-
-/***/ },
-/* 26 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _ingredients = __webpack_require__(27);
+	var _ingredients = __webpack_require__(26);
 
 	var _ingredients2 = _interopRequireDefault(_ingredients);
 
-	var _instructions = __webpack_require__(28);
+	var _instructions = __webpack_require__(27);
 
 	var _instructions2 = _interopRequireDefault(_instructions);
 
@@ -1853,7 +1824,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 27 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1901,7 +1872,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 28 */
+/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1943,6 +1914,43 @@
 	        null,
 	        instructions
 	      )
+	    );
+	  }
+	});
+	module.exports = exports["default"];
+
+/***/ },
+/* 28 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	exports["default"] = _react2["default"].createClass({
+	  displayName: "video",
+
+	  propTypes: {
+	    ytID: _react2["default"].PropTypes.string.isRequired
+	  },
+	  shouldComponentUpdate: function shouldComponentUpdate(nextProps, nextState) {
+	    return nextProps.ytID !== this.props.ytID;
+	  },
+	  render: function render() {
+	    var url = "https://www.youtube.com/embed/" + this.props.ytID;
+	    var iframe = this.props.ytID === "" ? null : _react2["default"].createElement("iframe", { width: "560", height: "315", src: url, frameBorder: "0" });
+	    return _react2["default"].createElement(
+	      "div",
+	      { className: "yt" },
+	      iframe
 	    );
 	  }
 	});
@@ -2013,35 +2021,32 @@
 	    var deleteRecipe = _props$actions.deleteRecipe;
 
 	    var src = "https://i.ytimg.com/vi/" + this.props.ytID + "/mqdefault.jpg";
+	    //<button onClick={() => { loadRecipe(index);} }>Edit</button>
 	    return _react2["default"].createElement(
 	      "li",
-	      null,
+	      { className: "thumbnail", onClick: function () {
+	          loadRecipe(index);
+	        } },
 	      _react2["default"].createElement(
 	        "div",
 	        null,
-	        _react2["default"].createElement("img", { src: src, width: "196", height: "110" })
+	        _react2["default"].createElement("img", { src: src })
 	      ),
 	      _react2["default"].createElement(
 	        "div",
-	        null,
+	        { className: "thumb-info" },
 	        name
 	      ),
 	      _react2["default"].createElement(
 	        "div",
-	        null,
+	        { className: "thumb-controls" },
 	        _react2["default"].createElement(
 	          "button",
-	          { onClick: function () {
-	              loadRecipe(index);
-	            } },
-	          "Edit"
-	        ),
-	        _react2["default"].createElement(
-	          "button",
-	          { onClick: function () {
+	          { title: "delete recipe",
+	            onClick: function () {
 	              deleteRecipe(index);
 	            } },
-	          "Delete"
+	          String.fromCharCode(215)
 	        )
 	      )
 	    );
@@ -2373,10 +2378,6 @@
 	  localStorage.setItem("recipes", JSON.stringify(recipes));
 	}
 
-	function loadRecipes() {
-	  return JSON.parse(localStorage.getItem("recipes"));
-	}
-
 	function recipeIndex(ytID, recipes) {
 	  var index = -1;
 	  for (var i = 0; i < recipes.length; i++) {
@@ -2398,22 +2399,23 @@
 	      switch (action.type) {
 	        case ActionTypes.SAVE_RECIPE:
 	          if (action.recipe.ytID !== "") {
-	            var _storedRecipes = loadRecipes();
-	            var index = recipeIndex(action.recipe.ytID, _storedRecipes);
+	            var storedRecipes = store.getState().savedRecipes.slice();
+	            var index = recipeIndex(action.recipe.ytID, storedRecipes);
 	            if (index !== -1) {
-	              _storedRecipes[index] = action.recipe;
+	              storedRecipes[index] = action.recipe;
 	            } else {
-	              _storedRecipes.push(action.recipe);
+	              storedRecipes.push(action.recipe);
 	            }
-	            action.recipes = _storedRecipes;
-	            saveRecipes(_storedRecipes);
+	            action.recipes = storedRecipes;
+	            saveRecipes(storedRecipes);
 	          }
 	          break;
 	        case ActionTypes.DELETE_RECIPE:
-	          var storedRecipes = loadRecipes();
-	          storedRecipes.splice(action.index);
-	          action.recipes = storedRecipes;
-	          saveRecipes(storedRecipes);
+	          //let storedRecipes = loadRecipes();
+	          var savedRecipes = store.getState().savedRecipes.slice();
+	          savedRecipes.splice(action.index, 1);
+	          action.recipes = savedRecipes;
+	          saveRecipes(savedRecipes);
 	          break;
 	      }
 	      return next(action);

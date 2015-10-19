@@ -1,5 +1,4 @@
 import React from "react";
-import Video from "./video";
 
 export default React.createClass({
   getDefaultProps: function() {
@@ -67,7 +66,6 @@ export default React.createClass({
         <UserInput name="url"
                    submit={this.submit}
                    value={this.props.url} />
-        <Video ytID={this.props.ytID} />
         <UserTextarea name="ingredients"
                       submit={this.submit}
                       value={this.props.ingredients.join("\n")} />
