@@ -29,22 +29,38 @@ let AddARecipe = React.createClass({
 });
 
 let Thumbnail = React.createClass({
+  shouldComponentUpdate: function(nextProps, nextState) {
+    return (
+      nextProps.ytID !== this.props.ytID ||
+      nextProps.name !== this.props.name ||
+      nextProps.index !== this.props.index
+    );
+  },
+  handleDelete: function(event) {
+    event.stopPropagation();
+    this.props.actions.deleteRecipe(this.props.index);
+  },
+  handleClick: function(event) {
+    this.props.actions.loadRecipe(this.props.index);
+  },
   render: function() {
     let { ytID, name, index } = this.props;
     let { loadRecipe, deleteRecipe } = this.props.actions;
     let src = `https://i.ytimg.com/vi/${this.props.ytID}/mqdefault.jpg`;
-    //<button onClick={() => { loadRecipe(index);} }>Edit</button>
+    let thumb = this.props.ytID === "" ? (
+      <div className="empty-thumb">?</div>
+      ) : (<img src={src} />);
     return (
-      <li className="thumbnail" onClick={() => { loadRecipe(index);} } >
+      <li className="thumbnail" onClick={this.handleClick} >
         <div>
-          <img src={src} />
+          {thumb}
         </div>
         <div className="thumb-info">
           {name}
         </div>
         <div className="thumb-controls">
           <button title="delete recipe"
-                  onClick={() => { deleteRecipe(index);} }>
+                  onClick={this.handleDelete}>
             {String.fromCharCode(215)}
           </button>
         </div>

@@ -38,6 +38,16 @@ header {
     img {
       width: 198px;
     }
+
+    .empty-thumb {
+      width: 198px;
+      height: 111px;
+      background: #ccc;
+      color: #fff;
+      text-align: center;
+      font-size: 4em;
+      text-shadow: 2px 2px #666;
+    }
   }
 
   .thumb-info {

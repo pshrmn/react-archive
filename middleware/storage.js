@@ -35,7 +35,6 @@ export const StorageAPI = store => next => action => {
     }
     break;
   case ActionTypes.DELETE_RECIPE:
-    //let storedRecipes = loadRecipes();
     let savedRecipes = store.getState().savedRecipes.slice();
     savedRecipes.splice(action.index, 1);
     action.recipes = savedRecipes;

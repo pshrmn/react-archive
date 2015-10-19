@@ -29,6 +29,14 @@ header {
     position: relative; }
     .saved-recipes .thumbnail img {
       width: 198px; }
+    .saved-recipes .thumbnail .empty-thumb {
+      width: 198px;
+      height: 111px;
+      background: #ccc;
+      color: #fff;
+      text-align: center;
+      font-size: 4em;
+      text-shadow: 2px 2px #666; }
   .saved-recipes .thumb-info {
     box-sizing: border-box;
     padding: 5px; }

@@ -2011,6 +2011,16 @@
 	var Thumbnail = _react2["default"].createClass({
 	  displayName: "Thumbnail",
 
+	  shouldComponentUpdate: function shouldComponentUpdate(nextProps, nextState) {
+	    return nextProps.ytID !== this.props.ytID || nextProps.name !== this.props.name || nextProps.index !== this.props.index;
+	  },
+	  handleDelete: function handleDelete(event) {
+	    event.stopPropagation();
+	    this.props.actions.deleteRecipe(this.props.index);
+	  },
+	  handleClick: function handleClick(event) {
+	    this.props.actions.loadRecipe(this.props.index);
+	  },
 	  render: function render() {
 	    var _props = this.props;
 	    var ytID = _props.ytID;
@@ -2021,16 +2031,18 @@
 	    var deleteRecipe = _props$actions.deleteRecipe;
 
 	    var src = "https://i.ytimg.com/vi/" + this.props.ytID + "/mqdefault.jpg";
-	    //<button onClick={() => { loadRecipe(index);} }>Edit</button>
+	    var thumb = this.props.ytID === "" ? _react2["default"].createElement(
+	      "div",
+	      { className: "empty-thumb" },
+	      "?"
+	    ) : _react2["default"].createElement("img", { src: src });
 	    return _react2["default"].createElement(
 	      "li",
-	      { className: "thumbnail", onClick: function () {
-	          loadRecipe(index);
-	        } },
+	      { className: "thumbnail", onClick: this.handleClick },
 	      _react2["default"].createElement(
 	        "div",
 	        null,
-	        _react2["default"].createElement("img", { src: src })
+	        thumb
 	      ),
 	      _react2["default"].createElement(
 	        "div",
@@ -2043,9 +2055,7 @@
 	        _react2["default"].createElement(
 	          "button",
 	          { title: "delete recipe",
-	            onClick: function () {
-	              deleteRecipe(index);
-	            } },
+	            onClick: this.handleDelete },
 	          String.fromCharCode(215)
 	        )
 	      )
@@ -2411,7 +2421,6 @@
 	          }
 	          break;
 	        case ActionTypes.DELETE_RECIPE:
-	          //let storedRecipes = loadRecipes();
 	          var savedRecipes = store.getState().savedRecipes.slice();
 	          savedRecipes.splice(action.index, 1);
 	          action.recipes = savedRecipes;
