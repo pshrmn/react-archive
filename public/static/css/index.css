@@ -10,6 +10,14 @@ header {
   header h1, header p {
     margin: 0; }
 
+.help {
+  margin: 5px 0; }
+  .help h3, .help ol {
+    margin: 3px 0; }
+
+.hidden {
+  display: none; }
+
 .recipe-menu {
   box-sizing: border-box;
   padding: 15px; }

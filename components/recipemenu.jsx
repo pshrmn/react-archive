@@ -70,7 +70,7 @@ let RecipeCreator = React.createClass({
   render: function() {
     return (
       <div>
-        <input placeholder="youtube url..."
+        <input placeholder="YouTube URL..."
                value={this.state.value}
                onChange={this.handleChange} />
         <button onClick={this.createRecipe}>Add Recipe</button>

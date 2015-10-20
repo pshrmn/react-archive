@@ -1456,6 +1456,82 @@
 
 	var RecipeActions = _interopRequireWildcard(_actions);
 
+	var HowTo = _react2["default"].createClass({
+	  displayName: "HowTo",
+
+	  getInitialState: function getInitialState() {
+	    return {
+	      visible: true
+	    };
+	  },
+	  shouldComponentUpdate: function shouldComponentUpdate(nextProps, nextState) {
+	    return nextState.visible !== this.state.visible;
+	  },
+	  toggleVisible: function toggleVisible(event) {
+	    event.preventDefault();
+	    this.setState({
+	      visible: !this.state.visible
+	    });
+	  },
+	  render: function render() {
+	    var buttonText = this.state.visible ? "Hide Help" : "Show Help";
+	    var visibleClass = this.state.visible ? "" : "hidden";
+	    return _react2["default"].createElement(
+	      "div",
+	      { className: "help" },
+	      _react2["default"].createElement(
+	        "h3",
+	        null,
+	        "How to:"
+	      ),
+	      _react2["default"].createElement(
+	        "button",
+	        { onClick: this.toggleVisible },
+	        buttonText
+	      ),
+	      _react2["default"].createElement(
+	        "ol",
+	        { className: visibleClass },
+	        _react2["default"].createElement(
+	          "li",
+	          null,
+	          "Go to the YouTube page for the recipe you would like to make and copy the url from the address bar."
+	        ),
+	        _react2["default"].createElement(
+	          "li",
+	          null,
+	          "Paste the url into the \"YouTube URL...\" box below, then click \"Add Recipe\""
+	        ),
+	        _react2["default"].createElement(
+	          "li",
+	          null,
+	          "An embedded copy of the video will appear in the page."
+	        ),
+	        _react2["default"].createElement(
+	          "li",
+	          null,
+	          "Type in the name of the recipe."
+	        ),
+	        _react2["default"].createElement(
+	          "li",
+	          null,
+	          "Press play on the video and write down the ingredients and instructions while you watch the video, pausing to catch up whenever the chef is moving faster than you can type."
+	        ),
+	        _react2["default"].createElement(
+	          "li",
+	          null,
+	          "When you've written everything down, click the \"Save\" button."
+	        ),
+	        _react2["default"].createElement(
+	          "li",
+	          null,
+	          "If you would like a paper copy, print the recipe. Only your input will be printed, everything else will be hidden."
+	        )
+	      )
+	    );
+	  }
+	});
+
 	var App = _react2["default"].createClass({
 	  displayName: "App",
 
@@ -1484,15 +1560,17 @@
 	          "Annotated Meals"
 	        ),
 	        _react2["default"].createElement(
-	          "p",
+	          "div",
 	          null,
-	          "Quickly write down the ingredients and instructions for a recipe from a YouTube video. When you are done you can print the recipe and a simple version showing only the name, link, and list of ingredients and instructions will be printed. For a quick test, try pasting this link ",
+	          "Did you see a recipe on YouTube that you'd like to make, but don't want to constantly pause the video while you're cooking? Annotated Meals lets you quickly type up a recipe from a video.",
+	          _react2["default"].createElement(HowTo, null),
+	          "For a quick test, try pasting this link ",
 	          _react2["default"].createElement(
 	            "strong",
 	            null,
 	            "https://www.youtube.com/watch?v=bjmYkPkjnVo"
 	          ),
-	          " into the Url input below."
+	          " into the \"YouTube URL...\" input below."
 	        )
 	      ),
 	      _react2["default"].createElement(_componentsRecipemenu2["default"], { actions: actions,
@@ -2074,7 +2152,7 @@
 	    return _react2["default"].createElement(
 	      "div",
 	      null,
-	      _react2["default"].createElement("input", { placeholder: "youtube url...",
+	      _react2["default"].createElement("input", { placeholder: "YouTube URL...",
 	        value: this.state.value,
 	        onChange: this.handleChange }),
 	      _react2["default"].createElement(
