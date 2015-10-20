@@ -54,13 +54,13 @@ let RecipeCreator = React.createClass({
   },
   createRecipe: function(event) {
     event.preventDefault();
+    // try to find the id of the url, otherwise create a recipe
+    // that doesn't have an associated youtube video
     let ytID = VideoID(this.state.value);
-    if ( ytID !== "" ) {
-      this.props.createRecipe(ytID);
-      this.setState({
-        value: ""
-      });
-    }
+    this.props.createRecipe(ytID);
+    this.setState({
+      value: ""
+    });
   },
   handleChange: function(event) {
     this.setState({

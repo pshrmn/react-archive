@@ -2135,13 +2135,13 @@
 	  },
 	  createRecipe: function createRecipe(event) {
 	    event.preventDefault();
+	    // try to find the id of the url, otherwise create a recipe
+	    // that doesn't have an associated youtube video
 	    var ytID = (0, _helpers.VideoID)(this.state.value);
-	    if (ytID !== "") {
-	      this.props.createRecipe(ytID);
-	      this.setState({
-	        value: ""
-	      });
-	    }
+	    this.props.createRecipe(ytID);
+	    this.setState({
+	      value: ""
+	    });
 	  },
 	  handleChange: function handleChange(event) {
 	    this.setState({
