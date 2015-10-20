@@ -75,12 +75,10 @@
 	var initialState = (0, _helpers.SetupStorage)();
 	var store = (0, _redux.applyMiddleware)(_middlewareStorage.StorageAPI)(_redux.createStore)(_reducers2["default"], initialState);
 
-	_react2["default"].render(_react2["default"].createElement(
+	_reactDom2["default"].render(_react2["default"].createElement(
 	  _reactRedux.Provider,
 	  { store: store },
-	  function () {
-	    return _react2["default"].createElement(_containersApp2["default"], null);
-	  }
+	  _react2["default"].createElement(_containersApp2["default"], null)
 	), document.getElementById("content"));
 
 /***/ },
@@ -1732,7 +1730,7 @@
 
 	  getInitialState: function getInitialState() {
 	    return {
-	      value: ""
+	      value: this.props.value || ""
 	    };
 	  },
 	  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {

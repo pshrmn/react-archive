@@ -89,7 +89,7 @@ var UserInput = React.createClass({
 var UserTextarea = React.createClass({
   getInitialState: function() {
     return {
-      value: ""
+      value: this.props.value || ""
     };
   },
   componentWillReceiveProps: function(nextProps) {

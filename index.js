@@ -12,9 +12,9 @@ var store = applyMiddleware(
   StorageAPI
 )(createStore)(recipeReducer, initialState);
 
-React.render(
+ReactDOM.render(
   <Provider store={store}>
-    {() => <App />}
+    <App />
   </Provider>,
   document.getElementById("content")
 );
