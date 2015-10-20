@@ -1,35 +1,15 @@
 import React from "react";
 import { VideoID } from "../helpers";
 
-let AddARecipe = React.createClass({
-  getInitialState: function() {
-    return {
-      value: ""
-    };
-  },
-  handleChange: function(event) {
-    this.setState({
-      value: event.target.value
-    });
-  },
-  handleSubmit: function(event) {
-    if ( event.which === 13 ) {
-      this.props.onSubmit(event.target.value);
-    }
-  },
-  render: function() {
-    return (
-      <div>
-        <p>Add A Recipe</p>
-        <input type="text"
-               onChange={this.handleChange}
-               onKeyDown={this.handleSubmit} />
-      </div>
-    );
-  }
-});
-
 let Thumbnail = React.createClass({
+  shouldComponentUpdate: function(nextProps, nextState) {
+    return (
+      this.props.ytID !== nextProps.ytID ||
+      this.props.name !== nextProps.name ||
+      this.props.index !== nextProps.index ||
+      this.props.active !== nextProps.active
+    )
+  },
   handleDelete: function(event) {
     event.stopPropagation();
     this.props.actions.deleteRecipe(this.props.index);
@@ -38,14 +18,13 @@ let Thumbnail = React.createClass({
     this.props.actions.loadRecipe(this.props.index);
   },
   render: function() {
-    let { ytID, name, index } = this.props;
-    let { loadRecipe, deleteRecipe } = this.props.actions;
-    let src = `https://i.ytimg.com/vi/${this.props.ytID}/mqdefault.jpg`;
-    let thumb = this.props.ytID === "" ? (
+    let { ytID, name, active } = this.props;
+    let src = `https://i.ytimg.com/vi/${ytID}/mqdefault.jpg`;
+    let thumb = ytID === "" ? (
       <div className="empty-thumb">?</div>
       ) : (<img src={src} />);
     let className = "thumbnail";
-    if ( this.props.active ) {
+    if ( active ) {
       className += " active";
     }
     return (
@@ -119,8 +98,6 @@ export default React.createClass({
                    {...r} />
       );
     }, this);
-    // not including this yet
-    //<AddARecipe onSubmit={this.props.actions.makeRecipe} />
     return (
       <div className="recipe-menu">
         Saved Recipes:

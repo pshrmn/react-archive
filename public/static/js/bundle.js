@@ -1991,43 +1991,12 @@
 
 	var _helpers = __webpack_require__(31);
 
-	var AddARecipe = _react2["default"].createClass({
-	  displayName: "AddARecipe",
-
-	  getInitialState: function getInitialState() {
-	    return {
-	      value: ""
-	    };
-	  },
-	  handleChange: function handleChange(event) {
-	    this.setState({
-	      value: event.target.value
-	    });
-	  },
-	  handleSubmit: function handleSubmit(event) {
-	    if (event.which === 13) {
-	      this.props.onSubmit(event.target.value);
-	    }
-	  },
-	  render: function render() {
-	    return _react2["default"].createElement(
-	      "div",
-	      null,
-	      _react2["default"].createElement(
-	        "p",
-	        null,
-	        "Add A Recipe"
-	      ),
-	      _react2["default"].createElement("input", { type: "text",
-	        onChange: this.handleChange,
-	        onKeyDown: this.handleSubmit })
-	    );
-	  }
-	});
-
 	var Thumbnail = _react2["default"].createClass({
 	  displayName: "Thumbnail",
 
+	  shouldComponentUpdate: function shouldComponentUpdate(nextProps, nextState) {
+	    return this.props.ytID !== nextProps.ytID || this.props.name !== nextProps.name || this.props.index !== nextProps.index || this.props.active !== nextProps.active;
+	  },
 	  handleDelete: function handleDelete(event) {
 	    event.stopPropagation();
 	    this.props.actions.deleteRecipe(this.props.index);
@@ -2039,19 +2008,16 @@
 	    var _props = this.props;
 	    var ytID = _props.ytID;
 	    var name = _props.name;
-	    var index = _props.index;
-	    var _props$actions = this.props.actions;
-	    var loadRecipe = _props$actions.loadRecipe;
-	    var deleteRecipe = _props$actions.deleteRecipe;
+	    var active = _props.active;
 
-	    var src = "https://i.ytimg.com/vi/" + this.props.ytID + "/mqdefault.jpg";
-	    var thumb = this.props.ytID === "" ? _react2["default"].createElement(
+	    var src = "https://i.ytimg.com/vi/" + ytID + "/mqdefault.jpg";
+	    var thumb = ytID === "" ? _react2["default"].createElement(
 	      "div",
 	      { className: "empty-thumb" },
 	      "?"
 	    ) : _react2["default"].createElement("img", { src: src });
 	    var className = "thumbnail";
-	    if (this.props.active) {
+	    if (active) {
 	      className += " active";
 	    }
 	    return _react2["default"].createElement(
@@ -2141,8 +2107,6 @@
 	        actions: _this.props.actions
 	      }, r));
 	    }, this);
-	    // not including this yet
-	    //<AddARecipe onSubmit={this.props.actions.makeRecipe} />
 	    return _react2["default"].createElement(
 	      "div",
 	      { className: "recipe-menu" },
