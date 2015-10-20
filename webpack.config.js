@@ -5,7 +5,8 @@ module.exports = {
     extensions: ["", ".js", ".jsx"]
   },
   externals: {
-    "react": "React"
+    "react": "React",
+    "react-dom": "ReactDOM"
   },
   output: {
     path: __dirname + "/public/static/js/",
