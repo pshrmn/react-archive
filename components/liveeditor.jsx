@@ -4,73 +4,37 @@ export default React.createClass({
   getDefaultProps: function() {
     return {
       name: "",
-      url: "",
       ytID: "",
       ingredients: [],
       instructions: [],
     };
   },
-  getInitialState: function() {
-    return {
-      name: "",
-      url: "",
-      ingredients: [],
-      instructions: []
-    }
-  },
-  submit: function(name, value) {
-    switch (name) {
-    case "name":
-      this.props.actions.setName(value);
-      break;
-    case "url":
-      this.props.actions.setVideoID(value);
-      break;
-    case "ingredients":
-      value = value.split("\n").filter(function(line){
-        return line !== "";
-      });
-      this.props.actions.setIngredients(value);
-      break;
-    case "instructions":
-      value = value.split("\n").filter(function(line){
-        return line !== "";
-      });
-      this.props.actions.setInstructions(value);
-      break;
-    }
-    this.setState({
-      [name]: value
-    });
+  propTypes: {
+    name: React.PropTypes.string.isRequired,
+    ytID: React.PropTypes.string.isRequired,
+    ingredients: React.PropTypes.array.isRequired,
+    instructions: React.PropTypes.array.isRequired
   },
   save: function(event) {
     event.preventDefault();
-    this.props.actions.saveRecipe({
-      name: this.props.name,
-      url: this.props.url,
-      ytID: this.props.ytID,
-      ingredients: this.props.ingredients,
-      instructions: this.props.instructions
-    });
+    this.props.actions.saveRecipes();
   },
   render: function() {
+    //<button onClick={() => this.props.reset()}>Reset</button>
     return (
       <div className="live-editor">
         <p>
           <button onClick={this.save}>Save</button>
-          <button onClick={() => this.props.actions.resetRecipe()}>Reset</button>
+          <button onClick={() => this.props.actions.resetRecipe() }>Cancel</button>
         </p>
         <UserInput name="name"
-                   submit={this.submit}
+                   submit={ (val) => {this.props.actions.setName(val);} }
                    value={this.props.name} />
-        <UserInput name="url"
-                   submit={this.submit}
-                   value={this.props.url} />
         <UserTextarea name="ingredients"
-                      submit={this.submit}
+                      submit={ (val) => {this.props.actions.setIngredients(val);} }
                       value={this.props.ingredients.join("\n")} />
         <UserTextarea name="instructions"
-                      submit={this.submit}
+                      submit={ (val) => {this.props.actions.setInstructions(val);} }
                       value={this.props.instructions.join("\n")} />
       </div>
     );
@@ -78,6 +42,11 @@ export default React.createClass({
 });
 
 var UserInput = React.createClass({
+  propTypes: {
+    value: React.PropTypes.string.isRequired,
+    name: React.PropTypes.string.isRequired,
+    submit: React.PropTypes.func.isRequired
+  },
   getInitialState: function() {
     return {
       value: this.props.value || ""
@@ -94,11 +63,11 @@ var UserInput = React.createClass({
     });
   },
   handleBlur: function(event) {
-    this.props.submit(this.props.name, this.state.value);
+    this.props.submit(this.state.value);
   },
   handleSubmit: function(event) {
     if ( event.which === 13 ) {
-      this.props.submit(this.props.name, this.state.value);
+      this.props.submit(this.state.value);
     }
   },
   render: function() {
@@ -129,17 +98,16 @@ var UserTextarea = React.createClass({
     });
   },
   handleChange: function(event) {
-    //this.props.submit(this.props.name, event.target.value);
     this.setState({
       value: event.target.value
     });
   },
   handleBlur: function(event) {
-    this.props.submit(this.props.name, this.state.value);
+    this.props.submit(this.state.value.split("\n"));
   },
   handleSubmit: function(event) {
     if ( event.which === 13 ) {
-      this.props.submit(this.props.name, this.state.value);
+      this.props.submit(this.state.value.split("\n"));
     }
   },
   render: function() {

@@ -6,30 +6,30 @@ import RecipeMenu from "../components/recipemenu";
 import * as RecipeActions from "../actions";
 
 var App = React.createClass({
-  propTypes: {
-    recipe: React.PropTypes.object.isRequired,
-    savedRecipes: React.PropTypes.array.isRequired,
-    dispatch: React.PropTypes.func.isRequired
-  },
   render() {
-    const { recipe, savedRecipes, dispatch } = this.props;
+    const { recipes, recipe, index, editing, dispatch } = this.props;
+    // bind the action creators to automatically dispatch when called
     const actions = bindActionCreators(RecipeActions, dispatch);
+    // only render the annotater while editing
+    let annotater = editing ? (
+      <Annotater actions={actions}
+                   {...recipe} />
+      ) : null;
     return (
       <div>
         <header>
           <h1>Annotated Meals</h1>
           <p>
-            Quickly write down the ingredients and instructions for a recipe.
+            Quickly write down the ingredients and instructions for a recipe from a YouTube video.
             When you are done you can print the recipe and a simple version showing
             only the name, link, and list of ingredients and instructions will be printed.
             For a quick test, try pasting this link <strong>https://www.youtube.com/watch?v=bjmYkPkjnVo</strong> into the Url input below.
           </p>
         </header> 
         <RecipeMenu actions={actions}
-                    savedRecipes={savedRecipes} />
-        <Annotater actions={actions}
-                   {...recipe} />
-        {this.props.children}
+                    recipes={recipes}
+                    index={index} />
+        {annotater}
       </div>
     );
   }
@@ -37,8 +37,10 @@ var App = React.createClass({
 
 function mapStateToProps(state) {
   return {
+    recipes: state.recipes,
     recipe: state.recipe,
-    savedRecipes: state.savedRecipes
+    index: state.index,
+    editing: state.editing
   };
 }
 

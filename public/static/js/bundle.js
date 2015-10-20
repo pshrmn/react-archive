@@ -66,10 +66,10 @@
 
 	var _middlewareStorage = __webpack_require__(34);
 
-	var _helpers = __webpack_require__(32);
+	var _helpers = __webpack_require__(30);
 
 	var initialState = (0, _helpers.SetupStorage)();
-	var store = (0, _redux.applyMiddleware)(_middlewareStorage.StorageAPI, _middlewareStorage.RecipeLoader)(_redux.createStore)(_reducers2["default"], initialState);
+	var store = (0, _redux.applyMiddleware)(_middlewareStorage.StorageAPI)(_redux.createStore)(_reducers2["default"], initialState);
 
 	_react2["default"].render(_react2["default"].createElement(
 	  _reactRedux.Provider,
@@ -1444,25 +1444,26 @@
 
 	var _componentsRecipemenu2 = _interopRequireDefault(_componentsRecipemenu);
 
-	var _actions = __webpack_require__(30);
+	var _actions = __webpack_require__(31);
 
 	var RecipeActions = _interopRequireWildcard(_actions);
 
 	var App = _react2["default"].createClass({
 	  displayName: "App",
 
-	  propTypes: {
-	    recipe: _react2["default"].PropTypes.object.isRequired,
-	    savedRecipes: _react2["default"].PropTypes.array.isRequired,
-	    dispatch: _react2["default"].PropTypes.func.isRequired
-	  },
 	  render: function render() {
 	    var _props = this.props;
+	    var recipes = _props.recipes;
 	    var recipe = _props.recipe;
-	    var savedRecipes = _props.savedRecipes;
+	    var index = _props.index;
+	    var editing = _props.editing;
 	    var dispatch = _props.dispatch;
 
+	    // bind the action creators to automatically dispatch when called
 	    var actions = (0, _redux.bindActionCreators)(RecipeActions, dispatch);
+	    // only render the annotater while editing
+	    var annotater = editing ? _react2["default"].createElement(_componentsAnnotater2["default"], _extends({ actions: actions
+	    }, recipe)) : null;
 	    return _react2["default"].createElement(
 	      "div",
 	      null,
@@ -1477,7 +1478,7 @@
 	        _react2["default"].createElement(
 	          "p",
 	          null,
-	          "Quickly write down the ingredients and instructions for a recipe. When you are done you can print the recipe and a simple version showing only the name, link, and list of ingredients and instructions will be printed. For a quick test, try pasting this link ",
+	          "Quickly write down the ingredients and instructions for a recipe from a YouTube video. When you are done you can print the recipe and a simple version showing only the name, link, and list of ingredients and instructions will be printed. For a quick test, try pasting this link ",
 	          _react2["default"].createElement(
 	            "strong",
 	            null,
@@ -1487,18 +1488,19 @@
 	        )
 	      ),
 	      _react2["default"].createElement(_componentsRecipemenu2["default"], { actions: actions,
-	        savedRecipes: savedRecipes }),
-	      _react2["default"].createElement(_componentsAnnotater2["default"], _extends({ actions: actions
-	      }, recipe)),
-	      this.props.children
+	        recipes: recipes,
+	        index: index }),
+	      annotater
 	    );
 	  }
 	});
 
 	function mapStateToProps(state) {
 	  return {
+	    recipes: state.recipes,
 	    recipe: state.recipe,
-	    savedRecipes: state.savedRecipes
+	    index: state.index,
+	    editing: state.editing
 	  };
 	}
 
@@ -1514,8 +1516,6 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
@@ -1538,22 +1538,51 @@
 	exports["default"] = _react2["default"].createClass({
 	  displayName: "annotater",
 
+	  propTypes: {
+	    // action dispatching functions
+	    actions: _react2["default"].PropTypes.object,
+	    // recipe props
+	    name: _react2["default"].PropTypes.string.isRequired,
+	    ytID: _react2["default"].PropTypes.string.isRequired,
+	    ingredients: _react2["default"].PropTypes.array.isRequired,
+	    instructions: _react2["default"].PropTypes.array.isRequired
+	  },
+	  getDefaultProps: function getDefaultProps() {
+	    return {
+	      index: -1,
+	      name: "",
+	      ytID: "",
+	      ingredients: [],
+	      instructions: []
+	    };
+	  },
 	  render: function render() {
+	    var _props = this.props;
+	    var actions = _props.actions;
+	    var name = _props.name;
+	    var ytID = _props.ytID;
+	    var ingredients = _props.ingredients;
+	    var instructions = _props.instructions;
+
 	    return _react2["default"].createElement(
 	      "div",
 	      { className: "annotater" },
 	      _react2["default"].createElement(
 	        "div",
 	        { className: "edit-view" },
-	        _react2["default"].createElement(_video2["default"], { ytID: this.props.ytID }),
-	        _react2["default"].createElement(_liveeditor2["default"], _extends({ actions: this.props.actions,
-	          submit: this.submit
-	        }, this.props))
+	        _react2["default"].createElement(_video2["default"], { ytID: ytID }),
+	        _react2["default"].createElement(_liveeditor2["default"], { actions: actions,
+	          name: name,
+	          ingredients: ingredients,
+	          instructions: instructions })
 	      ),
 	      _react2["default"].createElement(
 	        "div",
 	        { className: "print-view" },
-	        _react2["default"].createElement(_recipe2["default"], this.props)
+	        _react2["default"].createElement(_recipe2["default"], { name: name,
+	          ytID: ytID,
+	          ingredients: ingredients,
+	          instructions: instructions })
 	      )
 	    );
 	  }
@@ -1572,8 +1601,6 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 	var _react = __webpack_require__(1);
 
 	var _react2 = _interopRequireDefault(_react);
@@ -1584,56 +1611,25 @@
 	  getDefaultProps: function getDefaultProps() {
 	    return {
 	      name: "",
-	      url: "",
 	      ytID: "",
 	      ingredients: [],
 	      instructions: []
 	    };
 	  },
-	  getInitialState: function getInitialState() {
-	    return {
-	      name: "",
-	      url: "",
-	      ingredients: [],
-	      instructions: []
-	    };
-	  },
-	  submit: function submit(name, value) {
-	    switch (name) {
-	      case "name":
-	        this.props.actions.setName(value);
-	        break;
-	      case "url":
-	        this.props.actions.setVideoID(value);
-	        break;
-	      case "ingredients":
-	        value = value.split("\n").filter(function (line) {
-	          return line !== "";
-	        });
-	        this.props.actions.setIngredients(value);
-	        break;
-	      case "instructions":
-	        value = value.split("\n").filter(function (line) {
-	          return line !== "";
-	        });
-	        this.props.actions.setInstructions(value);
-	        break;
-	    }
-	    this.setState(_defineProperty({}, name, value));
+	  propTypes: {
+	    name: _react2["default"].PropTypes.string.isRequired,
+	    ytID: _react2["default"].PropTypes.string.isRequired,
+	    ingredients: _react2["default"].PropTypes.array.isRequired,
+	    instructions: _react2["default"].PropTypes.array.isRequired
 	  },
 	  save: function save(event) {
 	    event.preventDefault();
-	    this.props.actions.saveRecipe({
-	      name: this.props.name,
-	      url: this.props.url,
-	      ytID: this.props.ytID,
-	      ingredients: this.props.ingredients,
-	      instructions: this.props.instructions
-	    });
+	    this.props.actions.saveRecipes();
 	  },
 	  render: function render() {
 	    var _this = this;
 
+	    //<button onClick={() => this.props.reset()}>Reset</button>
 	    return _react2["default"].createElement(
 	      "div",
 	      { className: "live-editor" },
@@ -1650,20 +1646,23 @@
 	          { onClick: function () {
 	              return _this.props.actions.resetRecipe();
 	            } },
-	          "Reset"
+	          "Cancel"
 	        )
 	      ),
 	      _react2["default"].createElement(UserInput, { name: "name",
-	        submit: this.submit,
+	        submit: function (val) {
+	          _this.props.actions.setName(val);
+	        },
 	        value: this.props.name }),
-	      _react2["default"].createElement(UserInput, { name: "url",
-	        submit: this.submit,
-	        value: this.props.url }),
 	      _react2["default"].createElement(UserTextarea, { name: "ingredients",
-	        submit: this.submit,
+	        submit: function (val) {
+	          _this.props.actions.setIngredients(val);
+	        },
 	        value: this.props.ingredients.join("\n") }),
 	      _react2["default"].createElement(UserTextarea, { name: "instructions",
-	        submit: this.submit,
+	        submit: function (val) {
+	          _this.props.actions.setInstructions(val);
+	        },
 	        value: this.props.instructions.join("\n") })
 	    );
 	  }
@@ -1672,6 +1671,11 @@
 	var UserInput = _react2["default"].createClass({
 	  displayName: "UserInput",
 
+	  propTypes: {
+	    value: _react2["default"].PropTypes.string.isRequired,
+	    name: _react2["default"].PropTypes.string.isRequired,
+	    submit: _react2["default"].PropTypes.func.isRequired
+	  },
 	  getInitialState: function getInitialState() {
 	    return {
 	      value: this.props.value || ""
@@ -1688,11 +1692,11 @@
 	    });
 	  },
 	  handleBlur: function handleBlur(event) {
-	    this.props.submit(this.props.name, this.state.value);
+	    this.props.submit(this.state.value);
 	  },
 	  handleSubmit: function handleSubmit(event) {
 	    if (event.which === 13) {
-	      this.props.submit(this.props.name, this.state.value);
+	      this.props.submit(this.state.value);
 	    }
 	  },
 	  render: function render() {
@@ -1727,17 +1731,16 @@
 	    });
 	  },
 	  handleChange: function handleChange(event) {
-	    //this.props.submit(this.props.name, event.target.value);
 	    this.setState({
 	      value: event.target.value
 	    });
 	  },
 	  handleBlur: function handleBlur(event) {
-	    this.props.submit(this.props.name, this.state.value);
+	    this.props.submit(this.state.value.split("\n"));
 	  },
 	  handleSubmit: function handleSubmit(event) {
 	    if (event.which === 13) {
-	      this.props.submit(this.props.name, this.state.value);
+	      this.props.submit(this.state.value.split("\n"));
 	    }
 	  },
 	  render: function render() {
@@ -1800,24 +1803,28 @@
 	    };
 	  },
 	  render: function render() {
-	    var ingredients = this.props.ingredients;
-	    var instructions = this.props.instructions;
-	    var url = this.props.ytID !== "" ? "https://youtu.be/" + this.props.ytID : null;
+	    var _props = this.props;
+	    var name = _props.name;
+	    var ytID = _props.ytID;
+	    var ingredients = _props.ingredients;
+	    var instructions = _props.instructions;
+
+	    var url = ytID !== "" ? "https://youtu.be/" + ytID : null;
 	    return _react2["default"].createElement(
 	      "div",
 	      { className: "recipe" },
 	      _react2["default"].createElement(
 	        "h2",
 	        null,
-	        this.props.name
+	        name
 	      ),
 	      _react2["default"].createElement(
 	        "h3",
 	        null,
 	        url
 	      ),
-	      _react2["default"].createElement(_ingredients2["default"], { ingredients: ingredients }),
-	      _react2["default"].createElement(_instructions2["default"], { instructions: instructions })
+	      _react2["default"].createElement(_ingredients2["default"], { values: ingredients }),
+	      _react2["default"].createElement(_instructions2["default"], { values: instructions })
 	    );
 	  }
 	});
@@ -1843,10 +1850,10 @@
 	  displayName: "ingredients",
 
 	  propTypes: {
-	    ingredients: _react2["default"].PropTypes.array.isRequired
+	    values: _react2["default"].PropTypes.array.isRequired
 	  },
 	  render: function render() {
-	    var ingredients = this.props.ingredients.map(function (v, i) {
+	    var values = this.props.values.map(function (v, i) {
 	      return _react2["default"].createElement(
 	        "li",
 	        { key: i },
@@ -1864,7 +1871,7 @@
 	      _react2["default"].createElement(
 	        "ul",
 	        null,
-	        ingredients
+	        values
 	      )
 	    );
 	  }
@@ -1891,10 +1898,10 @@
 	  displayName: "instructions",
 
 	  propTypes: {
-	    instructions: _react2["default"].PropTypes.array.isRequired
+	    values: _react2["default"].PropTypes.array.isRequired
 	  },
 	  render: function render() {
-	    var instructions = this.props.instructions.map(function (s, i) {
+	    var values = this.props.values.map(function (s, i) {
 	      return _react2["default"].createElement(
 	        "li",
 	        { key: i },
@@ -1912,7 +1919,7 @@
 	      _react2["default"].createElement(
 	        "ol",
 	        null,
-	        instructions
+	        values
 	      )
 	    );
 	  }
@@ -1974,6 +1981,8 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _helpers = __webpack_require__(30);
+
 	var AddARecipe = _react2["default"].createClass({
 	  displayName: "AddARecipe",
 
@@ -2011,9 +2020,6 @@
 	var Thumbnail = _react2["default"].createClass({
 	  displayName: "Thumbnail",
 
-	  shouldComponentUpdate: function shouldComponentUpdate(nextProps, nextState) {
-	    return nextProps.ytID !== this.props.ytID || nextProps.name !== this.props.name || nextProps.index !== this.props.index;
-	  },
 	  handleDelete: function handleDelete(event) {
 	    event.stopPropagation();
 	    this.props.actions.deleteRecipe(this.props.index);
@@ -2036,9 +2042,13 @@
 	      { className: "empty-thumb" },
 	      "?"
 	    ) : _react2["default"].createElement("img", { src: src });
+	    var className = "thumbnail";
+	    if (this.props.active) {
+	      className += " active";
+	    }
 	    return _react2["default"].createElement(
 	      "li",
-	      { className: "thumbnail", onClick: this.handleClick },
+	      { className: className, onClick: this.handleClick },
 	      _react2["default"].createElement(
 	        "div",
 	        null,
@@ -2063,18 +2073,63 @@
 	  }
 	});
 
+	var RecipeCreator = _react2["default"].createClass({
+	  displayName: "RecipeCreator",
+
+	  getInitialState: function getInitialState() {
+	    return {
+	      value: ""
+	    };
+	  },
+	  createRecipe: function createRecipe(event) {
+	    event.preventDefault();
+	    var ytID = (0, _helpers.VideoID)(this.state.value);
+	    if (ytID !== "") {
+	      this.props.createRecipe(ytID);
+	      this.setState({
+	        value: ""
+	      });
+	    }
+	  },
+	  handleChange: function handleChange(event) {
+	    this.setState({
+	      value: event.target.value
+	    });
+	  },
+	  render: function render() {
+	    return _react2["default"].createElement(
+	      "div",
+	      null,
+	      _react2["default"].createElement("input", { placeholder: "youtube url...",
+	        value: this.state.value,
+	        onChange: this.handleChange }),
+	      _react2["default"].createElement(
+	        "button",
+	        { onClick: this.createRecipe },
+	        "Add Recipe"
+	      )
+	    );
+	  }
+	});
+
 	exports["default"] = _react2["default"].createClass({
 	  displayName: "recipemenu",
 
 	  propTypes: {
-	    savedRecipes: _react2["default"].PropTypes.array.isRequired
+	    recipes: _react2["default"].PropTypes.array.isRequired,
+	    index: _react2["default"].PropTypes.number.isRequired,
+	    actions: _react2["default"].PropTypes.object.isRequired
+	  },
+	  createRecipe: function createRecipe(url) {
+	    this.props.actions.createRecipe(url);
 	  },
 	  render: function render() {
 	    var _this = this;
 
-	    var recipes = this.props.savedRecipes.map(function (r, i) {
+	    var recipes = this.props.recipes.map(function (r, i) {
 	      return _react2["default"].createElement(Thumbnail, _extends({ key: i,
 	        index: i,
+	        active: i === _this.props.index,
 	        actions: _this.props.actions
 	      }, r));
 	    }, this);
@@ -2088,7 +2143,8 @@
 	        "ul",
 	        { className: "saved-recipes" },
 	        recipes
-	      )
+	      ),
+	      _react2["default"].createElement(RecipeCreator, { createRecipe: this.createRecipe })
 	    );
 	  }
 	});
@@ -2096,132 +2152,19 @@
 
 /***/ },
 /* 30 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.setName = setName;
-	exports.setVideoID = setVideoID;
-	exports.setIngredients = setIngredients;
-	exports.setInstructions = setInstructions;
-	exports.resetRecipe = resetRecipe;
-	exports.saveRecipe = saveRecipe;
-	exports.loadRecipe = loadRecipe;
-	exports.deleteRecipe = deleteRecipe;
-	exports.makeRecipe = makeRecipe;
-
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj["default"] = obj; return newObj; } }
-
-	var _constantsActionTypes = __webpack_require__(31);
-
-	var types = _interopRequireWildcard(_constantsActionTypes);
-
-	var _helpers = __webpack_require__(32);
-
-	function setName(name) {
-	  return {
-	    type: types.SET_NAME,
-	    name: name
-	  };
-	}
-
-	function setVideoID(url) {
-	  return {
-	    type: types.SET_URL,
-	    url: url,
-	    ytID: (0, _helpers.VideoID)(url)
-	  };
-	}
-
-	function setIngredients(ingredients) {
-	  return {
-	    type: types.SET_INGREDIENTS,
-	    ingredients: ingredients
-	  };
-	}
-
-	function setInstructions(instructions) {
-	  return {
-	    type: types.SET_INSTRUCTIONS,
-	    instructions: instructions
-	  };
-	}
-
-	function resetRecipe() {
-	  return {
-	    type: types.RESET_RECIPE
-	  };
-	}
-
-	function saveRecipe(recipe) {
-	  return {
-	    type: types.SAVE_RECIPE,
-	    recipe: recipe
-	  };
-	}
-
-	function loadRecipe(index) {
-	  return {
-	    type: types.LOAD_RECIPE,
-	    index: index
-	  };
-	}
-
-	function deleteRecipe(index) {
-	  return {
-	    type: types.DELETE_RECIPE,
-	    index: index
-	  };
-	}
-
-	function makeRecipe(url) {
-	  return {
-	    type: types.MAKE_RECIPE,
-	    url: url
-	  };
-	}
-
-/***/ },
-/* 31 */
 /***/ function(module, exports) {
 
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	var SET_NAME = "SET_NAME";
-	exports.SET_NAME = SET_NAME;
-	var SET_URL = "SET_URL";
-	exports.SET_URL = SET_URL;
-	var SET_INGREDIENTS = "SET_INGREDIENTS";
-	exports.SET_INGREDIENTS = SET_INGREDIENTS;
-	var SET_INSTRUCTIONS = "SET_INSTRUCTIONS";
-	exports.SET_INSTRUCTIONS = SET_INSTRUCTIONS;
-	var RESET_RECIPE = "RESET_RECIPE";
-	exports.RESET_RECIPE = RESET_RECIPE;
-	var SAVE_RECIPE = "SAVE_RECIPE";
-	exports.SAVE_RECIPE = SAVE_RECIPE;
-	var LOAD_RECIPE = "LOAD_RECIPE";
-	exports.LOAD_RECIPE = LOAD_RECIPE;
-	var DELETE_RECIPE = "DELETE_RECIPE";
-	exports.DELETE_RECIPE = DELETE_RECIPE;
-	var MAKE_RECIPE = "MAKE_RECIPE";
-	exports.MAKE_RECIPE = MAKE_RECIPE;
-
-/***/ },
-/* 32 */
-/***/ function(module, exports) {
-
+	/*
+	 * Returns the initial store values. "recipes" is loaded from localStorage. If it doesn't
+	 * currently exist, an empty array value is set as default. The default "index" value is -1
+	 */
 	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
 	exports.SetupStorage = SetupStorage;
+	exports.NewRecipe = NewRecipe;
 	exports.VideoID = VideoID;
 
 	function SetupStorage() {
@@ -2231,14 +2174,25 @@
 	    localStorage.setItem("recipes", "[]");
 	  }
 	  return {
-	    recipe: {
-	      name: "",
-	      ytID: "",
-	      url: "",
-	      ingredients: [],
-	      instructions: []
-	    },
-	    savedRecipes: JSON.parse(storedRecipes)
+	    recipe: {},
+	    recipes: JSON.parse(storedRecipes),
+	    index: -1,
+	    editing: false
+	  };
+	}
+
+	/*
+	 * Return a new object representing a recipe. Sets the ytID if the argument is provided
+	 */
+
+	function NewRecipe() {
+	  var ytID = arguments.length <= 0 || arguments[0] === undefined ? "" : arguments[0];
+
+	  return {
+	    name: "",
+	    ytID: ytID,
+	    ingredients: [],
+	    instructions: []
 	  };
 	}
 
@@ -2275,6 +2229,119 @@
 	}
 
 /***/ },
+/* 31 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.createRecipe = createRecipe;
+	exports.setName = setName;
+	exports.setIngredients = setIngredients;
+	exports.setInstructions = setInstructions;
+	exports.saveRecipes = saveRecipes;
+	exports.deleteRecipe = deleteRecipe;
+	exports.loadRecipe = loadRecipe;
+	exports.resetRecipe = resetRecipe;
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj["default"] = obj; return newObj; } }
+
+	var _constantsActionTypes = __webpack_require__(32);
+
+	var types = _interopRequireWildcard(_constantsActionTypes);
+
+	function createRecipe(ytID) {
+	  return {
+	    type: types.CREATE_RECIPE,
+	    ytID: ytID
+	  };
+	}
+
+	function setName(name) {
+	  return {
+	    type: types.SET_NAME,
+	    name: name
+	  };
+	}
+
+	function setIngredients(ingredients) {
+	  return {
+	    type: types.SET_INGREDIENTS,
+	    ingredients: ingredients
+	  };
+	}
+
+	function setInstructions(instructions) {
+	  return {
+	    type: types.SET_INSTRUCTIONS,
+	    instructions: instructions
+	  };
+	}
+
+	function saveRecipes() {
+	  return {
+	    type: types.SAVE_RECIPES
+	  };
+	}
+
+	function deleteRecipe(index) {
+	  return {
+	    type: types.DELETE_RECIPE,
+	    index: index
+	  };
+	}
+
+	function loadRecipe(index) {
+	  return {
+	    type: types.LOAD_RECIPE,
+	    index: index
+	  };
+	}
+
+	function resetRecipe() {
+	  return {
+	    type: types.RESET_RECIPE
+	  };
+	}
+
+/***/ },
+/* 32 */
+/***/ function(module, exports) {
+
+	// create a new recipe given an id for a youtube video
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var CREATE_RECIPE = "CREATE_RECIPE";
+	exports.CREATE_RECIPE = CREATE_RECIPE;
+	// set the name of the recipe being edited
+	var SET_NAME = "SET_NAME";
+	exports.SET_NAME = SET_NAME;
+	// set the ingredients of the recipe being edited
+	var SET_INGREDIENTS = "SET_INGREDIENTS";
+	exports.SET_INGREDIENTS = SET_INGREDIENTS;
+	// set the instructions of the recipe being edited
+	var SET_INSTRUCTIONS = "SET_INSTRUCTIONS";
+	exports.SET_INSTRUCTIONS = SET_INSTRUCTIONS;
+	// delete a recipe given its index in the saved array
+	var DELETE_RECIPE = "DELETE_RECIPE";
+	exports.DELETE_RECIPE = DELETE_RECIPE;
+	// save a recipe, either replacing the one being edited
+	// or adding it to the recipes array if new
+	var SAVE_RECIPES = "SAVE_RECIPES";
+	exports.SAVE_RECIPES = SAVE_RECIPES;
+	// start viewing/editing a recipe
+	var LOAD_RECIPE = "LOAD_RECIPE";
+	exports.LOAD_RECIPE = LOAD_RECIPE;
+	// cancel editing and reset the recipe view
+	var RESET_RECIPE = "RESET_RECIPE";
+	exports.RESET_RECIPE = RESET_RECIPE;
+
+/***/ },
 /* 33 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -2286,41 +2353,33 @@
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj["default"] = obj; return newObj; } }
 
-	var _constantsActionTypes = __webpack_require__(31);
+	var _constantsActionTypes = __webpack_require__(32);
 
 	var types = _interopRequireWildcard(_constantsActionTypes);
 
-	var _redux = __webpack_require__(2);
+	var _helpers = __webpack_require__(30);
 
 	var initialState = {
 	  recipe: {
 	    name: "",
 	    ytID: "",
-	    url: "",
 	    ingredients: [],
 	    instructions: []
 	  },
-	  savedRecipes: []
+	  recipes: [],
+	  index: -1,
+	  editing: false
 	};
 
-	function recipe(state, action) {
-	  if (state === undefined) state = {
-	    name: "",
-	    ytID: "",
-	    url: "",
-	    ingredients: [],
-	    instructions: []
-	  };
+	function recipeReducer(state, action) {
+	  if (state === undefined) state = {};
 
 	  switch (action.type) {
+	    case types.CREATE_RECIPE:
+	      return (0, _helpers.NewRecipe)(action.ytID);
 	    case types.SET_NAME:
 	      return Object.assign({}, state, {
 	        name: action.name
-	      });
-	    case types.SET_URL:
-	      return Object.assign({}, state, {
-	        url: action.url,
-	        ytID: action.ytID
 	      });
 	    case types.SET_INGREDIENTS:
 	      return Object.assign({}, state, {
@@ -2330,42 +2389,85 @@
 	      return Object.assign({}, state, {
 	        instructions: action.instructions
 	      });
-	    case types.LOAD_RECIPE:
-	      return Object.assign({}, state, action.recipe);
 	    case types.RESET_RECIPE:
-	      return Object.assign({}, state, {
-	        name: "",
-	        url: "",
-	        ytID: "",
-	        ingredients: [],
-	        instructions: []
-	      });
+	      return (0, _helpers.NewRecipe)();
 	    default:
 	      return state;
 	  }
 	}
 
-	function savedRecipes(state, action) {
-	  if (state === undefined) state = [];
+	function editingReducer(state, action) {
+	  switch (action.type) {
+	    case types.CREATE_RECIPE:
+	      return true;
+	    case types.RESET_RECIPE:
+	      return false;
+	    default:
+	      return state;
+	  }
+	}
+
+	function indexReducer(state, action) {
+	  if (state === undefined) state = -1;
 
 	  switch (action.type) {
-	    case types.SAVE_RECIPE:
-	      // the middleware will take the action.recipe and either append it to the array
-	      // if it doesn't already exist, or replace the existing version (based on ytID)
-	      return action.recipes;
+	    case types.CREATE_RECIPE:
+	    case types.RESET_RECIPE:
+	      return -1;
 	    case types.DELETE_RECIPE:
-	      return action.recipes;
+	      // figure out the new index
+	      // if the current index is less than the deleted value, keep it the same
+	      // if the current index recipe was deleted, set it to -1
+	      // if the current index is greater than the deleter value, subtract 1
+	      var newIndex = state;
+	      if (state === action.index) {
+	        newIndex = -1;
+	      } else if (state > action.index) {
+	        newIndex -= 1;
+	      }
+	      return newIndex;
 	    default:
 	      return state;
 	  }
 	}
 
-	var recipeApp = (0, _redux.combineReducers)({
-	  recipe: recipe,
-	  savedRecipes: savedRecipes
-	});
+	function recipesReducer(recipes, action) {
+	  if (recipes === undefined) recipes = [];
 
-	exports["default"] = recipeApp;
+	  switch (action.type) {
+	    case types.DELETE_RECIPE:
+	    case types.SAVE_RECIPES:
+	      return action.recipes;
+	    default:
+	      return recipes;
+	  }
+	}
+
+	function reducer(state, action) {
+	  if (state === undefined) state = initialState;
+
+	  //console.log("~~~~~~~~~~~\nreducer called\n", state, action, "\n~~~~~~~~~~~~~");
+	  /*
+	   * for the action LOAD_RECIPE, setting the recipe requires
+	   * knowlege of state.recipes
+	   */
+	  if (action.type === types.LOAD_RECIPE) {
+	    return Object.assign({}, state, {
+	      recipes: state.recipes,
+	      index: action.index,
+	      editing: true,
+	      recipe: Object.assign({}, state.recipe, state.recipes[action.index])
+	    });
+	  }
+	  return {
+	    recipes: recipesReducer(state.recipes, action),
+	    recipe: recipeReducer(state.recipe, action),
+	    index: indexReducer(state.index, action),
+	    editing: editingReducer(state.editing, action)
+	  };
+	}
+
+	exports["default"] = reducer;
 	module.exports = exports["default"];
 
 /***/ },
@@ -2380,7 +2482,7 @@
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj["default"] = obj; return newObj; } }
 
-	var _constantsActionTypes = __webpack_require__(31);
+	var _constantsActionTypes = __webpack_require__(32);
 
 	var ActionTypes = _interopRequireWildcard(_constantsActionTypes);
 
@@ -2388,66 +2490,51 @@
 	  localStorage.setItem("recipes", JSON.stringify(recipes));
 	}
 
-	function recipeIndex(ytID, recipes) {
-	  var index = -1;
-	  for (var i = 0; i < recipes.length; i++) {
-	    if (recipes[i].ytID === ytID) {
-	      index = i;
-	      break;
-	    }
-	  }
-	  return index;
-	}
-
 	/*
-	 * add the recipe to localStorage using the id of the youtube video. If there is already
-	 * a stored recipe with the same youtube video id, replace the existing one with the new one
+	 * StorageAPI responds to storage related actions, updating the localStorage.
+	 * A recipes array should be added to the action element so that the reducer can
+	 * just use the updated recipes array that is created by storage.
+	 * SAVE_RECIPES:
+	 *    If the action index !== -1, replace the recipe at index with the one being saved
+	 *    If the action index === -1, append the recipe at the end of the recipes array
+	 * DELETE_RECIPE:
+	 *    Filter out the recipe at action.index
 	 */
 	var StorageAPI = function StorageAPI(store) {
 	  return function (next) {
 	    return function (action) {
 	      switch (action.type) {
-	        case ActionTypes.SAVE_RECIPE:
-	          if (action.recipe.ytID !== "") {
-	            var storedRecipes = store.getState().savedRecipes.slice();
-	            var index = recipeIndex(action.recipe.ytID, storedRecipes);
-	            if (index !== -1) {
-	              storedRecipes[index] = action.recipe;
-	            } else {
-	              storedRecipes.push(action.recipe);
-	            }
-	            action.recipes = storedRecipes;
-	            saveRecipes(storedRecipes);
+	        case ActionTypes.SAVE_RECIPES:
+	          var _store$getState = store.getState(),
+	              recipes = _store$getState.recipes,
+	              recipe = _store$getState.recipe,
+	              index = _store$getState.index;
+
+	          var newRecipes = recipes.slice();
+	          if (index !== -1) {
+	            newRecipes[index] = recipe;
+	          } else {
+	            newRecipes = newRecipes.concat(recipe);
 	          }
+	          action.recipes = newRecipes;
+	          saveRecipes(newRecipes);
 	          break;
 	        case ActionTypes.DELETE_RECIPE:
-	          var savedRecipes = store.getState().savedRecipes.slice();
-	          savedRecipes.splice(action.index, 1);
-	          action.recipes = savedRecipes;
-	          saveRecipes(savedRecipes);
+	          var _store$getState2 = store.getState(),
+	              recipes = _store$getState2.recipes;
+
+	          var keptRecipes = recipes.filter(function (v, i) {
+	            return i !== action.index;
+	          });
+	          action.recipes = keptRecipes;
+	          saveRecipes(keptRecipes);
 	          break;
 	      }
 	      return next(action);
 	    };
 	  };
 	};
-
 	exports.StorageAPI = StorageAPI;
-	var RecipeLoader = function RecipeLoader(store) {
-	  return function (next) {
-	    return function (action) {
-	      if (action.type === ActionTypes.LOAD_RECIPE) {
-	        var state = store.getState();
-	        var recipe = state.savedRecipes[action.index];
-	        if (recipe) {
-	          action.recipe = recipe;
-	        }
-	      }
-	      return next(action);
-	    };
-	  };
-	};
-	exports.RecipeLoader = RecipeLoader;
 
 /***/ }
 /******/ ]);

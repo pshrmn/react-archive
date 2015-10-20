@@ -1,3 +1,7 @@
+/*
+ * Returns the initial store values. "recipes" is loaded from localStorage. If it doesn't
+ * currently exist, an empty array value is set as default. The default "index" value is -1
+ */
 export function SetupStorage() {
   let storedRecipes = localStorage.getItem("recipes");
   if ( storedRecipes === null ) {
@@ -5,14 +9,22 @@ export function SetupStorage() {
     localStorage.setItem("recipes", "[]");
   } 
   return {
-    recipe: {
-      name: "",
-      ytID: "",
-      url: "",
-      ingredients: [],
-      instructions: []
-    },
-    savedRecipes: JSON.parse(storedRecipes)
+    recipe: {},
+    recipes: JSON.parse(storedRecipes),
+    index: -1,
+    editing: false
+  };
+}
+
+/*
+ * Return a new object representing a recipe. Sets the ytID if the argument is provided
+ */
+export function NewRecipe(ytID = "") {
+  return {
+    name: "",
+    ytID: ytID,
+    ingredients: [],
+    instructions: []
   };
 }
 

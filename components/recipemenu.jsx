@@ -1,4 +1,5 @@
 import React from "react";
+import { VideoID } from "../helpers";
 
 let AddARecipe = React.createClass({
   getInitialState: function() {
@@ -29,13 +30,6 @@ let AddARecipe = React.createClass({
 });
 
 let Thumbnail = React.createClass({
-  shouldComponentUpdate: function(nextProps, nextState) {
-    return (
-      nextProps.ytID !== this.props.ytID ||
-      nextProps.name !== this.props.name ||
-      nextProps.index !== this.props.index
-    );
-  },
   handleDelete: function(event) {
     event.stopPropagation();
     this.props.actions.deleteRecipe(this.props.index);
@@ -50,8 +44,12 @@ let Thumbnail = React.createClass({
     let thumb = this.props.ytID === "" ? (
       <div className="empty-thumb">?</div>
       ) : (<img src={src} />);
+    let className = "thumbnail";
+    if ( this.props.active ) {
+      className += " active";
+    }
     return (
-      <li className="thumbnail" onClick={this.handleClick} >
+      <li className={className} onClick={this.handleClick} >
         <div>
           {thumb}
         </div>
@@ -69,15 +67,54 @@ let Thumbnail = React.createClass({
   }
 });
 
-export default React.createClass({
-  propTypes: {
-    savedRecipes: React.PropTypes.array.isRequired
+let RecipeCreator = React.createClass({
+  getInitialState: function() {
+    return {
+      value: ""
+    }
+  },
+  createRecipe: function(event) {
+    event.preventDefault();
+    let ytID = VideoID(this.state.value);
+    if ( ytID !== "" ) {
+      this.props.createRecipe(ytID);
+      this.setState({
+        value: ""
+      });
+    }
+  },
+  handleChange: function(event) {
+    this.setState({
+      value: event.target.value
+    });
   },
   render: function() {
-    let recipes = this.props.savedRecipes.map((r, i) => {
+    return (
+      <div>
+        <input placeholder="youtube url..."
+               value={this.state.value}
+               onChange={this.handleChange} />
+        <button onClick={this.createRecipe}>Add Recipe</button>
+      </div>
+    );
+  }
+});
+
+export default React.createClass({
+  propTypes: {
+    recipes: React.PropTypes.array.isRequired,
+    index: React.PropTypes.number.isRequired,
+    actions: React.PropTypes.object.isRequired
+  },
+  createRecipe: function(url) {
+    this.props.actions.createRecipe(url);
+  },
+  render: function() {
+    let recipes = this.props.recipes.map((r, i) => {
       return (
         <Thumbnail key={i}
                    index={i}
+                   active={i===this.props.index}
                    actions={this.props.actions}
                    {...r} />
       );
@@ -90,6 +127,7 @@ export default React.createClass({
         <ul className="saved-recipes">
           {recipes}
         </ul>
+        <RecipeCreator createRecipe={this.createRecipe} />
       </div>
     );
   }

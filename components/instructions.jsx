@@ -2,10 +2,10 @@ import React from "react";
 
 export default React.createClass({
   propTypes: {
-    instructions: React.PropTypes.array.isRequired
+    values: React.PropTypes.array.isRequired
   },
   render: function() {
-    var instructions = this.props.instructions.map(function(s, i){
+    var values = this.props.values.map(function(s, i){
       return (
         <li key={i}>{s}</li>
       );
@@ -14,7 +14,7 @@ export default React.createClass({
       <div className="instructions">
         <h3>Instructions</h3>
         <ol>
-          {instructions}
+          {values}
         </ol>
       </div>
     );

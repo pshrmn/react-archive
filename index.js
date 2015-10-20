@@ -3,12 +3,12 @@ import { createStore, applyMiddleware } from "redux";
 import { Provider } from "react-redux";
 import App from "./containers/app";
 import recipeReducer from './reducers';
-import { StorageAPI, RecipeLoader } from "./middleware/storage";
+import { StorageAPI } from "./middleware/storage";
 import { SetupStorage } from "./helpers";
 
 let initialState = SetupStorage();
 var store = applyMiddleware(
-  StorageAPI, RecipeLoader
+  StorageAPI
 )(createStore)(recipeReducer, initialState);
 
 React.render(

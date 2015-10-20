@@ -18,7 +18,7 @@ header {
   list-style: none;
   display: flex;
   padding: 0;
-  margin: 0; }
+  margin: 15px 0; }
   .saved-recipes .thumbnail {
     cursor: pointer;
     box-sizing: border-box;
@@ -26,7 +26,10 @@ header {
     margin-right: 10px;
     background: #fff;
     border: 1px solid #666;
-    position: relative; }
+    position: relative;
+    box-shadow: 3px 3px #999; }
+    .saved-recipes .thumbnail.active {
+      box-shadow: 3px 3px green; }
     .saved-recipes .thumbnail img {
       width: 198px; }
     .saved-recipes .thumbnail .empty-thumb {
@@ -55,17 +58,17 @@ header {
     .saved-recipes .thumb-controls button:hover {
       color: #f00; }
 
-label {
+.edit-view label {
   text-transform: capitalize; }
 
-input {
+.edit-view input {
   width: 560px; }
 
-textarea {
+.edit-view textarea {
   min-width: 560px;
   min-height: 150px; }
 
-input, textarea {
+.edit-view input, .edit-view textarea {
   display: block; }
 
 .annotater {

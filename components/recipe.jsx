@@ -18,15 +18,14 @@ export default React.createClass({
     };
   },
   render: function() {
-    var ingredients = this.props.ingredients;
-    var instructions = this.props.instructions;
-    var url = this.props.ytID !== "" ? `https://youtu.be/${this.props.ytID}` : null;
+    let { name, ytID, ingredients, instructions } = this.props;
+    var url = ytID !== "" ? `https://youtu.be/${ytID}` : null;
     return (
       <div className="recipe">
-        <h2>{this.props.name}</h2>
+        <h2>{name}</h2>
         <h3>{url}</h3>
-        <Ingredients ingredients={ingredients} />
-        <Instructions instructions={instructions} />
+        <Ingredients values={ingredients} />
+        <Instructions values={instructions} />
       </div>
     );
   }
