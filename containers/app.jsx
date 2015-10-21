@@ -68,7 +68,7 @@ var App = React.createClass({
                    {...recipe} />
       ) : null;
     return (
-      <div>
+      <div className="app">
         <header>
           <h1>Annotated Meals</h1>
           <div>
@@ -84,9 +84,6 @@ var App = React.createClass({
                       index={index} />
           {annotater}
         </div>
-        <footer>
-          made by <a href="http://pshrmn.com">pshrmn.com</a>
-        </footer>
       </div>
     );
   }

@@ -1,8 +1,5 @@
 import * as ActionTypes from "../constants/ActionTypes";
-
-function saveRecipes(recipes) {
-  localStorage.setItem("recipes", JSON.stringify(recipes));
-}
+import { StoreRecipes } from "../helpers";
 
 /*
  * StorageAPI responds to storage related actions, updating the localStorage.
@@ -25,7 +22,7 @@ export const StorageAPI = store => next => action => {
       newRecipes = newRecipes.concat(recipe);
     }
     action.recipes = newRecipes;
-    saveRecipes(newRecipes);
+    StoreRecipes(newRecipes);
     break;
   case ActionTypes.DELETE_RECIPE:
     var { recipes } = store.getState();
@@ -33,7 +30,7 @@ export const StorageAPI = store => next => action => {
       return i !== action.index;
     })
     action.recipes = keptRecipes;
-    saveRecipes(keptRecipes);
+    StoreRecipes(keptRecipes);
     break;
   }
   return next(action);

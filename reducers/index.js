@@ -90,7 +90,6 @@ function reducer(state = initialState, action) {
    */
   if ( action.type === types.LOAD_RECIPE ) {
     return Object.assign({}, state, {
-      recipes: state.recipes,
       index: action.index,
       editing: true,
       recipe: Object.assign({}, state.recipe, state.recipes[action.index])

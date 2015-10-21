@@ -1,10 +1,15 @@
-html {
+html, body {
   font-family: "Noto Serif", serif;
+  position: relative;
 }
 
 #content {
   width: 80vw;
   margin: 0 auto;
+}
+
+.app {
+  position: relative;
 }
 
 header {
@@ -17,7 +22,7 @@ header {
 
 footer {
   position: absolute;
-  bottom: 0;
+  bottom: -35px;;
   left: 0;
   text-align: center;
   padding: 5px 0;
