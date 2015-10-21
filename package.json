@@ -1,6 +1,6 @@
 {
   "name": "annotated-meals",
-  "version": "0.7.3",
+  "version": "0.7.4",
   "description": "write down recipes while watching youtube cooking videos",
   "main": "index.js",
   "scripts": {
