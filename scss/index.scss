@@ -15,6 +15,19 @@ header {
   }
 }
 
+footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  text-align: center;
+  padding: 5px 0;
+  width: 100vw;
+  
+  a {
+    color: #222233;
+  }
+}
+
 .help {
   margin: 5px 0;
 
@@ -120,14 +133,19 @@ header {
 
 .print-view, .edit-view {
   display: inline-block;
-  min-width: 600px;
-  vertical-align: top;
   box-sizing: border-box;
+  vertical-align: top;
+  min-width: 600px;
+  max-width: 50%
 }
 
 .recipe {
-  padding: 25px;
+  padding: 10px;
   border: 1px solid #ccc;
+
+  h2 {
+    margin: 3px 0;
+  }
 }
 
 .recipe-name {

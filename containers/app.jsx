@@ -78,10 +78,15 @@ var App = React.createClass({
             For a quick test, try pasting this link <strong>https://www.youtube.com/watch?v=bjmYkPkjnVo</strong> into the "YouTube URL..." input below.
           </div>
         </header> 
-        <RecipeMenu actions={actions}
-                    recipes={recipes}
-                    index={index} />
-        {annotater}
+        <div>
+          <RecipeMenu actions={actions}
+                      recipes={recipes}
+                      index={index} />
+          {annotater}
+        </div>
+        <footer>
+          made by <a href="http://pshrmn.com">pshrmn.com</a>
+        </footer>
       </div>
     );
   }

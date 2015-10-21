@@ -1573,10 +1573,24 @@
 	          " into the \"YouTube URL...\" input below."
 	        )
 	      ),
-	      _react2["default"].createElement(_componentsRecipemenu2["default"], { actions: actions,
-	        recipes: recipes,
-	        index: index }),
-	      annotater
+	      _react2["default"].createElement(
+	        "div",
+	        null,
+	        _react2["default"].createElement(_componentsRecipemenu2["default"], { actions: actions,
+	          recipes: recipes,
+	          index: index }),
+	        annotater
+	      ),
+	      _react2["default"].createElement(
+	        "footer",
+	        null,
+	        "made by ",
+	        _react2["default"].createElement(
+	          "a",
+	          { href: "http://pshrmn.com" },
+	          "pshrmn.com"
+	        )
+	      )
 	    );
 	  }
 	});

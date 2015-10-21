@@ -10,6 +10,16 @@ header {
   header h1, header p {
     margin: 0; }
 
+footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  text-align: center;
+  padding: 5px 0;
+  width: 100vw; }
+  footer a {
+    color: #222233; }
+
 .help {
   margin: 5px 0; }
   .help h3, .help ol {
@@ -84,13 +94,16 @@ header {
 
 .print-view, .edit-view {
   display: inline-block;
-  min-width: 600px;
+  box-sizing: border-box;
   vertical-align: top;
-  box-sizing: border-box; }
+  min-width: 600px;
+  max-width: 50%; }
 
 .recipe {
-  padding: 25px;
+  padding: 10px;
   border: 1px solid #ccc; }
+  .recipe h2 {
+    margin: 3px 0; }
 
 .recipe-name {
   font-size: 1.5em; }
