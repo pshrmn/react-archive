@@ -70,37 +70,53 @@ function indexReducer(state=-1, action) {
 }
 
 /*
- * The storage middleware does the processing andcreates the new recipes array.
+ * Index is required when saving the recipes
  */
-function recipesReducer(recipes=[], action) {
+function recipesReducer(state=[], action) {
   switch (action.type) {
   case types.DELETE_RECIPE:
-  case types.SAVE_RECIPES:
-    return action.recipes;
+    var index = action.index
+    return state.filter((v, i) => {
+      return i !== index;
+    });    
   default:
-    return recipes;
+    return state;
   }
 }
 
 function reducer(state = initialState, action) {
-  //console.log("~~~~~~~~~~~\nreducer called\n", state, action, "\n~~~~~~~~~~~~~");
+  
   /*
-   * for the action LOAD_RECIPE, setting the recipe requires
-   * knowlege of state.recipes
+   * most store values are derived from their current state and the action
+   * however some actions require knowledge of other parts of the the state,
+   * and so they are handled separately below
    */
-  if ( action.type === types.LOAD_RECIPE ) {
+  switch (action.type) {
+  case types.LOAD_RECIPE:
     return Object.assign({}, state, {
       index: action.index,
       editing: true,
       recipe: Object.assign({}, state.recipe, state.recipes[action.index])
     });
+  case types.SAVE_RECIPES:
+    var recipes = [];
+    if ( state.index !== -1 ) {
+      recipes = state.recipes.slice();
+      recipes[state.index] = state.recipe;
+    } else {
+      recipes = state.recipes.concat(state.recipe);
+    }
+    return Object.assign({}, state, {
+      recipes: recipes
+    });
+  default:
+    return {
+      recipes: recipesReducer(state.recipes, action),
+      recipe: recipeReducer(state.recipe, action),
+      index: indexReducer(state.index, action),
+      editing: editingReducer(state.editing, action)
+    };
   }
-  return {
-    recipes: recipesReducer(state.recipes, action),
-    recipe: recipeReducer(state.recipe, action),
-    index: indexReducer(state.index, action),
-    editing: editingReducer(state.editing, action)
-  };
 }
 
 export default reducer;

@@ -2793,41 +2793,56 @@
 	}
 
 	/*
-	 * The storage middleware does the processing andcreates the new recipes array.
+	 * Index is required when saving the recipes
 	 */
-	function recipesReducer(recipes, action) {
-	  if (recipes === undefined) recipes = [];
+	function recipesReducer(state, action) {
+	  if (state === undefined) state = [];
 
 	  switch (action.type) {
 	    case types.DELETE_RECIPE:
-	    case types.SAVE_RECIPES:
-	      return action.recipes;
+	      var index = action.index;
+	      return state.filter(function (v, i) {
+	        return i !== index;
+	      });
 	    default:
-	      return recipes;
+	      return state;
 	  }
 	}
 
 	function reducer(state, action) {
 	  if (state === undefined) state = initialState;
 
-	  //console.log("~~~~~~~~~~~\nreducer called\n", state, action, "\n~~~~~~~~~~~~~");
 	  /*
-	   * for the action LOAD_RECIPE, setting the recipe requires
-	   * knowlege of state.recipes
+	   * most store values are derived from their current state and the action
+	   * however some actions require knowledge of other parts of the the state,
+	   * and so they are handled separately below
 	   */
-	  if (action.type === types.LOAD_RECIPE) {
-	    return _Object$assign({}, state, {
-	      index: action.index,
-	      editing: true,
-	      recipe: _Object$assign({}, state.recipe, state.recipes[action.index])
-	    });
+	  switch (action.type) {
+	    case types.LOAD_RECIPE:
+	      return _Object$assign({}, state, {
+	        index: action.index,
+	        editing: true,
+	        recipe: _Object$assign({}, state.recipe, state.recipes[action.index])
+	      });
+	    case types.SAVE_RECIPES:
+	      var recipes = [];
+	      if (state.index !== -1) {
+	        recipes = state.recipes.slice();
+	        recipes[state.index] = state.recipe;
+	      } else {
+	        recipes = state.recipes.concat(state.recipe);
+	      }
+	      return _Object$assign({}, state, {
+	        recipes: recipes
+	      });
+	    default:
+	      return {
+	        recipes: recipesReducer(state.recipes, action),
+	        recipe: recipeReducer(state.recipe, action),
+	        index: indexReducer(state.index, action),
+	        editing: editingReducer(state.editing, action)
+	      };
 	  }
-	  return {
-	    recipes: recipesReducer(state.recipes, action),
-	    recipe: recipeReducer(state.recipe, action),
-	    index: indexReducer(state.index, action),
-	    editing: editingReducer(state.editing, action)
-	  };
 	}
 
 	exports["default"] = reducer;
@@ -2877,7 +2892,6 @@
 	          } else {
 	            newRecipes = newRecipes.concat(recipe);
 	          }
-	          action.recipes = newRecipes;
 	          (0, _helpers.StoreRecipes)(newRecipes);
 	          break;
 	        case ActionTypes.DELETE_RECIPE:
@@ -2887,7 +2901,6 @@
 	          var keptRecipes = recipes.filter(function (v, i) {
 	            return i !== action.index;
 	          });
-	          action.recipes = keptRecipes;
 	          (0, _helpers.StoreRecipes)(keptRecipes);
 	          break;
 	      }

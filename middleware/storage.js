@@ -21,15 +21,13 @@ export const StorageAPI = store => next => action => {
     } else {
       newRecipes = newRecipes.concat(recipe);
     }
-    action.recipes = newRecipes;
     StoreRecipes(newRecipes);
     break;
   case ActionTypes.DELETE_RECIPE:
     var { recipes } = store.getState();
     var keptRecipes = recipes.filter((v, i) => {
       return i !== action.index;
-    })
-    action.recipes = keptRecipes;
+    });
     StoreRecipes(keptRecipes);
     break;
   }

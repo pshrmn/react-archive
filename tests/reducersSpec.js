@@ -73,7 +73,6 @@ describe("reducers", () => {
     });
   });
 
-  /*
   // currently the middleware updates the action, but that probably shouldn't
   // actually happen, so no tests for DELETE_RECIPE or SAVE_RECIPES
   describe("DELETE_RECIPE", () => {
@@ -90,20 +89,39 @@ describe("reducers", () => {
       };
       let result = reducer(state, action);
       expect(result.recipes.length).equal(2);
-      expect(result.recipes).equal(["one", "three"]);
+      expect(result.recipes).deep.equal(["one", "three"]);
     });
   });
 
   describe("SAVE_RECIPES", () => {
-    it("", () => {
-      let state = Object.assign({}, initialState);
+    it("adds a new recipe to the end of the recipes array when index = -1", () => {
+      let state = Object.assign({}, initialState, {
+        recipes: [1,2,3],
+        recipe: 4,
+        index: -1
+      });
       let action = {
-        type:
+        type: ActionTypes.SAVE_RECIPES
       };
       let result = reducer(state, action);
+      expect(result.recipes.length).equal(4);
+      expect(result.recipes).deep.equal([1,2,3,4]);
+    });
+
+    it("replaces existing recipe for index != -1", () => {
+      let state = Object.assign({}, initialState, {
+        recipes: [1,2,3],
+        recipe: 4,
+        index: 1
+      });
+      let action = {
+        type: ActionTypes.SAVE_RECIPES
+      };
+      let result = reducer(state, action);
+      expect(result.recipes.length).equal(3);
+      expect(result.recipes).deep.equal([1,4,3]);
     });
   });
-  */
 
   describe("LOAD_RECIPE", () => {
     it("sets the recipe at state.recipes[index] to state.recipe", () => {
