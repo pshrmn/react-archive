@@ -1,12 +1,13 @@
 {
   "name": "annotated-meals",
-  "version": "0.7.5",
+  "version": "0.7.6",
   "description": "write down recipes while watching youtube cooking videos",
   "main": "index.js",
   "scripts": {
     "test": "mocha tests --compilers js:babel/register",
     "sass": "node-sass scss/** -o public/static/css/**",
     "autoprefix": "postcss --use autoprefixer --autoprefixer.browsers \"last 2 versions\" public/static/css/index.css --dir public/static/css/",
+    "css": "npm run sass && npm run autoprefix",
     "webpack": "webpack && webpack --config=webpack.config.min.js"
   },
   "engines": {
@@ -27,6 +28,7 @@
     "autoprefixer": "^6.0.3",
     "babel": "^5.8.23",
     "babel-loader": "^5.3.2",
+    "babel-runtime": "^5.8.25",
     "chai": "^3.4.0",
     "mocha": "^2.3.3",
     "node-sass": "^3.3.3",
@@ -35,7 +37,6 @@
     "webpack": "^1.12.2"
   },
   "dependencies": {
-    "babel-runtime": "^5.8.25",
     "react": "^0.14.0",
     "react-dom": "^0.14.0",
     "react-redux": "^3.1.0",

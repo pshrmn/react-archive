@@ -2094,6 +2094,12 @@
 	  }
 	});
 
+	function nonBlankLines(text) {
+	  return text.split("\n").filter(function (line) {
+	    return line !== "";
+	  });
+	}
+
 	var UserTextarea = _react2["default"].createClass({
 	  displayName: "UserTextarea",
 
@@ -2113,11 +2119,11 @@
 	    });
 	  },
 	  handleBlur: function handleBlur(event) {
-	    this.props.submit(this.state.value.split("\n"));
+	    this.props.submit(nonBlankLines(this.state.value));
 	  },
 	  handleSubmit: function handleSubmit(event) {
 	    if (event.which === 13) {
-	      this.props.submit(this.state.value.split("\n"));
+	      this.props.submit(nonBlankLines(this.state.value));
 	    }
 	  },
 	  render: function render() {

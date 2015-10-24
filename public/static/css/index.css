@@ -38,6 +38,8 @@ footer {
 
 .saved-recipes {
   list-style: none;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
   padding: 0;
   margin: 15px 0; }
@@ -88,6 +90,7 @@ footer {
 
 .edit-view textarea {
   min-width: 560px;
+  max-width: 100%;
   min-height: 150px; }
 
 .edit-view input, .edit-view textarea {

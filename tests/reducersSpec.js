@@ -15,10 +15,13 @@ describe("reducers", () => {
     editing: false,
     index: -1
   };
+  var state;
+  beforeEach(() => {
+    state = Object.assign({}, initialState);
+  });
 
   describe("CREATE_RECIPE", () => {
     it("returns a new state with the recipe's ytID set", () => {
-      let state = Object.assign({}, initialState);
       let ytID = "example_id";
       let action = {
         type: ActionTypes.CREATE_RECIPE,
@@ -35,7 +38,6 @@ describe("reducers", () => {
 
   describe("SET_NAME", () => {
     it("sets the name of the recipe", () => {
-      let state = Object.assign({}, initialState);
       let name = "Top Ramen";
       let action = {
         type: ActionTypes.SET_NAME,
@@ -49,7 +51,6 @@ describe("reducers", () => {
 
   describe("SET_INGREDIENTS", () => {
     it("sets the ingredients array of the recipe", () => {
-      let state = Object.assign({}, initialState);
       let ingredients = ["ramen", "water"];
       let action = {
         type: ActionTypes.SET_INGREDIENTS,
@@ -62,7 +63,6 @@ describe("reducers", () => {
 
   describe("SET_INSTRUCTIONS", () => {
     it("sets the instructions array of the recipe", () => {
-      let state = Object.assign({}, initialState);
       let instructions = ["boil water", "add ramen", "wait 4 minutes"];
       let action = {
         type: ActionTypes.SET_INSTRUCTIONS,
@@ -77,7 +77,7 @@ describe("reducers", () => {
   // actually happen, so no tests for DELETE_RECIPE or SAVE_RECIPES
   describe("DELETE_RECIPE", () => {
     it("", () => {
-      let state = Object.assign({}, initialState, {
+      state = Object.assign({}, state, {
         recipes: [
           "one", "two", "three"
         ]
@@ -95,7 +95,7 @@ describe("reducers", () => {
 
   describe("SAVE_RECIPES", () => {
     it("adds a new recipe to the end of the recipes array when index = -1", () => {
-      let state = Object.assign({}, initialState, {
+      state = Object.assign({}, state, {
         recipes: [1,2,3],
         recipe: 4,
         index: -1
@@ -109,7 +109,7 @@ describe("reducers", () => {
     });
 
     it("replaces existing recipe for index != -1", () => {
-      let state = Object.assign({}, initialState, {
+      state = Object.assign({}, state, {
         recipes: [1,2,3],
         recipe: 4,
         index: 1
@@ -131,7 +131,7 @@ describe("reducers", () => {
         {name: "baz", ytID: "baz", ingredients: [], instructions: []}
       ];
       let index = 1;
-      let state = Object.assign({}, initialState, {
+      let state = Object.assign({}, state, {
         recipes: recipes
       });
       let action = {
@@ -148,8 +148,8 @@ describe("reducers", () => {
   });
 
   describe("RESET_RECIPE", () => {
-    it("", () => {
-      let state = Object.assign({}, initialState, {
+    it("sets the properties of state.recipe to empty vals", () => {
+      state = Object.assign({}, state, {
         recipe: {
           name: "foo",
           ytID: "bar",

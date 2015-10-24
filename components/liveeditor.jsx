@@ -86,6 +86,12 @@ var UserInput = React.createClass({
   }
 });
 
+function nonBlankLines(text) {
+  return text.split("\n").filter((line) => {
+    return line !== "";
+  });
+}
+
 var UserTextarea = React.createClass({
   getInitialState: function() {
     return {
@@ -103,11 +109,11 @@ var UserTextarea = React.createClass({
     });
   },
   handleBlur: function(event) {
-    this.props.submit(this.state.value.split("\n"));
+    this.props.submit(nonBlankLines(this.state.value));
   },
   handleSubmit: function(event) {
     if ( event.which === 13 ) {
-      this.props.submit(this.state.value.split("\n"));
+      this.props.submit(nonBlankLines(this.state.value));
     }
   },
   render: function() {
