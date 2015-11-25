@@ -50,7 +50,11 @@
 
 	var _stories2 = _interopRequireDefault(_stories);
 
-	var _pageType = __webpack_require__(2);
+	var _comments = __webpack_require__(6);
+
+	var _comments2 = _interopRequireDefault(_comments);
+
+	var _pageType = __webpack_require__(8);
 
 	var _pageType2 = _interopRequireDefault(_pageType);
 
@@ -60,17 +64,26 @@
 	console.log(type);
 	if (type === "submission") {
 	  console.log((0, _stories2.default)());
+	} else if (type === "comments") {
+	  console.log((0, _comments2.default)());
 	}
 
 /***/ },
 /* 1 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+
+	var _story = __webpack_require__(2);
+
+	var _story2 = _interopRequireDefault(_story);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 	/*
 	 * stories
 	 * -------
@@ -78,12 +91,54 @@
 	 * return an array of stories in the page
 	 */
 	var stories = function stories() {
-	  var athings = document.querySelectorAll("tr.athing");
-	  var stories = Array.from(athings).map(function (thing) {
-	    return Object.assign({}, headlineData(thing), bylineData(thing.nextElementSibling));
+	  return Array.from(document.querySelectorAll("tr.athing")).map(function (thing) {
+	    return (0, _story2.default)(thing);
 	  });
-	  return stories;
 	};
+
+	exports.default = stories;
+
+/***/ },
+/* 2 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _headline = __webpack_require__(3);
+
+	var _headline2 = _interopRequireDefault(_headline);
+
+	var _byline = __webpack_require__(5);
+
+	var _byline2 = _interopRequireDefault(_byline);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var story = function story(element) {
+	  return Object.assign({}, (0, _headline2.default)(element), (0, _byline2.default)(element.nextElementSibling));
+	};
+
+	exports.default = story;
+
+/***/ },
+/* 3 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _votes = __webpack_require__(4);
+
+	var _votes2 = _interopRequireDefault(_votes);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	/*
 	 * data from the headline of a submission
@@ -94,18 +149,7 @@
 	    console.error("unexpected tds for headline", headline, tds);
 	    return {};
 	  }
-	  return Object.assign({}, votingData(tds[1]), submissionData(tds[2]));
-	};
-
-	var votingData = function votingData(element) {
-	  return {
-	    votes: Array.from(element.querySelectorAll("a")).map(function (link) {
-	      return {
-	        url: link.href,
-	        type: link.id.split("_")[0]
-	      };
-	    })
-	  };
+	  return Object.assign({}, (0, _votes2.default)(tds[1]), submissionData(tds[2]));
 	};
 
 	var submissionData = function submissionData(element) {
@@ -119,6 +163,39 @@
 	  };
 	};
 
+	exports.default = headlineData;
+
+/***/ },
+/* 4 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var votingData = function votingData(element) {
+	  return {
+	    votes: Array.from(element.querySelectorAll("a")).map(function (link) {
+	      return {
+	        url: link.href,
+	        type: link.id.split("_")[0]
+	      };
+	    })
+	  };
+	};
+
+	exports.default = votingData;
+
+/***/ },
+/* 5 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
 	/*
 	 * data from the byline of a submission
 	 */
@@ -170,10 +247,143 @@
 	  };
 	};
 
-	exports.default = stories;
+	exports.default = bylineData;
 
 /***/ },
-/* 2 */
+/* 6 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _story = __webpack_require__(2);
+
+	var _story2 = _interopRequireDefault(_story);
+
+	var _comment = __webpack_require__(7);
+
+	var _comment2 = _interopRequireDefault(_comment);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	/*
+	 * comments
+	 * --------
+	 *
+	 * There are two kinds of comments pages.
+	 * 1.) all comments - this is headed by a submission and lists all of the
+	 *     comments for a submission in a comment tree
+	 * 2.) single comments - this is headed by a comment and list all of the child
+	 *     comments in a comment tree
+	 */
+	var comments = function comments() {
+	  var headline = document.querySelector(".athing");
+	  var commentTree = document.querySelector(".comment-tree");
+	  return Object.assign({}, header(headline), commentData(commentTree));
+	};
+
+	var header = function header(element) {
+	  if (element.querySelector(".title") !== null) {
+	    return {
+	      type: "all",
+	      story: (0, _story2.default)(element)
+	    };
+	  } else {
+	    return {
+	      type: "single",
+	      comment: (0, _comment2.default)(element)
+	    };
+	  }
+	};
+
+	var commentData = function commentData(tree) {
+	  if (tree === null) {
+	    return {
+	      comments: []
+	    };
+	  }
+	  return {
+	    comments: Array.from(tree.querySelectorAll(".athing")).map(function (element) {
+	      return (0, _comment2.default)(element);
+	    })
+	  };
+	};
+
+	exports.default = comments;
+
+/***/ },
+/* 7 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _votes = __webpack_require__(4);
+
+	var _votes2 = _interopRequireDefault(_votes);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var comment = function comment(element) {
+	  // comments aren't actually nested, instead they are indented with an image to
+	  // show how they should be nested
+	  var indentationHolder = element.querySelector(".ind");
+	  var indentation = indentationHolder.querySelector("img");
+	  var level = indentation === null ? 0 : parseInt(indentation.width, 10) / 40;
+	  var commentHolder = element.querySelector(".comment > span");
+	  // get the text of the comment. This does not preserve any markdown elements
+	  // eg italics
+	  var paragraphs = Array.from(commentHolder.childNodes).filter(function (child) {
+	    return child.classList === undefined || !child.classList.contains("reply");
+	  }).reduce(function (arr, child) {
+	    var index = arr.length - 1;
+	    var current = arr[index];
+	    if (child.tagName === "P") {
+	      arr.push(child.textContent);
+	      return arr;
+	    } else {
+	      current += child.textContent;
+	      arr[index] = current;
+	      return arr;
+	    }
+	  }, [""]).map(function (t) {
+	    return t.trim();
+	  });
+	  var replyLink = element.querySelector(".reply a");
+	  var reply = replyLink !== null ? replyLink.href : "";
+	  return Object.assign({}, {
+	    level: level,
+	    votes: (0, _votes2.default)(element.querySelector(".votelinks")),
+	    paragraphs: paragraphs,
+	    reply: reply
+	  }, headline(element.querySelector("td.default div")));
+	};
+
+	var headline = function headline(element) {
+	  var links = element.querySelectorAll("a");
+	  var parentHolder = element.querySelector(".par a");
+	  var parent = parentHolder !== null ? parentHolder.href : "";
+	  return {
+	    user: {
+	      name: links[0].textContent,
+	      url: links[0].href
+	    },
+	    direct: links[1].href,
+	    when: links[1].textContent,
+	    parent: parent
+	  };
+	};
+
+	exports.default = comment;
+
+/***/ },
+/* 8 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -191,6 +401,8 @@
 	      return "submission";
 	    case "/item":
 	      return "comments";
+	    case "/reply":
+	      return "reply";
 	    default:
 	      return "no-op";
 	  }
