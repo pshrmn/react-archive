@@ -15,7 +15,7 @@ const comment = element => {
   let level = indentation === null ? 0 : parseInt(indentation.width, 10) / 40;
   let commentHolder = element.querySelector(".comment > span");
   // flagged comment
-  if ( !commentHolder.length ) {
+  if ( commentHolder === null ) {
     return {
       level: level,
       type: "flagged"

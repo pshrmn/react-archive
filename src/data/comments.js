@@ -49,8 +49,35 @@ const commentData = tree => {
     };
   }
   return {
-    comments: Array.from(tree.querySelectorAll(".athing")).map(element => comment(element))
+    comments: buildTree(Array.from(tree.querySelectorAll(".athing")).map(element => comment(element)))
   };
+};
+
+/*
+ * return an array of comments. Comments are nested based on their level, with the
+ * returned array consisting of root (level=0) comments, and any nested comments
+ * exisiting in the children array of their parent
+ */
+const buildTree = comments => {
+  let commentTree = [];
+  let levels = {};
+  comments.forEach(c => {
+    let { level } = c;
+    // set the comment at current level to current comment
+    levels[level] = c;
+    c.children = [];
+    // special case for root (level=0) comments
+    if ( level === 0 ) {
+      commentTree.push(c);
+    } else {
+      let parent = levels[level-1];
+      if ( parent === undefined ) {
+        console.error("missing parent", (level-1), comments, levels);
+      }
+      parent.children.push(c);
+    }
+  });
+  return commentTree
 };
 
 export default comments;

@@ -106,9 +106,11 @@
 	 * return an array of stories in the page
 	 */
 	var stories = function stories() {
-	  return Array.from(document.querySelectorAll("tr.athing")).map(function (thing) {
-	    return (0, _story2.default)(thing);
-	  });
+	  return {
+	    stories: Array.from(document.querySelectorAll("tr.athing")).map(function (thing) {
+	      return (0, _story2.default)(thing);
+	    })
+	  };
 	};
 
 	exports.default = stories;
@@ -331,10 +333,38 @@
 	    };
 	  }
 	  return {
-	    comments: Array.from(tree.querySelectorAll(".athing")).map(function (element) {
+	    comments: buildTree(Array.from(tree.querySelectorAll(".athing")).map(function (element) {
 	      return (0, _comment2.default)(element);
-	    })
+	    }))
 	  };
+	};
+
+	/*
+	 * return an array of comments. Comments are nested based on their level, with the
+	 * returned array consisting of root (level=0) comments, and any nested comments
+	 * exisiting in the children array of their parent
+	 */
+	var buildTree = function buildTree(comments) {
+	  var commentTree = [];
+	  var levels = {};
+	  comments.forEach(function (c) {
+	    var level = c.level;
+	    // set the comment at current level to current comment
+
+	    levels[level] = c;
+	    c.children = [];
+	    // special case for root (level=0) comments
+	    if (level === 0) {
+	      commentTree.push(c);
+	    } else {
+	      var parent = levels[level - 1];
+	      if (parent === undefined) {
+	        console.error("missing parent", level - 1, comments, levels);
+	      }
+	      parent.children.push(c);
+	    }
+	  });
+	  return commentTree;
 	};
 
 	exports.default = comments;
@@ -370,7 +400,7 @@
 	  var level = indentation === null ? 0 : parseInt(indentation.width, 10) / 40;
 	  var commentHolder = element.querySelector(".comment > span");
 	  // flagged comment
-	  if (!commentHolder.length) {
+	  if (commentHolder === null) {
 	    return {
 	      level: level,
 	      type: "flagged"
