@@ -1,0 +1,75 @@
+.hn-react {
+  font-size: 16px;
+}
+
+.hn-react a, .hn-react a:visited {
+  color: #000;
+}
+
+.hn-react header {
+  display: flex;
+}
+
+.hn-react header nav {
+  display: flex;
+  list-style: none;
+  align-items: flex-end;
+}
+
+.hn-react header nav li {
+  margin-right: 5px;
+}
+
+.hn-react header nav.user {
+  margin-left: auto;
+}
+
+.story {
+  margin: 10px 0;
+  display: flex;
+  border-left: 5px solid transparent;
+}
+
+.story:hover {
+  border-color: #F26522;
+  background: #efefef;
+}
+
+.voting {
+  width: 50px;
+  margin-right: 10px;
+  text-align: center;
+  font-size: 0.75em;
+}
+
+.points {
+  padding: 2px;
+  background: #F26522;
+  border-radius: 2px;
+  font-weight: bold;
+  color: #fff;
+  display: inline-block;
+}
+
+.voting .points {
+  width: 100%;
+  background: transparent;
+  color: #444;
+}
+
+.voting .filler {
+  height: 15px;
+}
+
+.story .byline, .story .more {
+  font-size: 0.75em;
+}
+
+.story .byline a, .story .more a {
+  text-decoration: underline;
+}
+
+.vote {
+  text-align: center;
+  cursor: pointer;
+}

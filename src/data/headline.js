@@ -18,7 +18,7 @@ const submissionData = element => {
   let domainText = domain === null ? "" : domain.textContent;
   return {
     title: sub.textContent,
-    subUrl: sub.href,
+    url: sub.href,
     domain: domainText
   };
 };

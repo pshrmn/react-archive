@@ -1,11 +1,9 @@
 const votingData = element => {
   return {
-    votes: Array.from(element.querySelectorAll("a")).map(link => {
-      return {
-        url: link.href,
-        type: link.id.split("_")[0]
-      };
-    })
+    votes: Array.from(element.querySelectorAll("a")).reduce((obj, link) => {
+      obj[link.id.split("_")[0]] = link.href;
+      return obj;
+    }, {})
   };
 };
 

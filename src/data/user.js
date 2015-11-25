@@ -14,12 +14,16 @@ const user = () => {
     // it as a string
     let points = matches[1] !== undefined ? matches[1] : "0";
     return {
-      name: userLink.textContent,
-      url: userLink.href,
-      points: points
-    }
+      user: {
+        name: userLink.textContent,
+        url: userLink.href,
+        points: points
+      }
+    };
   } else {
-    return {};
+    return {
+      user: {}
+    };
   }
 };
 

@@ -46,45 +46,99 @@
 
 	"use strict";
 
-	var _stories = __webpack_require__(1);
+	var _react = __webpack_require__(1);
 
-	var _stories2 = _interopRequireDefault(_stories);
+	var _react2 = _interopRequireDefault(_react);
 
-	var _comments = __webpack_require__(6);
+	var _reactDom = __webpack_require__(2);
 
-	var _comments2 = _interopRequireDefault(_comments);
+	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _reply = __webpack_require__(9);
-
-	var _reply2 = _interopRequireDefault(_reply);
-
-	var _pageType = __webpack_require__(10);
+	var _pageType = __webpack_require__(3);
 
 	var _pageType2 = _interopRequireDefault(_pageType);
 
-	var _user = __webpack_require__(11);
+	var _pages = __webpack_require__(4);
 
-	var _user2 = _interopRequireDefault(_user);
+	var _HackerNews = __webpack_require__(19);
+
+	var _HackerNews2 = _interopRequireDefault(_HackerNews);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var type = (0, _pageType2.default)();
-	console.log(type);
-	console.log((0, _user2.default)());
+	var page = undefined;
 	switch (type) {
 	  case "submission":
-	    console.log((0, _stories2.default)());
+	    page = (0, _pages.storyPage)();
 	    break;
 	  case "comments":
-	    console.log((0, _comments2.default)());
+	    page = (0, _pages.commentsPage)();
 	    break;
 	  case "reply":
-	    console.log((0, _reply2.default)());
+	    page = (0, _pages.replyPage)();
+	    break;
+	  default:
+	    page = (0, _pages.noopPage)();
 	    break;
 	}
 
+	var holder = document.createElement("div");
+	holder.classList.add("hn-react");
+	document.body.appendChild(holder);
+
+	_reactDom2.default.render(_react2.default.createElement(_HackerNews2.default, { type: type,
+	  page: page }), holder);
+
 /***/ },
 /* 1 */
+/***/ function(module, exports) {
+
+	module.exports = React;
+
+/***/ },
+/* 2 */
+/***/ function(module, exports) {
+
+	module.exports = ReactDOM;
+
+/***/ },
+/* 3 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	exports.default = function () {
+	  var location = window.location;
+	  switch (location.pathname) {
+	    case "/":
+	    case "/news":
+	    case "/jobs":
+	      return "submission";
+	    case "/item":
+	      return "comments";
+	    case "/reply":
+	      return "reply";
+	    default:
+	      return "no-op";
+	  }
+	};
+
+	; /*
+	   * return a string representing the type of page
+	   *
+	   * types:
+	   * submission - a page filled with submissions
+	   * comments - a page filled with comments
+	   * no-op - a page where nothing should be done?
+	   */
+
+/***/ },
+/* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -93,7 +147,117 @@
 	  value: true
 	});
 
-	var _story = __webpack_require__(2);
+	var _storyPage = __webpack_require__(5);
+
+	Object.defineProperty(exports, "storyPage", {
+	  enumerable: true,
+	  get: function get() {
+	    return _storyPage.default;
+	  }
+	});
+
+	var _commentsPage = __webpack_require__(12);
+
+	Object.defineProperty(exports, "commentsPage", {
+	  enumerable: true,
+	  get: function get() {
+	    return _commentsPage.default;
+	  }
+	});
+
+	var _replyPage = __webpack_require__(16);
+
+	Object.defineProperty(exports, "replyPage", {
+	  enumerable: true,
+	  get: function get() {
+	    return _replyPage.default;
+	  }
+	});
+
+	var _noopPage = __webpack_require__(18);
+
+	Object.defineProperty(exports, "noopPage", {
+	  enumerable: true,
+	  get: function get() {
+	    return _noopPage.default;
+	  }
+	});
+
+/***/ },
+/* 5 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _user = __webpack_require__(6);
+
+	var _user2 = _interopRequireDefault(_user);
+
+	var _stories = __webpack_require__(7);
+
+	var _stories2 = _interopRequireDefault(_stories);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.default = function () {
+	  return Object.assign({}, (0, _user2.default)(), (0, _stories2.default)());
+	};
+
+/***/ },
+/* 6 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var user = function user() {
+	  var pagetops = document.querySelectorAll(".pagetop");
+	  if (!pagetops[1]) {
+	    return {};
+	  }
+	  var holder = pagetops[1];
+	  var links = holder.querySelectorAll("a");
+	  if (links.length === 2) {
+	    var userLink = links[0];
+	    var pointsText = userLink.nextSibling.textContent.trim();
+	    var pointsRegex = /\((.+)\)/;
+	    var matches = pointsRegex.exec(pointsText);
+	    // I don't actually know how points are displayed for 1000+, so just keep
+	    // it as a string
+	    var points = matches[1] !== undefined ? matches[1] : "0";
+	    return {
+	      user: {
+	        name: userLink.textContent,
+	        url: userLink.href,
+	        points: points
+	      }
+	    };
+	  } else {
+	    return {
+	      user: {}
+	    };
+	  }
+	};
+
+	exports.default = user;
+
+/***/ },
+/* 7 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _story = __webpack_require__(8);
 
 	var _story2 = _interopRequireDefault(_story);
 
@@ -116,7 +280,7 @@
 	exports.default = stories;
 
 /***/ },
-/* 2 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -125,11 +289,11 @@
 	  value: true
 	});
 
-	var _headline = __webpack_require__(3);
+	var _headline = __webpack_require__(9);
 
 	var _headline2 = _interopRequireDefault(_headline);
 
-	var _byline = __webpack_require__(5);
+	var _byline = __webpack_require__(11);
 
 	var _byline2 = _interopRequireDefault(_byline);
 
@@ -142,7 +306,7 @@
 	exports.default = story;
 
 /***/ },
-/* 3 */
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -151,7 +315,7 @@
 	  value: true
 	});
 
-	var _votes = __webpack_require__(4);
+	var _votes = __webpack_require__(10);
 
 	var _votes2 = _interopRequireDefault(_votes);
 
@@ -175,7 +339,7 @@
 	  var domainText = domain === null ? "" : domain.textContent;
 	  return {
 	    title: sub.textContent,
-	    subUrl: sub.href,
+	    url: sub.href,
 	    domain: domainText
 	  };
 	};
@@ -183,7 +347,7 @@
 	exports.default = headlineData;
 
 /***/ },
-/* 4 */
+/* 10 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -193,19 +357,17 @@
 	});
 	var votingData = function votingData(element) {
 	  return {
-	    votes: Array.from(element.querySelectorAll("a")).map(function (link) {
-	      return {
-	        url: link.href,
-	        type: link.id.split("_")[0]
-	      };
-	    })
+	    votes: Array.from(element.querySelectorAll("a")).reduce(function (obj, link) {
+	      obj[link.id.split("_")[0]] = link.href;
+	      return obj;
+	    }, {})
 	  };
 	};
 
 	exports.default = votingData;
 
 /***/ },
-/* 5 */
+/* 11 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -267,7 +429,7 @@
 	exports.default = bylineData;
 
 /***/ },
-/* 6 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -276,15 +438,39 @@
 	  value: true
 	});
 
-	var _story = __webpack_require__(2);
+	var _user = __webpack_require__(6);
+
+	var _user2 = _interopRequireDefault(_user);
+
+	var _comments = __webpack_require__(13);
+
+	var _comments2 = _interopRequireDefault(_comments);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.default = function () {
+	  return Object.assign({}, (0, _user2.default)(), (0, _comments2.default)());
+	};
+
+/***/ },
+/* 13 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _story = __webpack_require__(8);
 
 	var _story2 = _interopRequireDefault(_story);
 
-	var _comment = __webpack_require__(7);
+	var _comment = __webpack_require__(14);
 
 	var _comment2 = _interopRequireDefault(_comment);
 
-	var _commentForm = __webpack_require__(8);
+	var _commentForm = __webpack_require__(15);
 
 	var _commentForm2 = _interopRequireDefault(_commentForm);
 
@@ -370,7 +556,7 @@
 	exports.default = comments;
 
 /***/ },
-/* 7 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -379,7 +565,7 @@
 	  value: true
 	});
 
-	var _votes = __webpack_require__(4);
+	var _votes = __webpack_require__(10);
 
 	var _votes2 = _interopRequireDefault(_votes);
 
@@ -453,7 +639,7 @@
 	exports.default = comment;
 
 /***/ },
-/* 8 */
+/* 15 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -478,7 +664,7 @@
 	exports.default = commentForm;
 
 /***/ },
-/* 9 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -487,11 +673,35 @@
 	  value: true
 	});
 
-	var _comment = __webpack_require__(7);
+	var _user = __webpack_require__(6);
+
+	var _user2 = _interopRequireDefault(_user);
+
+	var _reply = __webpack_require__(17);
+
+	var _reply2 = _interopRequireDefault(_reply);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.default = function () {
+	  return Object.assign({}, (0, _user2.default)(), (0, _reply2.default)());
+	};
+
+/***/ },
+/* 17 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _comment = __webpack_require__(14);
 
 	var _comment2 = _interopRequireDefault(_comment);
 
-	var _commentForm = __webpack_require__(8);
+	var _commentForm = __webpack_require__(15);
 
 	var _commentForm2 = _interopRequireDefault(_commentForm);
 
@@ -507,42 +717,440 @@
 	exports.default = reply;
 
 /***/ },
-/* 10 */
-/***/ function(module, exports) {
+/* 18 */
+/***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+
+	var _user = __webpack_require__(6);
+
+	var _user2 = _interopRequireDefault(_user);
+
+	var _stories = __webpack_require__(7);
+
+	var _stories2 = _interopRequireDefault(_stories);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	exports.default = function () {
-	  var location = window.location;
-	  switch (location.pathname) {
-	    case "/":
-	    case "/news":
-	    case "/jobs":
-	      return "submission";
-	    case "/item":
-	      return "comments";
-	    case "/reply":
-	      return "reply";
-	    default:
-	      return "no-op";
-	  }
+	  return Object.assign({}, (0, _user2.default)());
 	};
 
-	; /*
-	   * return a string representing the type of page
-	   *
-	   * types:
-	   * submission - a page filled with submissions
-	   * comments - a page filled with comments
-	   * no-op - a page where nothing should be done?
-	   */
+/***/ },
+/* 19 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _Header = __webpack_require__(20);
+
+	var _Header2 = _interopRequireDefault(_Header);
+
+	var _StoryPage = __webpack_require__(21);
+
+	var _StoryPage2 = _interopRequireDefault(_StoryPage);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.default = _react2.default.createClass({
+	  displayName: "HackerNews",
+
+	  render: function render() {
+	    var _props = this.props;
+	    var page = _props.page;
+	    var type = _props.type;
+
+	    var content = null;
+	    switch (type) {
+	      case "submission":
+	        content = _react2.default.createElement(_StoryPage2.default, { stories: page.stories });
+	        break;
+	    }
+	    return _react2.default.createElement(
+	      "div",
+	      { className: "hacker-news" },
+	      _react2.default.createElement(_Header2.default, { user: page.user }),
+	      content
+	    );
+	  },
+	  componentDidMount: function componentDidMount() {
+	    // hide the regular content
+	    if (this.props.type === "submission") {
+	      document.querySelector("center").style.display = "none";
+	    }
+	  },
+	  componentWillUnmount: function componentWillUnmount() {
+	    document.querySelector("center").style.display = "block";
+	  }
+	});
 
 /***/ },
-/* 11 */
+/* 20 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.default = _react2.default.createClass({
+	  displayName: "Header",
+
+	  shouldComponentUpdate: function shouldComponentUpdate(nextProps, nextState) {
+	    return false;
+	  },
+	  render: function render() {
+	    var user = this.props.user;
+
+	    return _react2.default.createElement(
+	      "header",
+	      null,
+	      _react2.default.createElement(
+	        "nav",
+	        { className: "general" },
+	        _react2.default.createElement(
+	          "li",
+	          null,
+	          _react2.default.createElement(
+	            "a",
+	            { href: "/" },
+	            _react2.default.createElement("img", { src: chrome.extension.getURL("img/logo.png"),
+	              width: "48", height: "48" }),
+	            "Hacker News"
+	          )
+	        ),
+	        _react2.default.createElement(
+	          "li",
+	          null,
+	          _react2.default.createElement(
+	            "a",
+	            { href: "/newest" },
+	            "new"
+	          )
+	        ),
+	        _react2.default.createElement(
+	          "li",
+	          null,
+	          _react2.default.createElement(
+	            "a",
+	            { href: "/newcomments" },
+	            "comments"
+	          )
+	        ),
+	        _react2.default.createElement(
+	          "li",
+	          null,
+	          _react2.default.createElement(
+	            "a",
+	            { href: "/show" },
+	            "show"
+	          )
+	        ),
+	        _react2.default.createElement(
+	          "li",
+	          null,
+	          _react2.default.createElement(
+	            "a",
+	            { href: "/ask" },
+	            "ask"
+	          )
+	        ),
+	        _react2.default.createElement(
+	          "li",
+	          null,
+	          _react2.default.createElement(
+	            "a",
+	            { href: "/jobs" },
+	            "jobs"
+	          )
+	        ),
+	        _react2.default.createElement(
+	          "li",
+	          null,
+	          _react2.default.createElement(
+	            "a",
+	            { href: "/submit" },
+	            "submit"
+	          )
+	        )
+	      ),
+	      _react2.default.createElement(User, user)
+	    );
+	  }
+	});
+
+	var User = _react2.default.createClass({
+	  displayName: "User",
+
+	  render: function render() {
+	    if (this.props.name === undefined) {
+	      var _location = window.location;
+	      var nextURL = "";
+	      return _react2.default.createElement(
+	        "nav",
+	        { className: "user" },
+	        _react2.default.createElement(
+	          "li",
+	          null,
+	          _react2.default.createElement(
+	            "a",
+	            { href: "/login?goto=" + _location.pathname + _location.search },
+	            "Login"
+	          )
+	        )
+	      );
+	    } else {
+	      var _props = this.props;
+	      var name = _props.name;
+	      var url = _props.url;
+	      var points = _props.points;
+
+	      return _react2.default.createElement(
+	        "nav",
+	        { className: "user" },
+	        _react2.default.createElement(
+	          "li",
+	          null,
+	          _react2.default.createElement(
+	            "a",
+	            { href: "/user?id=" + name },
+	            name
+	          )
+	        ),
+	        _react2.default.createElement(
+	          "li",
+	          { className: "points" },
+	          points
+	        ),
+	        _react2.default.createElement(
+	          "li",
+	          null,
+	          _react2.default.createElement(
+	            "a",
+	            { href: "/threads?id=" + name },
+	            "threads"
+	          )
+	        ),
+	        _react2.default.createElement(
+	          "li",
+	          null,
+	          _react2.default.createElement(
+	            "a",
+	            { href: "/logout?goto=" + location.pathname + location.search },
+	            "Logout"
+	          )
+	        )
+	      );
+	    }
+	  }
+	});
+
+/***/ },
+/* 21 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _vote = __webpack_require__(22);
+
+	var _vote2 = _interopRequireDefault(_vote);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.default = _react2.default.createClass({
+	  displayName: "StoryPage",
+
+	  render: function render() {
+	    var stories = this.props.stories;
+
+	    var submissions = stories.map(function (s, i) {
+	      return s.type === "sub" ? _react2.default.createElement(SubStory, _extends({ key: i }, s)) : _react2.default.createElement(JobStory, _extends({ key: i }, s));
+	    });
+	    return _react2.default.createElement(
+	      "div",
+	      null,
+	      submissions
+	    );
+	  }
+	});
+
+	var SubStory = _react2.default.createClass({
+	  displayName: "SubStory",
+
+	  getInitialState: function getInitialState() {
+	    return {
+	      canVote: true
+	    };
+	  },
+	  voted: function voted() {
+	    this.setState({
+	      canVote: false
+	    });
+	  },
+	  render: function render() {
+	    var _props = this.props;
+	    var url = _props.url;
+	    var title = _props.title;
+	    var id = _props.id;
+	    var points = _props.points;
+	    var comments = _props.comments;
+	    var user = _props.user;
+	    var votes = _props.votes;
+	    var when = _props.when;
+	    var domain = _props.domain;
+	    var canVote = this.state.canVote;
+
+	    var upVote = canVote && votes.up !== undefined ? _react2.default.createElement(Vote, { id: id, type: "up", url: votes.up, voted: this.voted }) : _react2.default.createElement("div", { className: "filler" });
+	    var downVote = canVote && votes.down !== undefined ? _react2.default.createElement(Vote, { id: id, type: "down", url: votes.down, voted: this.voted }) : _react2.default.createElement("div", { className: "filler" });
+	    var more = domain !== undefined ? _react2.default.createElement(
+	      "div",
+	      { className: "more" },
+	      "more from ",
+	      _react2.default.createElement(
+	        "a",
+	        { href: "/from?site=" + domain },
+	        domain
+	      )
+	    ) : null;
+	    return _react2.default.createElement(
+	      "div",
+	      { className: "story sub" },
+	      _react2.default.createElement(
+	        "div",
+	        { className: "voting" },
+	        upVote,
+	        _react2.default.createElement(
+	          "div",
+	          { className: "points" },
+	          points
+	        ),
+	        downVote
+	      ),
+	      _react2.default.createElement(
+	        "div",
+	        { className: "info" },
+	        _react2.default.createElement(
+	          "div",
+	          null,
+	          _react2.default.createElement(
+	            "a",
+	            { href: url, target: "_blank" },
+	            title
+	          )
+	        ),
+	        _react2.default.createElement(
+	          "div",
+	          { className: "byline" },
+	          _react2.default.createElement(
+	            "a",
+	            { href: comments.url, target: "_blank" },
+	            comments.count,
+	            " comments"
+	          ),
+	          " ",
+	          "submitted by ",
+	          _react2.default.createElement(
+	            "a",
+	            { href: user.url, target: "_blank" },
+	            user.name
+	          ),
+	          " ",
+	          when
+	        ),
+	        more
+	      )
+	    );
+	  }
+	});
+
+	var Vote = _react2.default.createClass({
+	  displayName: "Vote",
+
+	  voteHandler: function voteHandler(event) {
+	    event.preventDefault();
+	    (0, _vote2.default)(this.props.url);
+	    this.props.voted();
+	  },
+	  render: function render() {
+	    var _props2 = this.props;
+	    var id = _props2.id;
+	    var type = _props2.type;
+
+	    var code = 9632;
+	    if (type === "up") {
+	      code = 9650;
+	    } else if (type === "down") {
+	      code = 9660;
+	    }
+	    return _react2.default.createElement(
+	      "div",
+	      { className: "vote",
+	        onClick: this.voteHandler },
+	      String.fromCharCode(code)
+	    );
+	  }
+	});
+
+	var JobStory = _react2.default.createClass({
+	  displayName: "JobStory",
+
+	  render: function render() {
+	    var _props3 = this.props;
+	    var url = _props3.url;
+	    var title = _props3.title;
+
+	    return _react2.default.createElement(
+	      "div",
+	      { className: "story job" },
+	      _react2.default.createElement(
+	        "div",
+	        { className: "voting" },
+	        "(job)"
+	      ),
+	      _react2.default.createElement(
+	        "div",
+	        { className: "info" },
+	        _react2.default.createElement(
+	          "a",
+	          { href: url, target: "_blank" },
+	          title
+	        )
+	      )
+	    );
+	  }
+	});
+
+/***/ },
+/* 22 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -550,32 +1158,21 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	var user = function user() {
-	  var pagetops = document.querySelectorAll(".pagetop");
-	  if (!pagetops[1]) {
-	    return {};
-	  }
-	  var holder = pagetops[1];
-	  var links = holder.querySelectorAll("a");
-	  if (links.length === 2) {
-	    var userLink = links[0];
-	    var pointsText = userLink.nextSibling.textContent.trim();
-	    var pointsRegex = /\((.+)\)/;
-	    var matches = pointsRegex.exec(pointsText);
-	    // I don't actually know how points are displayed for 1000+, so just keep
-	    // it as a string
-	    var points = matches[1] !== undefined ? matches[1] : "0";
-	    return {
-	      name: userLink.textContent,
-	      url: userLink.href,
-	      points: points
-	    };
-	  } else {
-	    return {};
-	  }
-	};
+	/*
+	 * vote
+	 * ----
+	 *
+	 * the way that voting on hacker news works is that the href of the vote link
+	 * that was clicked is set as the src of a new Image, thus "pinging" the server
+	 * with the voting information encoded in the src. The auth query parameter
+	 * is unique for each voting url, so this has can't be generated just by knowing
+	 * the story's id
+	 */
 
-	exports.default = user;
+	exports.default = function (url) {
+	  var pinger = new Image();
+	  pinger.src = url;
+	};
 
 /***/ }
 /******/ ]);

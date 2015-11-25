@@ -1,20 +1,33 @@
-import stories from "./data/stories";
-import comments from "./data/comments";
-import reply from "./data/reply";
+import React from "react";
+import ReactDOM from "react-dom";
+
 import pageType from "./data/pageType";
-import user from "./data/user";
+import { storyPage, commentsPage, replyPage, noopPage } from "./data/pages";
+import HackerNews from "./components/HackerNews";
 
 let type = pageType();
-console.log(type);
-console.log(user());
+let page;
 switch ( type ) {
 case "submission":
-  console.log(stories());
+  page = storyPage();
   break;
 case "comments":
-  console.log(comments());
+  page = commentsPage();
   break;
 case "reply":
-  console.log(reply());
+  page = replyPage();
   break; 
+default:
+  page = noopPage();
+  break;
 }
+
+let holder = document.createElement("div");
+holder.classList.add("hn-react");
+document.body.appendChild(holder);
+
+ReactDOM.render(
+  <HackerNews type={type}
+              page={page} />
+  , holder
+);

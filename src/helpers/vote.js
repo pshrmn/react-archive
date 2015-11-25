@@ -8,7 +8,7 @@
  * is unique for each voting url, so this has can't be generated just by knowing
  * the story's id
  */
-export const vote = url => {
+export default url => {
   let pinger = new Image();
   pinger.src = url;
 };
