@@ -1,5 +1,6 @@
 import story from "./story";
 import comment from "./comment";
+import commentForm from "./commentForm";
 
 /*
  * comments
@@ -16,7 +17,8 @@ const comments = () => {
   let commentTree = document.querySelector(".comment-tree");
   return Object.assign({},
     header(headline),
-    commentData(commentTree)
+    commentData(commentTree),
+    replyForm(document.querySelector("form[method=post]"))
   );
 };
 
@@ -24,7 +26,7 @@ const header = element => {
   if ( element.querySelector(".title") !== null ) {
     return {
       type: "all",
-      story: story(element)  
+      story: story(element)
     }
   } else {
     return {
@@ -33,6 +35,12 @@ const header = element => {
     }
   }
 };
+
+const replyForm = form => {
+  return {
+    replyForm: form !== null ? commentForm(form) : null
+  };
+}
 
 const commentData = tree => {
   if ( tree === null ) {

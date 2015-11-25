@@ -54,7 +54,11 @@
 
 	var _comments2 = _interopRequireDefault(_comments);
 
-	var _pageType = __webpack_require__(8);
+	var _reply = __webpack_require__(9);
+
+	var _reply2 = _interopRequireDefault(_reply);
+
+	var _pageType = __webpack_require__(10);
 
 	var _pageType2 = _interopRequireDefault(_pageType);
 
@@ -66,6 +70,8 @@
 	  console.log((0, _stories2.default)());
 	} else if (type === "comments") {
 	  console.log((0, _comments2.default)());
+	} else if (type === "reply") {
+	  console.log((0, _reply2.default)());
 	}
 
 /***/ },
@@ -267,6 +273,10 @@
 
 	var _comment2 = _interopRequireDefault(_comment);
 
+	var _commentForm = __webpack_require__(8);
+
+	var _commentForm2 = _interopRequireDefault(_commentForm);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	/*
@@ -282,7 +292,7 @@
 	var comments = function comments() {
 	  var headline = document.querySelector(".athing");
 	  var commentTree = document.querySelector(".comment-tree");
-	  return Object.assign({}, header(headline), commentData(commentTree));
+	  return Object.assign({}, header(headline), commentData(commentTree), replyForm(document.querySelector("form[method=post]")));
 	};
 
 	var header = function header(element) {
@@ -297,6 +307,12 @@
 	      comment: (0, _comment2.default)(element)
 	    };
 	  }
+	};
+
+	var replyForm = function replyForm(form) {
+	  return {
+	    replyForm: form !== null ? (0, _commentForm2.default)(form) : null
+	  };
 	};
 
 	var commentData = function commentData(tree) {
@@ -384,6 +400,60 @@
 
 /***/ },
 /* 8 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var commentForm = function commentForm(form) {
+	  var parent = form.querySelector("input[name=parent]");
+	  // goto gets highlighted using syntax highlighter, so using togo intead
+	  var togo = form.querySelector("input[name=goto]");
+	  var hmac = form.querySelector("input[name=hmac]");
+	  return {
+	    method: "post",
+	    action: "comment",
+	    parent: parent.value,
+	    goto: togo.value,
+	    hmac: hmac.value
+	  };
+	};
+
+	exports.default = commentForm;
+
+/***/ },
+/* 9 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _comment = __webpack_require__(7);
+
+	var _comment2 = _interopRequireDefault(_comment);
+
+	var _commentForm = __webpack_require__(8);
+
+	var _commentForm2 = _interopRequireDefault(_commentForm);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var reply = function reply() {
+	  return {
+	    comment: (0, _comment2.default)(document.querySelector(".athing")),
+	    replyForm: (0, _commentForm2.default)(document.querySelector("form[method=post]"))
+	  };
+	};
+
+	exports.default = reply;
+
+/***/ },
+/* 10 */
 /***/ function(module, exports) {
 
 	"use strict";
