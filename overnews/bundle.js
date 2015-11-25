@@ -50,9 +50,17 @@
 
 	var _stories2 = _interopRequireDefault(_stories);
 
+	var _pageType = __webpack_require__(2);
+
+	var _pageType2 = _interopRequireDefault(_pageType);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	console.log((0, _stories2.default)());
+	var type = (0, _pageType2.default)();
+	console.log(type);
+	if (type === "submission") {
+	  console.log((0, _stories2.default)());
+	}
 
 /***/ },
 /* 1 */
@@ -163,6 +171,39 @@
 	};
 
 	exports.default = stories;
+
+/***/ },
+/* 2 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	exports.default = function () {
+	  var location = window.location;
+	  switch (location.pathname) {
+	    case "/":
+	    case "/news":
+	    case "/jobs":
+	      return "submission";
+	    case "/item":
+	      return "comments";
+	    default:
+	      return "no-op";
+	  }
+	};
+
+	; /*
+	   * return a string representing the type of page
+	   *
+	   * types:
+	   * submission - a page filled with submissions
+	   * comments - a page filled with comments
+	   * no-op - a page where nothing should be done?
+	   */
 
 /***/ }
 /******/ ]);
