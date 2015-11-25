@@ -1,5 +1,12 @@
 import votes from "./votes";
 
+/*
+ * comment
+ * -------
+ *
+ * return the data that represents a comment. There are two types of comments, regular
+ * ones, and flagged comments. Flagged comments contain no data.
+ */
 const comment = element => {
   // comments aren't actually nested, instead they are indented with an image to
   // show how they should be nested
@@ -7,6 +14,13 @@ const comment = element => {
   let indentation = indentationHolder.querySelector("img");
   let level = indentation === null ? 0 : parseInt(indentation.width, 10) / 40;
   let commentHolder = element.querySelector(".comment > span");
+  // flagged comment
+  if ( !commentHolder.length ) {
+    return {
+      level: level,
+      type: "flagged"
+    };
+  }
   // get the text of the comment. This does not preserve any markdown elements
   // eg italics
   let paragraphs = Array.from(commentHolder.childNodes)
@@ -30,6 +44,7 @@ const comment = element => {
   let reply = replyLink !== null ? replyLink.href : "";
   return Object.assign({}, {
       level: level,
+      type: "normal",
       votes: votes(element.querySelector(".votelinks")),
       paragraphs: paragraphs,
       reply: reply

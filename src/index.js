@@ -1,14 +1,20 @@
-import stories from "./helpers/stories";
-import comments from "./helpers/comments";
-import reply from "./helpers/reply";
-import pageType from "./helpers/pageType";
+import stories from "./data/stories";
+import comments from "./data/comments";
+import reply from "./data/reply";
+import pageType from "./data/pageType";
+import user from "./data/user";
 
 let type = pageType();
 console.log(type);
-if ( type === "submission" ) {
+console.log(user());
+switch ( type ) {
+case "submission":
   console.log(stories());
-} else if ( type === "comments" ) {
+  break;
+case "comments":
   console.log(comments());
-} else if ( type === "reply" ) {
+  break;
+case "reply":
   console.log(reply());
+  break; 
 }

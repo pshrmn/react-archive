@@ -62,16 +62,25 @@
 
 	var _pageType2 = _interopRequireDefault(_pageType);
 
+	var _user = __webpack_require__(11);
+
+	var _user2 = _interopRequireDefault(_user);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var type = (0, _pageType2.default)();
 	console.log(type);
-	if (type === "submission") {
-	  console.log((0, _stories2.default)());
-	} else if (type === "comments") {
-	  console.log((0, _comments2.default)());
-	} else if (type === "reply") {
-	  console.log((0, _reply2.default)());
+	console.log((0, _user2.default)());
+	switch (type) {
+	  case "submission":
+	    console.log((0, _stories2.default)());
+	    break;
+	  case "comments":
+	    console.log((0, _comments2.default)());
+	    break;
+	  case "reply":
+	    console.log((0, _reply2.default)());
+	    break;
 	}
 
 /***/ },
@@ -346,6 +355,13 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+	/*
+	 * comment
+	 * -------
+	 *
+	 * return the data that represents a comment. There are two types of comments, regular
+	 * ones, and flagged comments. Flagged comments contain no data.
+	 */
 	var comment = function comment(element) {
 	  // comments aren't actually nested, instead they are indented with an image to
 	  // show how they should be nested
@@ -353,6 +369,13 @@
 	  var indentation = indentationHolder.querySelector("img");
 	  var level = indentation === null ? 0 : parseInt(indentation.width, 10) / 40;
 	  var commentHolder = element.querySelector(".comment > span");
+	  // flagged comment
+	  if (!commentHolder.length) {
+	    return {
+	      level: level,
+	      type: "flagged"
+	    };
+	  }
 	  // get the text of the comment. This does not preserve any markdown elements
 	  // eg italics
 	  var paragraphs = Array.from(commentHolder.childNodes).filter(function (child) {
@@ -375,6 +398,7 @@
 	  var reply = replyLink !== null ? replyLink.href : "";
 	  return Object.assign({}, {
 	    level: level,
+	    type: "normal",
 	    votes: (0, _votes2.default)(element.querySelector(".votelinks")),
 	    paragraphs: paragraphs,
 	    reply: reply
@@ -486,6 +510,42 @@
 	   * comments - a page filled with comments
 	   * no-op - a page where nothing should be done?
 	   */
+
+/***/ },
+/* 11 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var user = function user() {
+	  var pagetops = document.querySelectorAll(".pagetop");
+	  if (!pagetops[1]) {
+	    return {};
+	  }
+	  var holder = pagetops[1];
+	  var links = holder.querySelectorAll("a");
+	  if (links.length === 2) {
+	    var userLink = links[0];
+	    var pointsText = userLink.nextSibling.textContent.trim();
+	    var pointsRegex = /\((.+)\)/;
+	    var matches = pointsRegex.exec(pointsText);
+	    // I don't actually know how points are displayed for 1000+, so just keep
+	    // it as a string
+	    var points = matches[1] !== undefined ? matches[1] : "0";
+	    return {
+	      name: userLink.textContent,
+	      url: userLink.href,
+	      points: points
+	    };
+	  } else {
+	    return {};
+	  }
+	};
+
+	exports.default = user;
 
 /***/ }
 /******/ ]);
