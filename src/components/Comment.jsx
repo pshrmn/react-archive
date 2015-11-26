@@ -45,6 +45,13 @@ const Comment = React.createClass({
     ) : <div className="filler"></div>;
 
     let ps = paragraphs.map((p, i) => {
+      if (p[0] === ">" ) {
+        return (
+          <blockquote key={i}>
+            {p.slice(1)}
+          </blockquote>
+        );
+      }
       return (
         <p key={i}>
           {p}

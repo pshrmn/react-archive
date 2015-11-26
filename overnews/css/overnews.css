@@ -27,12 +27,23 @@ body {
   align-items: flex-end;
 }
 
-.hn-react header nav li {
-  margin-right: 5px;
+.hn-react header nav li, .hn-react footer nav li {
+  margin-right: 10px;
 }
 
 .hn-react header nav.user {
   margin-left: auto;
+}
+
+.hn-react footer {
+  margin: 15px auto 25px;
+}
+
+.hn-react footer nav {
+  display: flex;
+  list-style: none;
+  justify-content: center;
+  align-items: flex-end;
 }
 
 .story {
@@ -101,4 +112,14 @@ body {
 .message {
   padding: 5px;
   background: #efefef;
+}
+
+blockquote {
+  margin: 0 0 0 3px;
+  border-left: 2px solid #444;
+  padding-left: 5px;
+}
+
+nav form {
+  margin: 0;
 }

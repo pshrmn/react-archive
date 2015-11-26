@@ -6,7 +6,6 @@ import Comment from "./Comment";
 export default React.createClass({
   render: function() {
     let { type, comments } = this.props;
-    console.log(this.props);
     let commElements = comments.map((c, i) => {
       return <Comment key={i} {...c} />;
     });

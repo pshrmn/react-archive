@@ -60,7 +60,7 @@ const User = React.createClass({
             {points}
           </li>
           <li>
-            <a href={`/threads?id=${name}`}>threads</a>
+            <a href={`/threads?id=${name}`}>Threads</a>
           </li>
           <li>
             <a href={`/logout?goto=${location.pathname}${location.search}`}>Logout</a>

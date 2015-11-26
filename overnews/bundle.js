@@ -764,11 +764,15 @@
 
 	var _Header2 = _interopRequireDefault(_Header);
 
-	var _StoryPage = __webpack_require__(21);
+	var _Footer = __webpack_require__(21);
+
+	var _Footer2 = _interopRequireDefault(_Footer);
+
+	var _StoryPage = __webpack_require__(22);
 
 	var _StoryPage2 = _interopRequireDefault(_StoryPage);
 
-	var _CommentsPage = __webpack_require__(25);
+	var _CommentsPage = __webpack_require__(26);
 
 	var _CommentsPage2 = _interopRequireDefault(_CommentsPage);
 
@@ -794,7 +798,8 @@
 	      "div",
 	      { className: "hacker-news" },
 	      _react2.default.createElement(_Header2.default, { user: page.user }),
-	      content
+	      content,
+	      _react2.default.createElement(_Footer2.default, null)
 	    );
 	  },
 	  componentDidMount: function componentDidMount() {
@@ -957,7 +962,7 @@
 	          _react2.default.createElement(
 	            "a",
 	            { href: "/threads?id=" + name },
-	            "threads"
+	            "Threads"
 	          )
 	        ),
 	        _react2.default.createElement(
@@ -980,6 +985,137 @@
 
 	"use strict";
 
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.default = _react2.default.createClass({
+	  displayName: "Footer",
+
+	  render: function render() {
+	    return _react2.default.createElement(
+	      "footer",
+	      null,
+	      _react2.default.createElement(
+	        "nav",
+	        null,
+	        _react2.default.createElement(
+	          "li",
+	          null,
+	          _react2.default.createElement(
+	            "a",
+	            { href: "/newsguidelines.html" },
+	            "Guidelines"
+	          )
+	        ),
+	        _react2.default.createElement(
+	          "li",
+	          null,
+	          _react2.default.createElement(
+	            "a",
+	            { href: "/newsfaq.html" },
+	            "FAQ"
+	          )
+	        ),
+	        _react2.default.createElement(
+	          "li",
+	          null,
+	          _react2.default.createElement(
+	            "a",
+	            { href: "mailto:hn@ycombinator.com" },
+	            "Support"
+	          )
+	        ),
+	        _react2.default.createElement(
+	          "li",
+	          null,
+	          _react2.default.createElement(
+	            "a",
+	            { href: "https://github.com/HackerNews/API" },
+	            "API"
+	          )
+	        ),
+	        _react2.default.createElement(
+	          "li",
+	          null,
+	          _react2.default.createElement(
+	            "a",
+	            { href: "/security.html" },
+	            "Security"
+	          )
+	        ),
+	        _react2.default.createElement(
+	          "li",
+	          null,
+	          _react2.default.createElement(
+	            "a",
+	            { href: "/lists" },
+	            "Lists"
+	          )
+	        ),
+	        _react2.default.createElement(
+	          "li",
+	          null,
+	          _react2.default.createElement(
+	            "a",
+	            { href: "/bookmarklet.html" },
+	            "Bookmarklet"
+	          )
+	        ),
+	        _react2.default.createElement(
+	          "li",
+	          null,
+	          _react2.default.createElement(
+	            "a",
+	            { href: "/dmca.html" },
+	            "DMCA"
+	          )
+	        ),
+	        _react2.default.createElement(
+	          "li",
+	          null,
+	          _react2.default.createElement(
+	            "a",
+	            { href: "/apply" },
+	            "Apply to YC"
+	          )
+	        ),
+	        _react2.default.createElement(
+	          "li",
+	          null,
+	          _react2.default.createElement(
+	            "a",
+	            { href: "mailto:hn@ycombinator.com" },
+	            "Contact"
+	          )
+	        ),
+	        _react2.default.createElement(
+	          "li",
+	          null,
+	          _react2.default.createElement(
+	            "form",
+	            { method: "get", action: "//hn.algolia.com" },
+	            _react2.default.createElement("input", { type: "text", placeholder: "Search", name: "q" })
+	          )
+	        )
+	      ),
+	      _react2.default.createElement("div", null)
+	    );
+	  }
+	});
+
+/***/ },
+/* 22 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 	Object.defineProperty(exports, "__esModule", {
@@ -990,7 +1126,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _SubStory = __webpack_require__(22);
+	var _SubStory = __webpack_require__(23);
 
 	var _SubStory2 = _interopRequireDefault(_SubStory);
 
@@ -1043,7 +1179,7 @@
 	});
 
 /***/ },
-/* 22 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1056,7 +1192,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _Vote = __webpack_require__(23);
+	var _Vote = __webpack_require__(24);
 
 	var _Vote2 = _interopRequireDefault(_Vote);
 
@@ -1157,7 +1293,7 @@
 	exports.default = SubStory;
 
 /***/ },
-/* 23 */
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1170,7 +1306,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _vote = __webpack_require__(24);
+	var _vote = __webpack_require__(25);
 
 	var _vote2 = _interopRequireDefault(_vote);
 
@@ -1205,7 +1341,7 @@
 	});
 
 /***/ },
-/* 24 */
+/* 25 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -1230,7 +1366,7 @@
 	};
 
 /***/ },
-/* 25 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1245,11 +1381,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _SubStory = __webpack_require__(22);
+	var _SubStory = __webpack_require__(23);
 
 	var _SubStory2 = _interopRequireDefault(_SubStory);
 
-	var _Comment = __webpack_require__(26);
+	var _Comment = __webpack_require__(27);
 
 	var _Comment2 = _interopRequireDefault(_Comment);
 
@@ -1263,7 +1399,6 @@
 	    var type = _props.type;
 	    var comments = _props.comments;
 
-	    console.log(this.props);
 	    var commElements = comments.map(function (c, i) {
 	      return _react2.default.createElement(_Comment2.default, _extends({ key: i }, c));
 	    });
@@ -1296,7 +1431,7 @@
 	});
 
 /***/ },
-/* 26 */
+/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1311,7 +1446,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _Vote = __webpack_require__(23);
+	var _Vote = __webpack_require__(24);
 
 	var _Vote2 = _interopRequireDefault(_Vote);
 
@@ -1377,6 +1512,13 @@
 	    var downVote = canVote && votes.down !== undefined ? _react2.default.createElement(_Vote2.default, { id: id, type: "down", url: votes.down, voted: this.voted }) : _react2.default.createElement("div", { className: "filler" });
 
 	    var ps = paragraphs.map(function (p, i) {
+	      if (p[0] === ">") {
+	        return _react2.default.createElement(
+	          "blockquote",
+	          { key: i },
+	          p.slice(1)
+	        );
+	      }
 	      return _react2.default.createElement(
 	        "p",
 	        { key: i },
