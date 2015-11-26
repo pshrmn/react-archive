@@ -10,11 +10,7 @@ export default React.createClass({
       <header>
         <nav className="general">
           <li>
-            <a href="/">
-              <img src={chrome.extension.getURL("img/logo.png")}
-                   width="48" height="48" />
-              Hacker News
-            </a>
+            <a href="/" className="home">Hacker News</a>
           </li>
           <li>
             <a href="/newest">new</a>

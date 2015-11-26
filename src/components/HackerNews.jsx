@@ -2,6 +2,7 @@ import React from "react";
 
 import Header from "./Header";
 import StoryPage from "./StoryPage";
+import CommentsPage from "./CommentsPage";
 
 export default React.createClass({
   render: function() {
@@ -10,9 +11,13 @@ export default React.createClass({
     switch ( type ) {
     case "submission":
       content = (
-        <StoryPage stories={page.stories} />
+        <StoryPage {...page} />
       );
       break;
+    case "comments":
+      content = (
+        <CommentsPage {...page} />
+      );
     }
     return (
       <div className="hacker-news">
@@ -23,7 +28,7 @@ export default React.createClass({
   },
   componentDidMount: function() {
     // hide the regular content
-    if ( this.props.type === "submission" ){
+    if ( this.props.type === "submission" || this.props.type === "comments"){
       document.querySelector("center").style.display = "none";
     }
   },

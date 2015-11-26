@@ -45,10 +45,11 @@ const comment = element => {
   return Object.assign({}, {
       level: level,
       type: "normal",
-      votes: votes(element.querySelector(".votelinks")),
       paragraphs: paragraphs,
-      reply: reply
+      reply: reply,
+      children: []
     },
+    votes(element.querySelector(".votelinks")),
     headline(element.querySelector("td.default div"))
   );
 };
@@ -64,6 +65,7 @@ const headline = element => {
     },
     direct: links[1].href,
     when: links[1].textContent,
+    id: links[1].href.split("=")[1],
     parent: parent
   };  
 };

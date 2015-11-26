@@ -390,7 +390,9 @@
 	  }
 
 	  var links = subtext.querySelectorAll("a");
-	  return Object.assign({}, { type: "sub" }, pointsData(score), userData(links[0]), whenData(links[1]), commentsData(links[2]));
+	  // the comments is the last link
+	  var last = links[links.length - 1];
+	  return Object.assign({}, { type: "sub" }, pointsData(score), userData(links[0]), whenData(links[1]), commentsData(last));
 	};
 
 	var pointsData = function pointsData(element) {
@@ -414,6 +416,10 @@
 	  };
 	};
 
+	/*
+	 * this is broken on comments pages where the comments is actually links[4]
+	 * but has not yet been fixed
+	 */
 	var commentsData = function commentsData(element) {
 	  var text = element.textContent;
 	  var commentCount = text === "discuss" ? 0 : parseInt(text.split(" ")[0], 10);
@@ -538,7 +544,6 @@
 	    // set the comment at current level to current comment
 
 	    levels[level] = c;
-	    c.children = [];
 	    // special case for root (level=0) comments
 	    if (level === 0) {
 	      commentTree.push(c);
@@ -615,10 +620,10 @@
 	  return Object.assign({}, {
 	    level: level,
 	    type: "normal",
-	    votes: (0, _votes2.default)(element.querySelector(".votelinks")),
 	    paragraphs: paragraphs,
-	    reply: reply
-	  }, headline(element.querySelector("td.default div")));
+	    reply: reply,
+	    children: []
+	  }, (0, _votes2.default)(element.querySelector(".votelinks")), headline(element.querySelector("td.default div")));
 	};
 
 	var headline = function headline(element) {
@@ -632,6 +637,7 @@
 	    },
 	    direct: links[1].href,
 	    when: links[1].textContent,
+	    id: links[1].href.split("=")[1],
 	    parent: parent
 	  };
 	};
@@ -762,6 +768,10 @@
 
 	var _StoryPage2 = _interopRequireDefault(_StoryPage);
 
+	var _CommentsPage = __webpack_require__(25);
+
+	var _CommentsPage2 = _interopRequireDefault(_CommentsPage);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	exports.default = _react2.default.createClass({
@@ -775,8 +785,10 @@
 	    var content = null;
 	    switch (type) {
 	      case "submission":
-	        content = _react2.default.createElement(_StoryPage2.default, { stories: page.stories });
+	        content = _react2.default.createElement(_StoryPage2.default, page);
 	        break;
+	      case "comments":
+	        content = _react2.default.createElement(_CommentsPage2.default, page);
 	    }
 	    return _react2.default.createElement(
 	      "div",
@@ -787,7 +799,7 @@
 	  },
 	  componentDidMount: function componentDidMount() {
 	    // hide the regular content
-	    if (this.props.type === "submission") {
+	    if (this.props.type === "submission" || this.props.type === "comments") {
 	      document.querySelector("center").style.display = "none";
 	    }
 	  },
@@ -832,9 +844,7 @@
 	          null,
 	          _react2.default.createElement(
 	            "a",
-	            { href: "/" },
-	            _react2.default.createElement("img", { src: chrome.extension.getURL("img/logo.png"),
-	              width: "48", height: "48" }),
+	            { href: "/", className: "home" },
 	            "Hacker News"
 	          )
 	        ),
@@ -980,9 +990,9 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _vote = __webpack_require__(22);
+	var _SubStory = __webpack_require__(22);
 
-	var _vote2 = _interopRequireDefault(_vote);
+	var _SubStory2 = _interopRequireDefault(_SubStory);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -993,7 +1003,7 @@
 	    var stories = this.props.stories;
 
 	    var submissions = stories.map(function (s, i) {
-	      return s.type === "sub" ? _react2.default.createElement(SubStory, _extends({ key: i }, s)) : _react2.default.createElement(JobStory, _extends({ key: i }, s));
+	      return s.type === "sub" ? _react2.default.createElement(_SubStory2.default, _extends({ key: i }, s)) : _react2.default.createElement(JobStory, _extends({ key: i }, s));
 	    });
 	    return _react2.default.createElement(
 	      "div",
@@ -1003,6 +1013,55 @@
 	  }
 	});
 
+	var JobStory = _react2.default.createClass({
+	  displayName: "JobStory",
+
+	  render: function render() {
+	    var _props = this.props;
+	    var url = _props.url;
+	    var title = _props.title;
+
+	    return _react2.default.createElement(
+	      "div",
+	      { className: "story job" },
+	      _react2.default.createElement(
+	        "div",
+	        { className: "voting" },
+	        "(job)"
+	      ),
+	      _react2.default.createElement(
+	        "div",
+	        { className: "info" },
+	        _react2.default.createElement(
+	          "a",
+	          { href: url, target: "_blank" },
+	          title
+	        )
+	      )
+	    );
+	  }
+	});
+
+/***/ },
+/* 22 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _Vote = __webpack_require__(23);
+
+	var _Vote2 = _interopRequireDefault(_Vote);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 	var SubStory = _react2.default.createClass({
 	  displayName: "SubStory",
 
@@ -1011,6 +1070,9 @@
 	      canVote: true
 	    };
 	  },
+	  /*
+	   * once a submission has been voted on, it cannot be changed
+	   */
 	  voted: function voted() {
 	    this.setState({
 	      canVote: false
@@ -1029,8 +1091,8 @@
 	    var domain = _props.domain;
 	    var canVote = this.state.canVote;
 
-	    var upVote = canVote && votes.up !== undefined ? _react2.default.createElement(Vote, { id: id, type: "up", url: votes.up, voted: this.voted }) : _react2.default.createElement("div", { className: "filler" });
-	    var downVote = canVote && votes.down !== undefined ? _react2.default.createElement(Vote, { id: id, type: "down", url: votes.down, voted: this.voted }) : _react2.default.createElement("div", { className: "filler" });
+	    var upVote = canVote && votes.up !== undefined ? _react2.default.createElement(_Vote2.default, { id: id, type: "up", url: votes.up, voted: this.voted }) : _react2.default.createElement("div", { className: "filler" });
+	    var downVote = canVote && votes.down !== undefined ? _react2.default.createElement(_Vote2.default, { id: id, type: "down", url: votes.down, voted: this.voted }) : _react2.default.createElement("div", { className: "filler" });
 	    var more = domain !== undefined ? _react2.default.createElement(
 	      "div",
 	      { className: "more" },
@@ -1092,7 +1154,29 @@
 	  }
 	});
 
-	var Vote = _react2.default.createClass({
+	exports.default = SubStory;
+
+/***/ },
+/* 23 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _vote = __webpack_require__(24);
+
+	var _vote2 = _interopRequireDefault(_vote);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.default = _react2.default.createClass({
 	  displayName: "Vote",
 
 	  voteHandler: function voteHandler(event) {
@@ -1101,9 +1185,9 @@
 	    this.props.voted();
 	  },
 	  render: function render() {
-	    var _props2 = this.props;
-	    var id = _props2.id;
-	    var type = _props2.type;
+	    var _props = this.props;
+	    var id = _props.id;
+	    var type = _props.type;
 
 	    var code = 9632;
 	    if (type === "up") {
@@ -1120,37 +1204,8 @@
 	  }
 	});
 
-	var JobStory = _react2.default.createClass({
-	  displayName: "JobStory",
-
-	  render: function render() {
-	    var _props3 = this.props;
-	    var url = _props3.url;
-	    var title = _props3.title;
-
-	    return _react2.default.createElement(
-	      "div",
-	      { className: "story job" },
-	      _react2.default.createElement(
-	        "div",
-	        { className: "voting" },
-	        "(job)"
-	      ),
-	      _react2.default.createElement(
-	        "div",
-	        { className: "info" },
-	        _react2.default.createElement(
-	          "a",
-	          { href: url, target: "_blank" },
-	          title
-	        )
-	      )
-	    );
-	  }
-	});
-
 /***/ },
-/* 22 */
+/* 24 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -1173,6 +1228,206 @@
 	  var pinger = new Image();
 	  pinger.src = url;
 	};
+
+/***/ },
+/* 25 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _SubStory = __webpack_require__(22);
+
+	var _SubStory2 = _interopRequireDefault(_SubStory);
+
+	var _Comment = __webpack_require__(26);
+
+	var _Comment2 = _interopRequireDefault(_Comment);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.default = _react2.default.createClass({
+	  displayName: "CommentsPage",
+
+	  render: function render() {
+	    var _props = this.props;
+	    var type = _props.type;
+	    var comments = _props.comments;
+
+	    console.log(this.props);
+	    var commElements = comments.map(function (c, i) {
+	      return _react2.default.createElement(_Comment2.default, _extends({ key: i }, c));
+	    });
+
+	    var header = null;
+	    switch (type) {
+	      case "single":
+	        header = _react2.default.createElement(_Comment2.default, this.props.comment);
+	        break;
+	      case "all":
+	        header = _react2.default.createElement(_SubStory2.default, this.props.story);
+	        break;
+	    }
+
+	    return _react2.default.createElement(
+	      "div",
+	      null,
+	      _react2.default.createElement(
+	        "div",
+	        { className: "comments-main" },
+	        header
+	      ),
+	      _react2.default.createElement(
+	        "div",
+	        { className: "comments" },
+	        commElements
+	      )
+	    );
+	  }
+	});
+
+/***/ },
+/* 26 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _Vote = __webpack_require__(23);
+
+	var _Vote2 = _interopRequireDefault(_Vote);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var Comment = _react2.default.createClass({
+	  displayName: "Comment",
+
+	  getInitialState: function getInitialState() {
+	    return {
+	      canVote: true
+	    };
+	  },
+	  voted: function voted() {
+	    this.setState({
+	      canVote: false
+	    });
+	  },
+	  render: function render() {
+	    var _props = this.props;
+	    var user = _props.user;
+	    var votes = _props.votes;
+	    var when = _props.when;
+	    var paragraphs = _props.paragraphs;
+	    var parent = _props.parent;
+	    var children = _props.children;
+	    var direct = _props.direct;
+	    var reply = _props.reply;
+	    var type = _props.type;
+	    var id = _props.id;
+	    var canVote = this.state.canVote;
+
+	    var childrenElements = children.map(function (c, i) {
+	      return _react2.default.createElement(Comment, _extends({ key: i }, c));
+	    });
+
+	    if (type === "flagged") {
+	      return _react2.default.createElement(
+	        "div",
+	        { className: "comment" },
+	        _react2.default.createElement(
+	          "div",
+	          null,
+	          _react2.default.createElement(
+	            "div",
+	            { className: "message" },
+	            _react2.default.createElement(
+	              "p",
+	              null,
+	              "[flagged]"
+	            )
+	          ),
+	          _react2.default.createElement(
+	            "div",
+	            { className: "children" },
+	            childrenElements
+	          )
+	        )
+	      );
+	    }
+
+	    var upVote = canVote && votes.up !== undefined ? _react2.default.createElement(_Vote2.default, { id: id, type: "up", url: votes.up, voted: this.voted }) : _react2.default.createElement("div", { className: "filler" });
+	    var downVote = canVote && votes.down !== undefined ? _react2.default.createElement(_Vote2.default, { id: id, type: "down", url: votes.down, voted: this.voted }) : _react2.default.createElement("div", { className: "filler" });
+
+	    var ps = paragraphs.map(function (p, i) {
+	      return _react2.default.createElement(
+	        "p",
+	        { key: i },
+	        p
+	      );
+	    });
+	    return _react2.default.createElement(
+	      "div",
+	      { className: "comment" },
+	      _react2.default.createElement(
+	        "div",
+	        { className: "votes" },
+	        upVote,
+	        downVote
+	      ),
+	      _react2.default.createElement(
+	        "div",
+	        null,
+	        _react2.default.createElement(
+	          "div",
+	          { className: "user" },
+	          _react2.default.createElement(
+	            "a",
+	            { href: user.url },
+	            user.name
+	          ),
+	          " ",
+	          when,
+	          " ",
+	          _react2.default.createElement(
+	            "a",
+	            { href: "/item?id=" + id },
+	            "direct"
+	          )
+	        ),
+	        _react2.default.createElement(
+	          "div",
+	          { className: "message" },
+	          ps
+	        ),
+	        _react2.default.createElement(
+	          "div",
+	          { className: "children" },
+	          childrenElements
+	        )
+	      )
+	    );
+	  }
+	});
+
+	exports.default = Comment;
 
 /***/ }
 /******/ ]);

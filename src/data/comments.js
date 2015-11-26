@@ -65,7 +65,6 @@ const buildTree = comments => {
     let { level } = c;
     // set the comment at current level to current comment
     levels[level] = c;
-    c.children = [];
     // special case for root (level=0) comments
     if ( level === 0 ) {
       commentTree.push(c);

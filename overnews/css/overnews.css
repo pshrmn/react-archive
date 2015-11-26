@@ -1,5 +1,10 @@
+body {
+  margin: 0;
+}
+
 .hn-react {
   font-size: 16px;
+  color: #444;
 }
 
 .hn-react a, .hn-react a:visited {
@@ -8,6 +13,12 @@
 
 .hn-react header {
   display: flex;
+  padding: 5px 0;
+  background: #F26522;
+}
+
+.hn-react header .home {
+  font-weight: bold;
 }
 
 .hn-react header nav {
@@ -44,10 +55,9 @@
 
 .points {
   padding: 2px;
-  background: #F26522;
+  background: #fff;
   border-radius: 2px;
   font-weight: bold;
-  color: #fff;
   display: inline-block;
 }
 
@@ -72,4 +82,23 @@
 .vote {
   text-align: center;
   cursor: pointer;
+}
+
+.comments-main {
+  margin-bottom: 25px;
+  border-bottom: 2px solid #444;
+}
+
+.comment {
+  display: flex;
+  margin: 15px 0 5px 0;
+}
+
+.comment .children {
+  margin-left: 20px;
+}
+
+.message {
+  padding: 5px;
+  background: #efefef;
 }

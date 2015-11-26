@@ -13,12 +13,14 @@ const bylineData = byline => {
   }
 
   let links = subtext.querySelectorAll("a");
+  // the comments is the last link
+  let last = links[links.length-1];
   return Object.assign({},
     {type: "sub"},
     pointsData(score),
     userData(links[0]),
     whenData(links[1]),
-    commentsData(links[2])
+    commentsData(last)
   );
 };
 
@@ -43,6 +45,10 @@ const whenData = element => {
   };
 };
 
+/*
+ * this is broken on comments pages where the comments is actually links[4]
+ * but has not yet been fixed
+ */
 const commentsData = element => {
   let text = element.textContent;
   let commentCount = text === "discuss" ? 0 : parseInt(text.split(" ")[0], 10);
