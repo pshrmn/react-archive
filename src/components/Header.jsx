@@ -82,9 +82,46 @@ const User = React.createClass({
       let location = window.location;
       let nextURL = ``
       return (
-        <nav className="user">  
+        <nav className="user">
           <li>
-            <a href={`/login?goto=${location.pathname}${location.search}`}>Login</a>
+            <form method="post" action="login">
+              <p>Login</p>
+              <input type="hidden" name="goto" value="/" />
+              <p>
+                <input type="text" name="acct" size="20"
+                       placeholder="username"
+                       autoCorrect="off"
+                       autoCapitalize="off" />
+              </p>
+              <p>
+                <input type="password" name="pw" size="20"
+                       placeholder="password" />
+              </p>
+              <p>
+                <button>Login</button>
+              </p>
+            </form>
+            <form method="post" action="login">
+              <p>Create account</p>
+              <input type="hidden" name="goto" value="/" />
+              <input type="hidden" name="creating" value="t" />
+              <p>
+                <input type="text" name="acct" size="20"
+                       placeholder="username"
+                       autoCorrect="off"
+                       autoCapitalize="off" />
+              </p>
+              <p>
+                <input type="password" name="pw" size="20"
+                       placeholder="password" />
+              </p>
+              <p>
+                <button>Create Account</button>
+              </p>
+            </form>
+          </li>
+          <li>
+            <a href={`/forgot?id=`}>Forgot Password?</a>
           </li>
         </nav>
       );

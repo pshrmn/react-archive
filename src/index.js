@@ -25,7 +25,7 @@ default:
 }
 
 function render(type, page) {
-  if ( type !== "noop" ) {
+  if ( type !== "no-op" ) {
     let holder = document.createElement("div");
     holder.classList.add("hn-react");
     document.body.appendChild(holder);

@@ -86,7 +86,7 @@
 	}
 
 	function render(type, page) {
-	  if (type !== "noop") {
+	  if (type !== "no-op") {
 	    var holder = document.createElement("div");
 	    holder.classList.add("hn-react");
 	    document.body.appendChild(holder);
@@ -1036,9 +1036,80 @@
 	          "li",
 	          null,
 	          _react2.default.createElement(
+	            "form",
+	            { method: "post", action: "login" },
+	            _react2.default.createElement(
+	              "p",
+	              null,
+	              "Login"
+	            ),
+	            _react2.default.createElement("input", { type: "hidden", name: "goto", value: "/" }),
+	            _react2.default.createElement(
+	              "p",
+	              null,
+	              _react2.default.createElement("input", { type: "text", name: "acct", size: "20",
+	                placeholder: "username",
+	                autoCorrect: "off",
+	                autoCapitalize: "off" })
+	            ),
+	            _react2.default.createElement(
+	              "p",
+	              null,
+	              _react2.default.createElement("input", { type: "password", name: "pw", size: "20",
+	                placeholder: "password" })
+	            ),
+	            _react2.default.createElement(
+	              "p",
+	              null,
+	              _react2.default.createElement(
+	                "button",
+	                null,
+	                "Login"
+	              )
+	            )
+	          ),
+	          _react2.default.createElement(
+	            "form",
+	            { method: "post", action: "login" },
+	            _react2.default.createElement(
+	              "p",
+	              null,
+	              "Create account"
+	            ),
+	            _react2.default.createElement("input", { type: "hidden", name: "goto", value: "/" }),
+	            _react2.default.createElement("input", { type: "hidden", name: "creating", value: "t" }),
+	            _react2.default.createElement(
+	              "p",
+	              null,
+	              _react2.default.createElement("input", { type: "text", name: "acct", size: "20",
+	                placeholder: "username",
+	                autoCorrect: "off",
+	                autoCapitalize: "off" })
+	            ),
+	            _react2.default.createElement(
+	              "p",
+	              null,
+	              _react2.default.createElement("input", { type: "password", name: "pw", size: "20",
+	                placeholder: "password" })
+	            ),
+	            _react2.default.createElement(
+	              "p",
+	              null,
+	              _react2.default.createElement(
+	                "button",
+	                null,
+	                "Create Account"
+	              )
+	            )
+	          )
+	        ),
+	        _react2.default.createElement(
+	          "li",
+	          null,
+	          _react2.default.createElement(
 	            "a",
-	            { href: "/login?goto=" + _location.pathname + _location.search },
-	            "Login"
+	            { href: "/forgot?id=" },
+	            "Forgot Password?"
 	          )
 	        )
 	      );
