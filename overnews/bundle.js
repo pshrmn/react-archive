@@ -510,9 +510,18 @@
 
 	var header = function header(element) {
 	  if (element.querySelector(".title") !== null) {
+	    var storyData = (0, _story2.default)(element);
+	    var parentElement = element.parentElement;
+	    if (storyData.url.startsWith("https://news.ycombinator.com/item?id=") && parentElement.childElementCount === 6) {
+	      // this is a self-post, so we want to get the post's text
+	      var selfHolder = parentElement.children[3];
+	      storyData.self = {
+	        __html: selfHolder.innerHTML
+	      };
+	    }
 	    return {
 	      type: "all",
-	      story: (0, _story2.default)(element)
+	      story: storyData
 	    };
 	  } else {
 	    return {
@@ -1194,7 +1203,7 @@
 	    });
 	    return _react2.default.createElement(
 	      "div",
-	      null,
+	      { className: "story-page" },
 	      submissions
 	    );
 	  }
@@ -1276,11 +1285,12 @@
 	    var votes = _props.votes;
 	    var when = _props.when;
 	    var domain = _props.domain;
+	    var self = _props.self;
 	    var canVote = this.state.canVote;
 
 	    var upVote = canVote && votes.up !== undefined ? _react2.default.createElement(_Vote2.default, { id: id, type: "up", url: votes.up, voted: this.voted }) : _react2.default.createElement("div", { className: "filler" });
 	    var downVote = canVote && votes.down !== undefined ? _react2.default.createElement(_Vote2.default, { id: id, type: "down", url: votes.down, voted: this.voted }) : _react2.default.createElement("div", { className: "filler" });
-	    var more = domain !== undefined ? _react2.default.createElement(
+	    var more = domain !== "" ? _react2.default.createElement(
 	      "div",
 	      { className: "more" },
 	      "more from ",
@@ -1290,6 +1300,7 @@
 	        domain
 	      )
 	    ) : null;
+	    var selfText = self !== undefined ? _react2.default.createElement("div", { dangerouslySetInnerHTML: self }) : null;
 	    return _react2.default.createElement(
 	      "div",
 	      { className: "story sub" },
@@ -1335,7 +1346,8 @@
 	          " ",
 	          when
 	        ),
-	        more
+	        more,
+	        selfText
 	      )
 	    );
 	  }

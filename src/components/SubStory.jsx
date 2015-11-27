@@ -17,7 +17,7 @@ const SubStory = React.createClass({
     });
   },
   render: function() {
-    let { url, title, id, points, comments, user, votes, when, domain } = this.props;
+    let { url, title, id, points, comments, user, votes, when, domain, self } = this.props;
     let { canVote } = this.state;
 
     let upVote = canVote && votes.up !== undefined ? (
@@ -26,10 +26,13 @@ const SubStory = React.createClass({
     let downVote = canVote && votes.down !== undefined ? (
       <Vote id={id} type="down" url={votes.down} voted={this.voted} />
     ) : <div className="filler"></div>;
-    let more =  domain !== undefined ? (
+    let more = domain !== "" ? (
       <div className="more">
         more from <a href={`/from?site=${domain}`}>{domain}</a>
       </div>
+    ) : null;
+    let selfText = self !== undefined ? (
+      <div dangerouslySetInnerHTML={self} />
     ) : null;
     return (
       <div className="story sub">
@@ -48,6 +51,7 @@ const SubStory = React.createClass({
             {when}
           </div>
           {more}
+          {selfText}
         </div>
       </div>
     );

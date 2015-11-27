@@ -24,9 +24,19 @@ const comments = () => {
 
 const header = element => {
   if ( element.querySelector(".title") !== null ) {
+    let storyData = story(element);
+    let parentElement = element.parentElement;
+    if ( storyData.url.startsWith("https://news.ycombinator.com/item?id=") &&
+      parentElement.childElementCount === 6) {
+      // this is a self-post, so we want to get the post's text
+      let selfHolder = parentElement.children[3];
+      storyData.self = {
+        __html: selfHolder.innerHTML
+      };
+    }
     return {
       type: "all",
-      story: story(element)
+      story: storyData
     }
   } else {
     return {

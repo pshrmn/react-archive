@@ -13,7 +13,7 @@ export default React.createClass({
       );
     })
     return (
-      <div>
+      <div className="story-page">
         {submissions}
       </div>
     );
