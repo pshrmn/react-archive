@@ -5,15 +5,14 @@ body {
   display: none; }
 
 .hacker-news {
-  display: flex; }
-
-.hn-react {
+  display: flex;
+  min-height: 100vh;
   font-size: 16px;
   color: #444;
   background: #efefef; }
-  .hn-react a, .hn-react a:visited {
+  .hacker-news a, .hacker-news a:visited {
     color: #000; }
-  .hn-react header {
+  .hacker-news header {
     padding: 5px;
     box-sizing: border-box;
     background: #F26522;
@@ -21,27 +20,27 @@ body {
     width: 200px;
     color: #000;
     overflow-wrap: break-word; }
-    .hn-react header nav {
+    .hacker-news header nav {
       margin-bottom: 15px;
       text-align: center;
       border-bottom: 1px solid #fff;
       padding-bottom: 15px;
       list-style: none; }
-      .hn-react header nav:last-child {
+      .hacker-news header nav:last-child {
         border-bottom: 0; }
-      .hn-react header nav.user.logged-out a {
+      .hacker-news header nav.user.logged-out a {
         text-decoration: underline; }
-      .hn-react header nav p {
+      .hacker-news header nav p {
         margin: 2px 0; }
-      .hn-react header nav form {
+      .hacker-news header nav form {
         margin: 0; }
-    .hn-react header input, .hn-react header button {
+    .hacker-news header input, .hacker-news header button {
       width: 100%;
       font-size: 16px; }
-    .hn-react header .home {
+    .hacker-news header .home {
       font-weight: bold;
       padding: 5px 0; }
-    .hn-react header .points {
+    .hacker-news header .points {
       background: #fff;
       color: #F26522;
       font-weight: bold;

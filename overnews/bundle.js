@@ -124,6 +124,8 @@
 	    case "/":
 	    case "/news":
 	    case "/jobs":
+	    case "/ask":
+	    case "/show":
 	      return "submission";
 	    case "/item":
 	      return "comments";
@@ -606,30 +608,22 @@
 	      children: []
 	    };
 	  }
-	  // get the text of the comment. This does not preserve any markdown elements
-	  // eg italics
-	  var paragraphs = Array.from(commentHolder.childNodes).filter(function (child) {
-	    return child.classList === undefined || !child.classList.contains("reply");
-	  }).reduce(function (arr, child) {
-	    var index = arr.length - 1;
-	    var current = arr[index];
-	    if (child.tagName === "P") {
-	      arr.push(child.textContent);
-	      return arr;
-	    } else {
-	      current += child.textContent;
-	      arr[index] = current;
-	      return arr;
-	    }
-	  }, [""]).map(function (t) {
-	    return t.trim();
-	  });
+	  // instead of trying to break the comment down, just remove the reply
+	  // link and return the html
+	  var commClone = commentHolder.cloneNode(true);
+	  var cloneReply = commClone.querySelector(".reply");
+	  if (cloneReply !== null) {
+	    commClone.removeChild(cloneReply);
+	  }
+	  var message = {
+	    __html: commClone.innerHTML
+	  };
 	  var replyLink = element.querySelector(".reply a");
 	  var reply = replyLink !== null ? replyLink.href : "";
 	  return Object.assign({}, {
 	    level: level,
 	    type: "normal",
-	    paragraphs: paragraphs,
+	    message: message,
 	    reply: reply,
 	    children: []
 	  }, (0, _votes2.default)(element.querySelector(".votelinks")), headline(element.querySelector("td.default div")));
@@ -1557,7 +1551,7 @@
 	    var user = _props.user;
 	    var votes = _props.votes;
 	    var when = _props.when;
-	    var paragraphs = _props.paragraphs;
+	    var message = _props.message;
 	    var parent = _props.parent;
 	    var children = _props.children;
 	    var direct = _props.direct;
@@ -1599,20 +1593,7 @@
 
 	    var hidden = this.state.visible ? "" : "hidden";
 	    var visText = this.state.visible ? "hide" : "show";
-	    var ps = paragraphs.map(function (p, i) {
-	      if (p[0] === ">") {
-	        return _react2.default.createElement(
-	          "blockquote",
-	          { key: i },
-	          p.slice(1)
-	        );
-	      }
-	      return _react2.default.createElement(
-	        "p",
-	        { key: i },
-	        p
-	      );
-	    });
+
 	    return _react2.default.createElement(
 	      "div",
 	      { className: "comment" },
@@ -1657,11 +1638,7 @@
 	        _react2.default.createElement(
 	          "div",
 	          { className: hidden },
-	          _react2.default.createElement(
-	            "div",
-	            { className: "message" },
-	            ps
-	          ),
+	          _react2.default.createElement("div", { className: "message", dangerouslySetInnerHTML: message }),
 	          _react2.default.createElement(
 	            "div",
 	            { className: "children" },

@@ -22,31 +22,22 @@ const comment = element => {
       children: []
     };
   }
-  // get the text of the comment. This does not preserve any markdown elements
-  // eg italics
-  let paragraphs = Array.from(commentHolder.childNodes)
-    .filter(child => {
-      return child.classList === undefined || !child.classList.contains("reply");
-    })
-    .reduce((arr, child) => {
-      let index = arr.length - 1;
-      let current = arr[index];
-      if ( child.tagName === "P" ) {
-        arr.push(child.textContent);
-        return arr;
-      } else {
-        current += child.textContent;
-        arr[index] = current;
-        return arr;
-      }
-    }, [""])
-    .map(t => t.trim());
+  // instead of trying to break the comment down, just remove the reply
+  // link and return the html
+  let commClone = commentHolder.cloneNode(true);
+  let cloneReply = commClone.querySelector(".reply");
+  if ( cloneReply !== null ) {
+    commClone.removeChild(cloneReply);
+  }
+  let message = {
+    __html: commClone.innerHTML
+  };
   let replyLink = element.querySelector(".reply a");
   let reply = replyLink !== null ? replyLink.href : "";
   return Object.assign({}, {
       level: level,
       type: "normal",
-      paragraphs: paragraphs,
+      message: message,
       reply: reply,
       children: []
     },

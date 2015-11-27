@@ -21,7 +21,7 @@ const Comment = React.createClass({
     });
   },
   render: function() {
-    let { user, votes, when, paragraphs, parent, children, direct, reply, type, id } = this.props;
+    let { user, votes, when, message, parent, children, direct, reply, type, id } = this.props;
     let { canVote } = this.state;
     let childrenElements = children.map((c, i) => {
       return (
@@ -52,20 +52,7 @@ const Comment = React.createClass({
 
     let hidden = this.state.visible ? "" : "hidden";
     let visText = this.state.visible ? "hide" : "show";
-    let ps = paragraphs.map((p, i) => {
-      if (p[0] === ">" ) {
-        return (
-          <blockquote key={i}>
-            {p.slice(1)}
-          </blockquote>
-        );
-      }
-      return (
-        <p key={i}>
-          {p}
-        </p>
-      );
-    });
+
     return (
       <div className="comment">
         <div className="votes">
@@ -81,9 +68,7 @@ const Comment = React.createClass({
             <button onClick={this.toggle}>{visText}</button>
           </div>
           <div className={hidden}>
-            <div className="message">
-              {ps}
-            </div>
+            <div className="message" dangerouslySetInnerHTML={message} />
             <div className="children">
               {childrenElements}
             </div>
