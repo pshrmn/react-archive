@@ -1041,7 +1041,11 @@
 	            _react2.default.createElement(
 	              "p",
 	              null,
-	              "Login"
+	              _react2.default.createElement(
+	                "a",
+	                { href: "/login?goto=" + _location.pathname + _location.search },
+	                "Login"
+	              )
 	            ),
 	            _react2.default.createElement("input", { type: "hidden", name: "goto", value: "/" }),
 	            _react2.default.createElement(
@@ -1074,7 +1078,11 @@
 	            _react2.default.createElement(
 	              "p",
 	              null,
-	              "Create account"
+	              _react2.default.createElement(
+	                "a",
+	                { href: "/login?goto=" + _location.pathname + _location.search },
+	                "Create account"
+	              )
 	            ),
 	            _react2.default.createElement("input", { type: "hidden", name: "goto", value: "/" }),
 	            _react2.default.createElement("input", { type: "hidden", name: "creating", value: "t" }),

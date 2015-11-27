@@ -1,138 +1,91 @@
 body {
-  margin: 0;
-}
+  margin: 0; }
 
 .hacker-news {
-  display: flex;
-}
+  display: flex; }
 
 .hn-react {
   font-size: 16px;
-  color: #444;
-}
-
-.hn-react a, .hn-react a:visited {
-  color: #000;
-}
-
-.hn-react header {
-  padding: 5px;
-  box-sizing: border-box;
-  background: #F26522;
-  width: 200px;
-  color: #000;
-  overflow-wrap: break-word;
-}
-
-.hn-react header nav {
-  margin-bottom: 15px;
-  text-align: center;
-}
-
-header nav {
-  border-bottom: 1px solid #fff;
-  padding-bottom: 15px;
-}
-
-header nav:last-child {
-  border-bottom: 0;
-}
-
-header form input, header form button {
-  width: 100%;
-  font-size: 16px;
-}
-
-.hn-react header .home {
-  font-weight: bold;
-  padding: 5px 0;
-}
-
-.hn-react header nav {
-  list-style: none;
-}
-
-.hn-react header nav p {
-  margin: 2px 0;
-}
-
-header .points {
-  background: #fff;
-  color: #F26522;
-  font-weight: bold;
-  border-radius: 3px;
-}
-
-.user a {
-  text-decoration: underline;
-}
+  color: #444; }
+  .hn-react a, .hn-react a:visited {
+    color: #000; }
+  .hn-react header {
+    padding: 5px;
+    box-sizing: border-box;
+    background: #F26522;
+    min-width: 200px;
+    width: 200px;
+    color: #000;
+    overflow-wrap: break-word; }
+    .hn-react header nav {
+      margin-bottom: 15px;
+      text-align: center;
+      border-bottom: 1px solid #fff;
+      padding-bottom: 15px;
+      list-style: none; }
+      .hn-react header nav:last-child {
+        border-bottom: 0; }
+      .hn-react header nav.user a {
+        text-decoration: underline; }
+      .hn-react header nav p {
+        margin: 2px 0; }
+      .hn-react header nav form {
+        margin: 0; }
+    .hn-react header input, .hn-react header button {
+      width: 100%;
+      font-size: 16px; }
+    .hn-react header .home {
+      font-weight: bold;
+      padding: 5px 0; }
+    .hn-react header .points {
+      background: #fff;
+      color: #F26522;
+      font-weight: bold;
+      border-radius: 3px; }
 
 .story {
   margin: 10px 0;
   display: flex;
-  border-left: 5px solid transparent;
-}
-
-.story:hover {
-  border-color: #444;
-  background: #efefef;
-}
+  border-left: 5px solid transparent; }
+  .story:hover {
+    border-color: #444;
+    background: #efefef; }
+  .story .byline, .story .more {
+    font-size: 0.75em; }
+    .story .byline a, .story .more a {
+      text-decoration: underline; }
 
 .voting {
   width: 50px;
   margin-right: 10px;
   text-align: center;
-  font-size: 0.75em;
-}
-
-.voting .points {
-  width: 100%;
-  background: transparent;
-  color: #444;
-}
-
-.voting .filler {
-  height: 15px;
-}
-
-.story .byline, .story .more {
-  font-size: 0.75em;
-}
-
-.story .byline a, .story .more a {
-  text-decoration: underline;
-}
+  font-size: 0.75em; }
+  .voting .points {
+    width: 100%;
+    background: transparent;
+    color: #444; }
+  .voting .filler {
+    height: 15px; }
 
 .vote {
   text-align: center;
-  cursor: pointer;
-}
+  cursor: pointer; }
 
 .comments-main {
   margin-bottom: 25px;
-  border-bottom: 2px solid #444;
-}
+  border-bottom: 2px solid #444; }
 
 .comment {
   display: flex;
-  margin: 15px 0 5px 0;
-}
-
-.comment .children {
-  margin-left: 20px;
-}
+  margin: 15px 0 5px 0; }
+  .comment .children {
+    margin-left: 20px; }
 
 .message {
   padding: 5px;
-  background: #efefef;
-}
+  background: #efefef; }
 
 blockquote {
   margin: 0 0 0 3px;
   border-left: 2px solid #444;
-  padding-left: 5px;
-}
-
-nav form {
-  margin: 0;
-}
+  padding-left: 5px; }

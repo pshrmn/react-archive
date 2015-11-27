@@ -85,7 +85,9 @@ const User = React.createClass({
         <nav className="user">
           <li>
             <form method="post" action="login">
-              <p>Login</p>
+              <p>
+                <a href={`/login?goto=${location.pathname}${location.search}`}>Login</a>
+              </p>
               <input type="hidden" name="goto" value="/" />
               <p>
                 <input type="text" name="acct" size="20"
@@ -102,7 +104,9 @@ const User = React.createClass({
               </p>
             </form>
             <form method="post" action="login">
-              <p>Create account</p>
+              <p>
+                <a href={`/login?goto=${location.pathname}${location.search}`}>Create account</a>
+              </p>
               <input type="hidden" name="goto" value="/" />
               <input type="hidden" name="creating" value="t" />
               <p>
