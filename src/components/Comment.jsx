@@ -5,12 +5,19 @@ import Vote from "./Vote";
 const Comment = React.createClass({
   getInitialState: function() {
     return {
-      canVote: true
+      canVote: true,
+      visible: true
     };
   },
   voted: function() {
     this.setState({
       canVote: false
+    });
+  },
+  toggle: function(event) {
+    event.preventDefault();
+    this.setState({
+      visible: !this.state.visible
     });
   },
   render: function() {
@@ -21,7 +28,6 @@ const Comment = React.createClass({
         <Comment key={i} {...c} />
       );
     })
-
     if ( type === "missing" ) {
       return (
         <div className="comment">
@@ -44,6 +50,8 @@ const Comment = React.createClass({
       <Vote id={id} type="down" url={votes.down} voted={this.voted} />
     ) : <div className="filler"></div>;
 
+    let hidden = this.state.visible ? "" : "hidden";
+    let visText = this.state.visible ? "hide" : "show";
     let ps = paragraphs.map((p, i) => {
       if (p[0] === ">" ) {
         return (
@@ -66,13 +74,19 @@ const Comment = React.createClass({
         </div>
         <div>
           <div className="user">
-            <a href={user.url}>{user.name}</a> {when} <a href={`/item?id=${id}`}>direct</a>
+            <a href={user.url}>{user.name}</a>{" "}
+            {when}{" "}
+            <a href={`/item?id=${id}`}>direct</a>{" "}
+            <a href={reply}>reply</a>{" "}
+            <button onClick={this.toggle}>{visText}</button>
           </div>
-          <div className="message">
-            {ps}
-          </div>
-          <div className="children">
-            {childrenElements}
+          <div className={hidden}>
+            <div className="message">
+              {ps}
+            </div>
+            <div className="children">
+              {childrenElements}
+            </div>
           </div>
         </div>
       </div>

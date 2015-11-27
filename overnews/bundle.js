@@ -127,8 +127,10 @@
 	      return "submission";
 	    case "/item":
 	      return "comments";
+	    /*
 	    case "/reply":
 	      return "reply";
+	    */
 	    default:
 	      return "no-op";
 	  }
@@ -1449,10 +1451,26 @@
 	exports.default = _react2.default.createClass({
 	  displayName: "CommentsPage",
 
+	  replyElement: function replyElement(form) {
+	    return _react2.default.createElement(
+	      "form",
+	      { method: "post", action: form.action },
+	      _react2.default.createElement("input", { type: "hidden", name: "parent", value: form.parent }),
+	      _react2.default.createElement("input", { type: "hidden", name: "goto", value: form.goto }),
+	      _react2.default.createElement("input", { type: "hidden", name: "hmac", value: form.hmac }),
+	      _react2.default.createElement("textarea", { name: "text", rows: "6", cols: "60" }),
+	      _react2.default.createElement(
+	        "button",
+	        null,
+	        "Add Comment"
+	      )
+	    );
+	  },
 	  render: function render() {
 	    var _props = this.props;
 	    var type = _props.type;
 	    var comments = _props.comments;
+	    var replyForm = _props.replyForm;
 
 	    var commElements = comments.map(function (c, i) {
 	      return _react2.default.createElement(_Comment2.default, _extends({ key: i }, c));
@@ -1474,7 +1492,8 @@
 	      _react2.default.createElement(
 	        "div",
 	        { className: "comments-main" },
-	        header
+	        header,
+	        this.replyElement(replyForm)
 	      ),
 	      _react2.default.createElement(
 	        "div",
@@ -1512,12 +1531,19 @@
 
 	  getInitialState: function getInitialState() {
 	    return {
-	      canVote: true
+	      canVote: true,
+	      visible: true
 	    };
 	  },
 	  voted: function voted() {
 	    this.setState({
 	      canVote: false
+	    });
+	  },
+	  toggle: function toggle(event) {
+	    event.preventDefault();
+	    this.setState({
+	      visible: !this.state.visible
 	    });
 	  },
 	  render: function render() {
@@ -1537,7 +1563,6 @@
 	    var childrenElements = children.map(function (c, i) {
 	      return _react2.default.createElement(Comment, _extends({ key: i }, c));
 	    });
-
 	    if (type === "missing") {
 	      return _react2.default.createElement(
 	        "div",
@@ -1566,6 +1591,8 @@
 	    var upVote = canVote && votes.up !== undefined ? _react2.default.createElement(_Vote2.default, { id: id, type: "up", url: votes.up, voted: this.voted }) : _react2.default.createElement("div", { className: "filler" });
 	    var downVote = canVote && votes.down !== undefined ? _react2.default.createElement(_Vote2.default, { id: id, type: "down", url: votes.down, voted: this.voted }) : _react2.default.createElement("div", { className: "filler" });
 
+	    var hidden = this.state.visible ? "" : "hidden";
+	    var visText = this.state.visible ? "hide" : "show";
 	    var ps = paragraphs.map(function (p, i) {
 	      if (p[0] === ">") {
 	        return _react2.default.createElement(
@@ -1607,17 +1634,33 @@
 	            "a",
 	            { href: "/item?id=" + id },
 	            "direct"
+	          ),
+	          " ",
+	          _react2.default.createElement(
+	            "a",
+	            { href: reply },
+	            "reply"
+	          ),
+	          " ",
+	          _react2.default.createElement(
+	            "button",
+	            { onClick: this.toggle },
+	            visText
 	          )
 	        ),
 	        _react2.default.createElement(
 	          "div",
-	          { className: "message" },
-	          ps
-	        ),
-	        _react2.default.createElement(
-	          "div",
-	          { className: "children" },
-	          childrenElements
+	          { className: hidden },
+	          _react2.default.createElement(
+	            "div",
+	            { className: "message" },
+	            ps
+	          ),
+	          _react2.default.createElement(
+	            "div",
+	            { className: "children" },
+	            childrenElements
+	          )
 	        )
 	      )
 	    );

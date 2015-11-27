@@ -2,6 +2,10 @@ body {
   margin: 0;
 }
 
+.hidden {
+  display: none;
+}
+
 .hacker-news {
   display: flex;
 }
@@ -111,6 +115,14 @@ body {
 .comments-main {
   margin-bottom: 25px;
   border-bottom: 2px solid #444;
+
+  form {
+    padding: 15px 25px;
+
+    textarea, button {
+      display: block;
+    }
+  }
 }
 
 .comment {
@@ -119,6 +131,14 @@ body {
 
   .children {
     margin-left: 20px;
+  }
+
+  button {
+    background: transparent;
+    border: 0;
+    text-decoration: underline;
+    cursor: pointer;
+    padding: 0;
   }
 }
 

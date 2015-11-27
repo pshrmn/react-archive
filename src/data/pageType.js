@@ -15,8 +15,10 @@ export default function() {
     return "submission";
   case "/item":
     return "comments";
+  /*
   case "/reply":
     return "reply";
+  */
   default:
     return "no-op"
   }

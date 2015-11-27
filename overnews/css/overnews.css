@@ -1,6 +1,9 @@
 body {
   margin: 0; }
 
+.hidden {
+  display: none; }
+
 .hacker-news {
   display: flex; }
 
@@ -74,12 +77,22 @@ body {
 .comments-main {
   margin-bottom: 25px;
   border-bottom: 2px solid #444; }
+  .comments-main form {
+    padding: 15px 25px; }
+    .comments-main form textarea, .comments-main form button {
+      display: block; }
 
 .comment {
   display: flex;
   margin: 15px 0 5px 0; }
   .comment .children {
     margin-left: 20px; }
+  .comment button {
+    background: transparent;
+    border: 0;
+    text-decoration: underline;
+    cursor: pointer;
+    padding: 0; }
 
 .message {
   padding: 5px;
