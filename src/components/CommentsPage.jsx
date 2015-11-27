@@ -16,21 +16,26 @@ export default React.createClass({
     );
   },
   render: function() {
-    let { type, comments, replyForm } = this.props;
+    let { type, comments, replyForm, user } = this.props;
+    let loggedIn = user.name !== undefined;
     let commElements = comments.map((c, i) => {
-      return <Comment key={i} {...c} />;
+      return <Comment key={i}
+                      loggedIn={loggedIn}
+                      {...c} />;
     });
 
     let header = null;
     switch ( type ) {
     case "single":
       header = (
-        <Comment {...this.props.comment} />
+        <Comment loggedIn={loggedIn}
+                 {...this.props.comment} />
       );
       break;
     case "all":
       header = (
-        <SubStory  {...this.props.story} />
+        <SubStory loggedIn={loggedIn}
+                  {...this.props.story} />
       );
       break;
     }

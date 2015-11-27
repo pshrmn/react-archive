@@ -1033,7 +1033,7 @@
 	      var nextURL = "";
 	      return _react2.default.createElement(
 	        "nav",
-	        { className: "user" },
+	        { className: "user logged-out" },
 	        _react2.default.createElement(
 	          "li",
 	          null,
@@ -1131,7 +1131,7 @@
 
 	      return _react2.default.createElement(
 	        "nav",
-	        { className: "user" },
+	        { className: "user logged-in" },
 	        _react2.default.createElement(
 	          "li",
 	          null,
@@ -1260,7 +1260,7 @@
 
 	  getInitialState: function getInitialState() {
 	    return {
-	      canVote: true
+	      canVote: this.props.loggedIn || false
 	    };
 	  },
 	  /*
@@ -1471,18 +1471,24 @@
 	    var type = _props.type;
 	    var comments = _props.comments;
 	    var replyForm = _props.replyForm;
+	    var user = _props.user;
 
+	    var loggedIn = user.name !== undefined;
 	    var commElements = comments.map(function (c, i) {
-	      return _react2.default.createElement(_Comment2.default, _extends({ key: i }, c));
+	      return _react2.default.createElement(_Comment2.default, _extends({ key: i,
+	        loggedIn: loggedIn
+	      }, c));
 	    });
 
 	    var header = null;
 	    switch (type) {
 	      case "single":
-	        header = _react2.default.createElement(_Comment2.default, this.props.comment);
+	        header = _react2.default.createElement(_Comment2.default, _extends({ loggedIn: loggedIn
+	        }, this.props.comment));
 	        break;
 	      case "all":
-	        header = _react2.default.createElement(_SubStory2.default, this.props.story);
+	        header = _react2.default.createElement(_SubStory2.default, _extends({ loggedIn: loggedIn
+	        }, this.props.story));
 	        break;
 	    }
 
@@ -1531,7 +1537,7 @@
 
 	  getInitialState: function getInitialState() {
 	    return {
-	      canVote: true,
+	      canVote: this.props.loggedIn || false,
 	      visible: true
 	    };
 	  },

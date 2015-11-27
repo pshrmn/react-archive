@@ -9,7 +9,8 @@ body {
 
 .hn-react {
   font-size: 16px;
-  color: #444; }
+  color: #444;
+  background: #efefef; }
   .hn-react a, .hn-react a:visited {
     color: #000; }
   .hn-react header {
@@ -28,7 +29,7 @@ body {
       list-style: none; }
       .hn-react header nav:last-child {
         border-bottom: 0; }
-      .hn-react header nav.user a {
+      .hn-react header nav.user.logged-out a {
         text-decoration: underline; }
       .hn-react header nav p {
         margin: 2px 0; }
@@ -52,9 +53,10 @@ body {
   border-left: 5px solid transparent; }
   .story:hover {
     border-color: #444;
-    background: #efefef; }
+    background: #ddd; }
   .story .byline, .story .more {
-    font-size: 0.75em; }
+    font-size: 0.75em;
+    line-height: 1.5em; }
     .story .byline a, .story .more a {
       text-decoration: underline; }
 
@@ -87,16 +89,15 @@ body {
   margin: 15px 0 5px 0; }
   .comment .children {
     margin-left: 20px; }
+  .comment .message {
+    padding: 5px;
+    background: #ddd; }
   .comment button {
     background: transparent;
     border: 0;
     text-decoration: underline;
     cursor: pointer;
     padding: 0; }
-
-.message {
-  padding: 5px;
-  background: #efefef; }
 
 blockquote {
   margin: 0 0 0 3px;

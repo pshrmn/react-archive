@@ -5,7 +5,7 @@ import Vote from "./Vote";
 const Comment = React.createClass({
   getInitialState: function() {
     return {
-      canVote: true,
+      canVote: this.props.loggedIn || false,
       visible: true
     };
   },

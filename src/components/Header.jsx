@@ -82,7 +82,7 @@ const User = React.createClass({
       let location = window.location;
       let nextURL = ``
       return (
-        <nav className="user">
+        <nav className="user logged-out">
           <li>
             <form method="post" action="login">
               <p>
@@ -132,7 +132,7 @@ const User = React.createClass({
     } else {
       let { name, url, points } = this.props;
       return (
-        <nav className="user">
+        <nav className="user logged-in">
           <li>
             <a href={`/user?id=${name}`}>{name}</a> ({points})
           </li>
