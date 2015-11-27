@@ -5,7 +5,7 @@ import votes from "./votes";
  * -------
  *
  * return the data that represents a comment. There are two types of comments, regular
- * ones, and flagged comments. Flagged comments contain no data.
+ * ones, and missing comments. Missing comments contain no data.
  */
 const comment = element => {
   // comments aren't actually nested, instead they are indented with an image to
@@ -14,11 +14,12 @@ const comment = element => {
   let indentation = indentationHolder.querySelector("img");
   let level = indentation === null ? 0 : parseInt(indentation.width, 10) / 40;
   let commentHolder = element.querySelector(".comment > span");
-  // flagged comment
+  // missing comment
   if ( commentHolder === null ) {
     return {
       level: level,
-      type: "flagged"
+      type: "missing",
+      children: []
     };
   }
   // get the text of the comment. This does not preserve any markdown elements

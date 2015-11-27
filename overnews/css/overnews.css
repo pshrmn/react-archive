@@ -2,6 +2,10 @@ body {
   margin: 0;
 }
 
+.hacker-news {
+  display: flex;
+}
+
 .hn-react {
   font-size: 16px;
   color: #444;
@@ -12,38 +16,42 @@ body {
 }
 
 .hn-react header {
-  display: flex;
-  padding: 5px 0;
+  padding: 5px;
+  box-sizing: border-box;
   background: #F26522;
+  width: 200px;
+  color: #000;
+  overflow-wrap: break-word;
+}
+
+.hn-react header nav {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+header nav {
+  border-bottom: 1px solid #fff;
+  padding-bottom: 15px;
+}
+
+header nav:last-child {
+  border-bottom: 0;
 }
 
 .hn-react header .home {
   font-weight: bold;
+  padding: 5px 0;
 }
 
 .hn-react header nav {
-  display: flex;
   list-style: none;
-  align-items: flex-end;
 }
 
-.hn-react header nav li, .hn-react footer nav li {
-  margin-right: 10px;
-}
-
-.hn-react header nav.user {
-  margin-left: auto;
-}
-
-.hn-react footer {
-  margin: 15px auto 25px;
-}
-
-.hn-react footer nav {
-  display: flex;
-  list-style: none;
-  justify-content: center;
-  align-items: flex-end;
+header .points {
+  background: #fff;
+  color: #F26522;
+  font-weight: bold;
+  border-radius: 3px;
 }
 
 .story {
@@ -53,7 +61,7 @@ body {
 }
 
 .story:hover {
-  border-color: #F26522;
+  border-color: #444;
   background: #efefef;
 }
 
@@ -62,14 +70,6 @@ body {
   margin-right: 10px;
   text-align: center;
   font-size: 0.75em;
-}
-
-.points {
-  padding: 2px;
-  background: #fff;
-  border-radius: 2px;
-  font-weight: bold;
-  display: inline-block;
 }
 
 .voting .points {

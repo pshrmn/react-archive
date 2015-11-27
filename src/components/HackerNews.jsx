@@ -1,7 +1,6 @@
 import React from "react";
 
 import Header from "./Header";
-import Footer from "./Footer";
 import StoryPage from "./StoryPage";
 import CommentsPage from "./CommentsPage";
 
@@ -24,7 +23,6 @@ export default React.createClass({
       <div className="hacker-news">
         <Header user={page.user} />
         {content}
-        <Footer />
       </div>
     );
   },

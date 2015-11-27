@@ -70,25 +70,31 @@
 	var page = undefined;
 	switch (type) {
 	  case "submission":
-	    page = (0, _pages.storyPage)();
+	    render(type, (0, _pages.storyPage)());
 	    break;
 	  case "comments":
-	    page = (0, _pages.commentsPage)();
+	    render(type, (0, _pages.commentsPage)());
 	    break;
+	  /*
 	  case "reply":
-	    page = (0, _pages.replyPage)();
-	    break;
+	    page = replyPage();
+	    break; 
+	  */
 	  default:
-	    page = (0, _pages.noopPage)();
+	    render(type);
 	    break;
 	}
 
-	var holder = document.createElement("div");
-	holder.classList.add("hn-react");
-	document.body.appendChild(holder);
+	function render(type, page) {
+	  if (type !== "noop") {
+	    var holder = document.createElement("div");
+	    holder.classList.add("hn-react");
+	    document.body.appendChild(holder);
 
-	_reactDom2.default.render(_react2.default.createElement(_HackerNews2.default, { type: type,
-	  page: page }), holder);
+	    _reactDom2.default.render(_react2.default.createElement(_HackerNews2.default, { type: type,
+	      page: page }), holder);
+	  }
+	}
 
 /***/ },
 /* 1 */
@@ -581,7 +587,7 @@
 	 * -------
 	 *
 	 * return the data that represents a comment. There are two types of comments, regular
-	 * ones, and flagged comments. Flagged comments contain no data.
+	 * ones, and missing comments. Missing comments contain no data.
 	 */
 	var comment = function comment(element) {
 	  // comments aren't actually nested, instead they are indented with an image to
@@ -590,11 +596,12 @@
 	  var indentation = indentationHolder.querySelector("img");
 	  var level = indentation === null ? 0 : parseInt(indentation.width, 10) / 40;
 	  var commentHolder = element.querySelector(".comment > span");
-	  // flagged comment
+	  // missing comment
 	  if (commentHolder === null) {
 	    return {
 	      level: level,
-	      type: "flagged"
+	      type: "missing",
+	      children: []
 	    };
 	  }
 	  // get the text of the comment. This does not preserve any markdown elements
@@ -764,15 +771,11 @@
 
 	var _Header2 = _interopRequireDefault(_Header);
 
-	var _Footer = __webpack_require__(21);
-
-	var _Footer2 = _interopRequireDefault(_Footer);
-
-	var _StoryPage = __webpack_require__(22);
+	var _StoryPage = __webpack_require__(21);
 
 	var _StoryPage2 = _interopRequireDefault(_StoryPage);
 
-	var _CommentsPage = __webpack_require__(26);
+	var _CommentsPage = __webpack_require__(25);
 
 	var _CommentsPage2 = _interopRequireDefault(_CommentsPage);
 
@@ -798,8 +801,7 @@
 	      "div",
 	      { className: "hacker-news" },
 	      _react2.default.createElement(_Header2.default, { user: page.user }),
-	      content,
-	      _react2.default.createElement(_Footer2.default, null)
+	      content
 	    );
 	  },
 	  componentDidMount: function componentDidMount() {
@@ -843,13 +845,13 @@
 	      null,
 	      _react2.default.createElement(
 	        "nav",
-	        { className: "general" },
+	        null,
 	        _react2.default.createElement(
 	          "li",
-	          null,
+	          { className: "home" },
 	          _react2.default.createElement(
 	            "a",
-	            { href: "/", className: "home" },
+	            { href: "/" },
 	            "Hacker News"
 	          )
 	        ),
@@ -857,9 +859,23 @@
 	          "li",
 	          null,
 	          _react2.default.createElement(
+	            "form",
+	            { method: "get", action: "//hn.algolia.com" },
+	            _react2.default.createElement("input", { type: "text", placeholder: "Search", name: "q" })
+	          )
+	        )
+	      ),
+	      _react2.default.createElement(User, user),
+	      _react2.default.createElement(
+	        "nav",
+	        { className: "general" },
+	        _react2.default.createElement(
+	          "li",
+	          null,
+	          _react2.default.createElement(
 	            "a",
 	            { href: "/newest" },
-	            "new"
+	            "New"
 	          )
 	        ),
 	        _react2.default.createElement(
@@ -868,7 +884,7 @@
 	          _react2.default.createElement(
 	            "a",
 	            { href: "/newcomments" },
-	            "comments"
+	            "Comments"
 	          )
 	        ),
 	        _react2.default.createElement(
@@ -877,7 +893,7 @@
 	          _react2.default.createElement(
 	            "a",
 	            { href: "/show" },
-	            "show"
+	            "Show"
 	          )
 	        ),
 	        _react2.default.createElement(
@@ -886,7 +902,7 @@
 	          _react2.default.createElement(
 	            "a",
 	            { href: "/ask" },
-	            "ask"
+	            "Ask"
 	          )
 	        ),
 	        _react2.default.createElement(
@@ -895,7 +911,7 @@
 	          _react2.default.createElement(
 	            "a",
 	            { href: "/jobs" },
-	            "jobs"
+	            "Jobs"
 	          )
 	        ),
 	        _react2.default.createElement(
@@ -904,104 +920,10 @@
 	          _react2.default.createElement(
 	            "a",
 	            { href: "/submit" },
-	            "submit"
+	            "Submit"
 	          )
 	        )
 	      ),
-	      _react2.default.createElement(User, user)
-	    );
-	  }
-	});
-
-	var User = _react2.default.createClass({
-	  displayName: "User",
-
-	  render: function render() {
-	    if (this.props.name === undefined) {
-	      var _location = window.location;
-	      var nextURL = "";
-	      return _react2.default.createElement(
-	        "nav",
-	        { className: "user" },
-	        _react2.default.createElement(
-	          "li",
-	          null,
-	          _react2.default.createElement(
-	            "a",
-	            { href: "/login?goto=" + _location.pathname + _location.search },
-	            "Login"
-	          )
-	        )
-	      );
-	    } else {
-	      var _props = this.props;
-	      var name = _props.name;
-	      var url = _props.url;
-	      var points = _props.points;
-
-	      return _react2.default.createElement(
-	        "nav",
-	        { className: "user" },
-	        _react2.default.createElement(
-	          "li",
-	          null,
-	          _react2.default.createElement(
-	            "a",
-	            { href: "/user?id=" + name },
-	            name
-	          )
-	        ),
-	        _react2.default.createElement(
-	          "li",
-	          { className: "points" },
-	          points
-	        ),
-	        _react2.default.createElement(
-	          "li",
-	          null,
-	          _react2.default.createElement(
-	            "a",
-	            { href: "/threads?id=" + name },
-	            "Threads"
-	          )
-	        ),
-	        _react2.default.createElement(
-	          "li",
-	          null,
-	          _react2.default.createElement(
-	            "a",
-	            { href: "/logout?goto=" + location.pathname + location.search },
-	            "Logout"
-	          )
-	        )
-	      );
-	    }
-	  }
-	});
-
-/***/ },
-/* 21 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	exports.default = _react2.default.createClass({
-	  displayName: "Footer",
-
-	  render: function render() {
-	    return _react2.default.createElement(
-	      "footer",
-	      null,
 	      _react2.default.createElement(
 	        "nav",
 	        null,
@@ -1094,24 +1016,78 @@
 	            { href: "mailto:hn@ycombinator.com" },
 	            "Contact"
 	          )
+	        )
+	      )
+	    );
+	  }
+	});
+
+	var User = _react2.default.createClass({
+	  displayName: "User",
+
+	  render: function render() {
+	    if (this.props.name === undefined) {
+	      var _location = window.location;
+	      var nextURL = "";
+	      return _react2.default.createElement(
+	        "nav",
+	        { className: "user" },
+	        _react2.default.createElement(
+	          "li",
+	          null,
+	          _react2.default.createElement(
+	            "a",
+	            { href: "/login?goto=" + _location.pathname + _location.search },
+	            "Login"
+	          )
+	        )
+	      );
+	    } else {
+	      var _props = this.props;
+	      var name = _props.name;
+	      var url = _props.url;
+	      var points = _props.points;
+
+	      return _react2.default.createElement(
+	        "nav",
+	        { className: "user" },
+	        _react2.default.createElement(
+	          "li",
+	          null,
+	          _react2.default.createElement(
+	            "a",
+	            { href: "/user?id=" + name },
+	            name
+	          ),
+	          " (",
+	          points,
+	          ")"
 	        ),
 	        _react2.default.createElement(
 	          "li",
 	          null,
 	          _react2.default.createElement(
-	            "form",
-	            { method: "get", action: "//hn.algolia.com" },
-	            _react2.default.createElement("input", { type: "text", placeholder: "Search", name: "q" })
+	            "a",
+	            { href: "/threads?id=" + name },
+	            "Threads"
+	          )
+	        ),
+	        _react2.default.createElement(
+	          "li",
+	          null,
+	          _react2.default.createElement(
+	            "a",
+	            { href: "/logout?goto=" + location.pathname + location.search },
+	            "Logout"
 	          )
 	        )
-	      ),
-	      _react2.default.createElement("div", null)
-	    );
+	      );
+	    }
 	  }
 	});
 
 /***/ },
-/* 22 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1126,7 +1102,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _SubStory = __webpack_require__(23);
+	var _SubStory = __webpack_require__(22);
 
 	var _SubStory2 = _interopRequireDefault(_SubStory);
 
@@ -1179,7 +1155,7 @@
 	});
 
 /***/ },
-/* 23 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1192,7 +1168,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _Vote = __webpack_require__(24);
+	var _Vote = __webpack_require__(23);
 
 	var _Vote2 = _interopRequireDefault(_Vote);
 
@@ -1293,7 +1269,7 @@
 	exports.default = SubStory;
 
 /***/ },
-/* 24 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1306,7 +1282,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _vote = __webpack_require__(25);
+	var _vote = __webpack_require__(24);
 
 	var _vote2 = _interopRequireDefault(_vote);
 
@@ -1341,7 +1317,7 @@
 	});
 
 /***/ },
-/* 25 */
+/* 24 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -1366,7 +1342,7 @@
 	};
 
 /***/ },
-/* 26 */
+/* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1381,11 +1357,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _SubStory = __webpack_require__(23);
+	var _SubStory = __webpack_require__(22);
 
 	var _SubStory2 = _interopRequireDefault(_SubStory);
 
-	var _Comment = __webpack_require__(27);
+	var _Comment = __webpack_require__(26);
 
 	var _Comment2 = _interopRequireDefault(_Comment);
 
@@ -1431,7 +1407,7 @@
 	});
 
 /***/ },
-/* 27 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1446,7 +1422,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _Vote = __webpack_require__(24);
+	var _Vote = __webpack_require__(23);
 
 	var _Vote2 = _interopRequireDefault(_Vote);
 
@@ -1483,7 +1459,7 @@
 	      return _react2.default.createElement(Comment, _extends({ key: i }, c));
 	    });
 
-	    if (type === "flagged") {
+	    if (type === "missing") {
 	      return _react2.default.createElement(
 	        "div",
 	        { className: "comment" },
@@ -1496,7 +1472,7 @@
 	            _react2.default.createElement(
 	              "p",
 	              null,
-	              "[flagged]"
+	              "[comment no longer exists]"
 	            )
 	          ),
 	          _react2.default.createElement(

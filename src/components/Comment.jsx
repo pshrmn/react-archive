@@ -22,12 +22,12 @@ const Comment = React.createClass({
       );
     })
 
-    if ( type === "flagged" ) {
+    if ( type === "missing" ) {
       return (
         <div className="comment">
           <div>
             <div className="message">
-              <p>[flagged]</p>
+              <p>[comment no longer exists]</p>
             </div>
             <div className="children">
               {childrenElements}
