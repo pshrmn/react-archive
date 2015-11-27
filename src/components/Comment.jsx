@@ -53,6 +53,10 @@ const Comment = React.createClass({
     let hidden = this.state.visible ? "" : "hidden";
     let visText = this.state.visible ? "hide" : "show";
 
+    let userElement = <a href={user.url}>{user.name}</a>;
+    let directElement = <a href={`/item?id=${id}`}>direct</a>;
+    let replyElement = <a href={reply}>reply</a>;
+    let parentElement = parent !== "" ? <a href={parent}>parent</a> : null;
     return (
       <div className="comment">
         <div className="votes">
@@ -61,10 +65,7 @@ const Comment = React.createClass({
         </div>
         <div>
           <div className="user">
-            <a href={user.url}>{user.name}</a>{" "}
-            {when}{" "}
-            <a href={`/item?id=${id}`}>direct</a>{" "}
-            <a href={reply}>reply</a>{" "}
+            {userElement} {when} {directElement} {replyElement} {parentElement}{" "}
             <button onClick={this.toggle}>{visText}</button>
           </div>
           <div className={hidden}>

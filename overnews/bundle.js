@@ -1594,6 +1594,26 @@
 	    var hidden = this.state.visible ? "" : "hidden";
 	    var visText = this.state.visible ? "hide" : "show";
 
+	    var userElement = _react2.default.createElement(
+	      "a",
+	      { href: user.url },
+	      user.name
+	    );
+	    var directElement = _react2.default.createElement(
+	      "a",
+	      { href: "/item?id=" + id },
+	      "direct"
+	    );
+	    var replyElement = _react2.default.createElement(
+	      "a",
+	      { href: reply },
+	      "reply"
+	    );
+	    var parentElement = parent !== "" ? _react2.default.createElement(
+	      "a",
+	      { href: parent },
+	      "parent"
+	    ) : null;
 	    return _react2.default.createElement(
 	      "div",
 	      { className: "comment" },
@@ -1609,25 +1629,15 @@
 	        _react2.default.createElement(
 	          "div",
 	          { className: "user" },
-	          _react2.default.createElement(
-	            "a",
-	            { href: user.url },
-	            user.name
-	          ),
+	          userElement,
 	          " ",
 	          when,
 	          " ",
-	          _react2.default.createElement(
-	            "a",
-	            { href: "/item?id=" + id },
-	            "direct"
-	          ),
+	          directElement,
 	          " ",
-	          _react2.default.createElement(
-	            "a",
-	            { href: reply },
-	            "reply"
-	          ),
+	          replyElement,
+	          " ",
+	          parentElement,
 	          " ",
 	          _react2.default.createElement(
 	            "button",

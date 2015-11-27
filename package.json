@@ -1,11 +1,12 @@
 {
   "name": "overnews",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Chrome extension to rebuild HackerNews with React",
   "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "sass": "node-sass scss/** -o overnews/css/**"
+    "sass": "node-sass scss/** -o overnews/css/**",
+    "build": "webpack & npm run sass"
   },
   "repository": {
     "type": "git",
