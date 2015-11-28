@@ -87,6 +87,12 @@
 
 	function render(type, page) {
 	  if (type !== "no-op") {
+	    // fontawesome
+	    var style = document.createElement("link");
+	    style.rel = "stylesheet";
+	    style.href = "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css";
+	    document.head.appendChild(style);
+
 	    var holder = document.createElement("div");
 	    holder.classList.add("hn-react");
 	    document.body.appendChild(holder);
@@ -126,6 +132,7 @@
 	    case "/jobs":
 	    case "/ask":
 	    case "/show":
+	    case "/newest":
 	      return "submission";
 	    case "/item":
 	      return "comments";
@@ -764,6 +771,8 @@
 
 	"use strict";
 
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
@@ -780,7 +789,7 @@
 
 	var _StoryPage2 = _interopRequireDefault(_StoryPage);
 
-	var _CommentsPage = __webpack_require__(25);
+	var _CommentsPage = __webpack_require__(26);
 
 	var _CommentsPage2 = _interopRequireDefault(_CommentsPage);
 
@@ -795,12 +804,13 @@
 	    var type = _props.type;
 
 	    var content = null;
+	    var loggedIn = page.user.name !== undefined;
 	    switch (type) {
 	      case "submission":
-	        content = _react2.default.createElement(_StoryPage2.default, page);
+	        content = _react2.default.createElement(_StoryPage2.default, _extends({ loggedIn: loggedIn }, page));
 	        break;
 	      case "comments":
-	        content = _react2.default.createElement(_CommentsPage2.default, page);
+	        content = _react2.default.createElement(_CommentsPage2.default, _extends({ loggedIn: loggedIn }, page));
 	    }
 	    return _react2.default.createElement(
 	      "div",
@@ -917,15 +927,6 @@
 	            "a",
 	            { href: "/jobs" },
 	            "Jobs"
-	          )
-	        ),
-	        _react2.default.createElement(
-	          "li",
-	          null,
-	          _react2.default.createElement(
-	            "a",
-	            { href: "/submit" },
-	            "Submit"
 	          )
 	        )
 	      ),
@@ -1152,6 +1153,15 @@
 	          null,
 	          _react2.default.createElement(
 	            "a",
+	            { href: "/submit" },
+	            "Submit"
+	          )
+	        ),
+	        _react2.default.createElement(
+	          "li",
+	          null,
+	          _react2.default.createElement(
+	            "a",
 	            { href: "/threads?id=" + name },
 	            "Threads"
 	          )
@@ -1190,22 +1200,90 @@
 
 	var _SubStory2 = _interopRequireDefault(_SubStory);
 
+	var _chrome = __webpack_require__(25);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	exports.default = _react2.default.createClass({
 	  displayName: "StoryPage",
 
+	  getInitialState: function getInitialState() {
+	    return {
+	      "saved": {},
+	      "hidden": {},
+	      "domains": {}
+	    };
+	  },
+	  toggleSave: function toggleSave(id, url) {
+	    var saved = this.state.saved;
+	    if (saved[id]) {
+	      delete saved[id];
+	      (0, _chrome.unsaveStory)(id);
+	    } else {
+	      saved[id] = url;
+	      (0, _chrome.saveStory)(id, url);
+	    }
+	    this.setState({
+	      saved: saved
+	    });
+	  },
+	  hideStory: function hideStory(id) {
+	    var hidden = this.state.hidden;
+	    hidden[id] = true;
+	    (0, _chrome.hideStory)(id);
+	    this.setState({
+	      hidden: hidden
+	    });
+	  },
+	  hideDomain: function hideDomain(domain) {
+	    var domains = this.state.domains;
+	    domains[domain] = true;
+	    (0, _chrome.hideDomain)(domain);
+	    this.setState({
+	      domains: domains
+	    });
+	  },
 	  render: function render() {
-	    var stories = this.props.stories;
+	    var _this = this;
+
+	    var _props = this.props;
+	    var stories = _props.stories;
+	    var loggedIn = _props.loggedIn;
+	    var _state = this.state;
+	    var saved = _state.saved;
+	    var hidden = _state.hidden;
+	    var domains = _state.domains;
 
 	    var submissions = stories.map(function (s, i) {
-	      return s.type === "sub" ? _react2.default.createElement(_SubStory2.default, _extends({ key: i }, s)) : _react2.default.createElement(JobStory, _extends({ key: i }, s));
+	      if (hidden[s.id] || domains[s.domain]) {
+	        return null;
+	      }
+	      return s.type === "sub" ? _react2.default.createElement(_SubStory2.default, _extends({ key: i,
+	        saved: saved[s.id] !== undefined,
+	        toggleSave: _this.toggleSave,
+	        hideStory: _this.hideStory,
+	        hideDomain: _this.hideDomain,
+	        loggedIn: loggedIn
+	      }, s)) : _react2.default.createElement(JobStory, _extends({ key: i,
+	        saved: saved[s.id] === true
+	      }, s));
 	    });
 	    return _react2.default.createElement(
 	      "div",
 	      { className: "story-page" },
 	      submissions
 	    );
+	  },
+	  componentDidMount: function componentDidMount() {
+	    var _this2 = this;
+
+	    (0, _chrome.getStorage)(function (storage) {
+	      _this2.setState({
+	        saved: storage.saved,
+	        hidden: storage.hidden,
+	        domains: storage.domains
+	      });
+	    });
 	  }
 	});
 
@@ -1213,9 +1291,9 @@
 	  displayName: "JobStory",
 
 	  render: function render() {
-	    var _props = this.props;
-	    var url = _props.url;
-	    var title = _props.title;
+	    var _props2 = this.props;
+	    var url = _props2.url;
+	    var title = _props2.title;
 
 	    return _react2.default.createElement(
 	      "div",
@@ -1274,6 +1352,17 @@
 	      canVote: false
 	    });
 	  },
+	  saveStory: function saveStory() {
+	    this.props.toggleSave(this.props.id, this.props.url);
+	  },
+	  /*
+	  hideStory: function() {
+	    this.props.hideStory(this.props.id);
+	  },
+	  hideDomain: function() {
+	    this.props.hideDomain(this.props.domain);
+	  },
+	  */
 	  render: function render() {
 	    var _props = this.props;
 	    var url = _props.url;
@@ -1286,21 +1375,18 @@
 	    var when = _props.when;
 	    var domain = _props.domain;
 	    var self = _props.self;
+	    var saved = _props.saved;
 	    var canVote = this.state.canVote;
 
 	    var upVote = canVote && votes.up !== undefined ? _react2.default.createElement(_Vote2.default, { id: id, type: "up", url: votes.up, voted: this.voted }) : _react2.default.createElement("div", { className: "filler" });
 	    var downVote = canVote && votes.down !== undefined ? _react2.default.createElement(_Vote2.default, { id: id, type: "down", url: votes.down, voted: this.voted }) : _react2.default.createElement("div", { className: "filler" });
 	    var more = domain !== "" ? _react2.default.createElement(
-	      "div",
-	      { className: "more" },
-	      "more from ",
-	      _react2.default.createElement(
-	        "a",
-	        { href: "/from?site=" + domain },
-	        domain
-	      )
+	      "a",
+	      { className: "more", href: "/from?site=" + domain },
+	      domain
 	    ) : null;
 	    var selfText = self !== undefined ? _react2.default.createElement("div", { dangerouslySetInnerHTML: self }) : null;
+
 	    return _react2.default.createElement(
 	      "div",
 	      { className: "story sub" },
@@ -1325,7 +1411,8 @@
 	            "a",
 	            { href: url, target: "_blank" },
 	            title
-	          )
+	          ),
+	          more
 	        ),
 	        _react2.default.createElement(
 	          "div",
@@ -1346,10 +1433,25 @@
 	          " ",
 	          when
 	        ),
-	        more,
 	        selfText
+	      ),
+	      _react2.default.createElement(
+	        "div",
+	        { className: "story-controls" },
+	        _react2.default.createElement("i", { className: saved ? "fa fa-star" : "fa fa-star-o",
+	          title: saved ? "unsave story" : "save story",
+	          onClick: this.saveStory })
 	      )
 	    );
+	    /*
+	    not including ability to hide a story/domain until they can also be removed
+	    <i className="fa fa-times"
+	       title="hide story"
+	       onClick={this.hideStory} />
+	    <i className="fa fa-ban"
+	       title="hide domain"
+	       onClick={this.hideDomain} />
+	    */
 	  }
 	});
 
@@ -1430,6 +1532,96 @@
 
 /***/ },
 /* 25 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var getStorage = exports.getStorage = function getStorage(callback) {
+	  chrome.storage.local.get(null, function (storage) {
+	    callback(storage);
+	  });
+	};
+
+	/*
+	 * stories
+	 */
+	var saveStory = exports.saveStory = function saveStory(id, url) {
+	  chrome.storage.local.get("saved", function (storage) {
+	    var saved = storage.saved;
+	    saved[id] = url;
+	    chrome.storage.local.set({ "saved": saved });
+	  });
+	};
+
+	var unsaveStory = exports.unsaveStory = function unsaveStory(id) {
+	  chrome.storage.local.get("saved", function (storage) {
+	    var saved = storage.saved;
+	    delete saved[id];
+	    chrome.storage.local.set({ "saved": saved });
+	  });
+	};
+
+	var getSaved = exports.getSaved = function getSaved(callback) {
+	  chrome.storage.local.get("saved", function (storage) {
+	    callback(storage.saved);
+	  });
+	};
+
+	/*
+	 * domains
+	 */
+	var hideDomain = exports.hideDomain = function hideDomain(domain) {
+	  chrome.storage.local.get("domains", function (storage) {
+	    var domains = storage.domains;
+	    domains[domain] = true;
+	    chrome.storage.local.set({ "domains": domains });
+	  });
+	};
+
+	var unhideDomain = exports.unhideDomain = function unhideDomain(domain) {
+	  chrome.storage.local.get("domains", function (storage) {
+	    var domains = storage.domains;
+	    delete domains[domain];
+	    chrome.storage.local.set({ "domains": domains });
+	  });
+	};
+
+	var getDomains = exports.getDomains = function getDomains(callback) {
+	  chrome.storage.local.get("domains", function (storage) {
+	    callback(storage.domains);
+	  });
+	};
+
+	/*
+	 * hidden
+	 */
+	var hideStory = exports.hideStory = function hideStory(id) {
+	  chrome.storage.local.get("hidden", function (storage) {
+	    var hidden = storage.hidden;
+	    hidden[id] = true;
+	    chrome.storage.local.set({ "hidden": hidden });
+	  });
+	};
+
+	var unhideStory = exports.unhideStory = function unhideStory(id) {
+	  chrome.storage.local.get("hidden", function (storage) {
+	    var hidden = storage.hidden;
+	    delete hidden[id];
+	    chrome.storage.local.set({ "hidden": hidden });
+	  });
+	};
+
+	var getHidden = exports.getHidden = function getHidden(callback) {
+	  chrome.storage.local.get("hidden", function (storage) {
+	    callback(storage.hidden);
+	  });
+	};
+
+/***/ },
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1448,7 +1640,7 @@
 
 	var _SubStory2 = _interopRequireDefault(_SubStory);
 
-	var _Comment = __webpack_require__(26);
+	var _Comment = __webpack_require__(27);
 
 	var _Comment2 = _interopRequireDefault(_Comment);
 
@@ -1478,8 +1670,8 @@
 	    var comments = _props.comments;
 	    var replyForm = _props.replyForm;
 	    var user = _props.user;
+	    var loggedIn = _props.loggedIn;
 
-	    var loggedIn = user.name !== undefined;
 	    var commElements = comments.map(function (c, i) {
 	      return _react2.default.createElement(_Comment2.default, _extends({ key: i,
 	        loggedIn: loggedIn
@@ -1517,7 +1709,7 @@
 	});
 
 /***/ },
-/* 26 */
+/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1570,10 +1762,11 @@
 	    var reply = _props.reply;
 	    var type = _props.type;
 	    var id = _props.id;
+	    var loggedIn = _props.loggedIn;
 	    var canVote = this.state.canVote;
 
 	    var childrenElements = children.map(function (c, i) {
-	      return _react2.default.createElement(Comment, _extends({ key: i }, c));
+	      return _react2.default.createElement(Comment, _extends({ key: i, loggedIn: loggedIn }, c));
 	    });
 	    if (type === "missing") {
 	      return _react2.default.createElement(

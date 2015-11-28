@@ -16,8 +16,7 @@ export default React.createClass({
     );
   },
   render: function() {
-    let { type, comments, replyForm, user } = this.props;
-    let loggedIn = user.name !== undefined;
+    let { type, comments, replyForm, user, loggedIn } = this.props;
     let commElements = comments.map((c, i) => {
       return <Comment key={i}
                       loggedIn={loggedIn}

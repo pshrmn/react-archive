@@ -24,8 +24,15 @@ default:
   break;
 }
 
+
 function render(type, page) {
   if ( type !== "no-op" ) {
+    // fontawesome
+    let style = document.createElement("link");
+    style.rel = "stylesheet";
+    style.href = "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css";
+    document.head.appendChild(style);
+
     let holder = document.createElement("div");
     holder.classList.add("hn-react");
     document.body.appendChild(holder);

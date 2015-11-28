@@ -54,11 +54,25 @@ body {
   margin: 10px 0;
   display: flex;
   border-left: 5px solid transparent; }
-  .story .byline, .story .more {
+  .story a.more {
+    color: #999;
+    text-shadow: 1px 1px #fff;
+    margin-left: 15px; }
+  .story .byline {
     font-size: 0.75em;
     line-height: 1.5em; }
-    .story .byline a, .story .more a {
+    .story .byline a {
       text-decoration: underline; }
+  .story .story-controls {
+    margin-left: auto; }
+    .story .story-controls i {
+      margin: 0 5px; }
+      .story .story-controls i.fa {
+        cursor: pointer; }
+      .story .story-controls i.fa-star-o:hover, .story .story-controls i.fa-star {
+        color: #BDA211; }
+      .story .story-controls i.fa-times:hover, .story .story-controls i.fa-ban:hover {
+        color: #C14242; }
 
 .voting {
   width: 50px;

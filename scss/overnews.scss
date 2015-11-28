@@ -82,12 +82,38 @@ body {
   display: flex;
   border-left: 5px solid transparent;
 
-  .byline, .more {
+  a.more {
+    color: #999;
+    text-shadow: 1px 1px #fff;
+    margin-left: 15px;
+  }
+
+  .byline {
     font-size: 0.75em;
     line-height: 1.5em;
     
     a {
       text-decoration: underline;
+    }
+  }
+
+  .story-controls {
+    margin-left: auto;
+
+    i {
+      margin: 0 5px;
+
+      &.fa {
+        cursor: pointer;
+      }
+
+      &.fa-star-o:hover, &.fa-star {
+        color: #BDA211;
+      }
+
+      &.fa-times:hover, &.fa-ban:hover {
+        color: #C14242;
+      }
     }
   }
 }

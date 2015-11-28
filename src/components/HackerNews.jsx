@@ -8,15 +8,16 @@ export default React.createClass({
   render: function() {
     let { page, type } = this.props;
     let content = null;
+    let loggedIn = page.user.name !== undefined;
     switch ( type ) {
     case "submission":
       content = (
-        <StoryPage {...page} />
+        <StoryPage loggedIn={loggedIn} {...page} />
       );
       break;
     case "comments":
       content = (
-        <CommentsPage {...page} />
+        <CommentsPage loggedIn={loggedIn} {...page} />
       );
     }
     return (

@@ -21,11 +21,12 @@ const Comment = React.createClass({
     });
   },
   render: function() {
-    let { user, votes, when, message, parent, children, direct, reply, type, id } = this.props;
+    let { user, votes, when, message, parent, children,
+      direct, reply, type, id, loggedIn } = this.props;
     let { canVote } = this.state;
     let childrenElements = children.map((c, i) => {
       return (
-        <Comment key={i} {...c} />
+        <Comment key={i} loggedIn={loggedIn} {...c} />
       );
     })
     if ( type === "missing" ) {

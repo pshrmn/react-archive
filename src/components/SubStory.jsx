@@ -16,10 +16,20 @@ const SubStory = React.createClass({
       canVote: false
     });
   },
+  saveStory: function() {
+    this.props.toggleSave(this.props.id, this.props.url);
+  },
+  /*
+  hideStory: function() {
+    this.props.hideStory(this.props.id);
+  },
+  hideDomain: function() {
+    this.props.hideDomain(this.props.domain);
+  },
+  */
   render: function() {
-    let { url, title, id, points, comments, user, votes, when, domain, self } = this.props;
+    let { url, title, id, points, comments, user, votes, when, domain, self, saved } = this.props;
     let { canVote } = this.state;
-
     let upVote = canVote && votes.up !== undefined ? (
       <Vote id={id} type="up" url={votes.up} voted={this.voted} />
     ) : <div className="filler"></div>;
@@ -27,13 +37,12 @@ const SubStory = React.createClass({
       <Vote id={id} type="down" url={votes.down} voted={this.voted} />
     ) : <div className="filler"></div>;
     let more = domain !== "" ? (
-      <div className="more">
-        more from <a href={`/from?site=${domain}`}>{domain}</a>
-      </div>
+        <a className="more" href={`/from?site=${domain}`}>{domain}</a>
     ) : null;
     let selfText = self !== undefined ? (
       <div dangerouslySetInnerHTML={self} />
     ) : null;
+
     return (
       <div className="story sub">
         <div className="voting">
@@ -44,17 +53,32 @@ const SubStory = React.createClass({
         <div className="info">
           <div>
             <a href={url} target="_blank">{title}</a>
+            {more}
           </div>
           <div className="byline">
             <a href={comments.url} target="_blank">{comments.count} comments</a>{" "}
             submitted by <a href={user.url} target="_blank">{user.name}</a>{" "}
             {when}
           </div>
-          {more}
           {selfText}
+        </div>
+        <div className="story-controls">
+          <i className={saved ? "fa fa-star" : "fa fa-star-o"}
+             title={saved ? "unsave story" : "save story"}
+             onClick={this.saveStory} />
+          
         </div>
       </div>
     );
+    /*
+    not including ability to hide a story/domain until they can also be removed
+    <i className="fa fa-times"
+       title="hide story"
+       onClick={this.hideStory} />
+    <i className="fa fa-ban"
+       title="hide domain"
+       onClick={this.hideDomain} />
+    */
   }
 });
 
