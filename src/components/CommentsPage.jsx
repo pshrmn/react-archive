@@ -3,6 +3,8 @@ import React from "react";
 import SubStory from "./SubStory";
 import Comment from "./Comment";
 
+import { saveStory, unsaveStory } from "../helpers/chrome";
+
 export default React.createClass({
   replyElement: function(form) {
     return (
@@ -15,8 +17,21 @@ export default React.createClass({
       </form>
     );
   },
+  toggleSave: function(id, url) {
+    let saved = this.props.options.saved;
+    if ( saved[id] ) {
+      delete saved[id];
+      unsaveStory(id);
+      this.props.unsaveStory(id);
+    } else {
+      saved[id] = url;
+      saveStory(id, url);
+      this.props.saveStory(id, url);
+    }
+  },
   render: function() {
-    let { type, comments, replyForm, user, loggedIn } = this.props;
+    let { type, comments, replyForm, user, loggedIn, options } = this.props;
+    let { saved, hidden, domains } = options;
     let commElements = comments.map((c, i) => {
       return <Comment key={i}
                       loggedIn={loggedIn}
@@ -34,6 +49,8 @@ export default React.createClass({
     case "all":
       header = (
         <SubStory loggedIn={loggedIn}
+                  saved={saved[this.props.story.id] !== undefined }
+                  toggleSave={this.toggleSave}
                   {...this.props.story} />
       );
       break;

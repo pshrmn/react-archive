@@ -2,48 +2,34 @@ import React from "react";
 
 import SubStory from "./SubStory";
 
-import { getStorage, saveStory, unsaveStory, hideStory, hideDomain } from "../helpers/chrome";
+import { saveStory, unsaveStory, hideStory, hideDomain } from "../helpers/chrome";
 
 export default React.createClass({
-  getInitialState: function() {
-    return {
-      "saved": {},
-      "hidden": {},
-      "domains": {}
-    };
-  },
   toggleSave: function(id, url) {
-    let saved = this.state.saved;
+    let saved = this.props.options.saved;
     if ( saved[id] ) {
       delete saved[id];
       unsaveStory(id);
+      this.props.unsaveStory(id);
     } else {
       saved[id] = url;
       saveStory(id, url);
+      this.props.saveStory(id, url);
     }
-    this.setState({
-      saved: saved
-    });
   },
   hideStory: function(id) {
-    let hidden = this.state.hidden;
+    let hidden = this.props.options.hidden;
     hidden[id] = true;
     hideStory(id);
-    this.setState({
-      hidden: hidden
-    });
   },
   hideDomain: function(domain) {
-    let domains = this.state.domains;
+    let domains = this.props.options.domains;
     domains[domain] = true;
     hideDomain(domain);
-    this.setState({
-      domains: domains
-    });
   },
   render: function() {
-    let { stories, loggedIn } = this.props;
-    let { saved, hidden, domains } = this.state;
+    let { stories, loggedIn, options } = this.props;
+    let { saved, hidden, domains } = options;
     let submissions = stories.map((s, i) => {
       if ( hidden[s.id] || domains[s.domain] ) {
         return null;
@@ -67,15 +53,6 @@ export default React.createClass({
         {submissions}
       </div>
     );
-  },
-  componentDidMount: function() {
-    getStorage(storage => {
-      this.setState({
-        saved: storage.saved,
-        hidden: storage.hidden,
-        domains: storage.domains
-      });
-    });
   }
 });
 
