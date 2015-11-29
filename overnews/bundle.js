@@ -102,8 +102,8 @@
 	    var initialState = {
 	      type: type,
 	      page: page,
-	      savedVisible: false,
-	      options: storage
+	      moddedVisible: false,
+	      modded: storage
 	    };
 	    var store = (0, _redux.createStore)(_reducers2.default, initialState);
 
@@ -1389,13 +1389,13 @@
 
 	var types = _interopRequireWildcard(_ActionTypes);
 
-	var _options = __webpack_require__(24);
+	var _modded = __webpack_require__(24);
 
-	var _options2 = _interopRequireDefault(_options);
+	var _modded2 = _interopRequireDefault(_modded);
 
-	var _savedVisible = __webpack_require__(25);
+	var _moddedVisible = __webpack_require__(25);
 
-	var _savedVisible2 = _interopRequireDefault(_savedVisible);
+	var _moddedVisible2 = _interopRequireDefault(_moddedVisible);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1403,8 +1403,8 @@
 
 	function reducer(state, action) {
 	  return Object.assign({}, state, {
-	    options: (0, _options2.default)(state.options, action),
-	    savedVisible: (0, _savedVisible2.default)(state.savedVisible, action)
+	    modded: (0, _modded2.default)(state.modded, action),
+	    moddedVisible: (0, _moddedVisible2.default)(state.moddedVisible, action)
 	  });
 	}
 
@@ -1421,6 +1421,9 @@
 	});
 	var SAVE_STORY = exports.SAVE_STORY = "SAVE_STORY";
 	var UNSAVE_STORY = exports.UNSAVE_STORY = "UNSAVE_STORY";
+	var HIDE_STORY = exports.HIDE_STORY = "HIDE_STORY";
+	var UNHIDE_STORY = exports.UNHIDE_STORY = "UNHIDE_STORY";
+
 	var SHOW_SAVED = exports.SHOW_SAVED = "SHOW_SAVED";
 	var HIDE_SAVED = exports.HIDE_SAVED = "HIDE_SAVED";
 
@@ -1453,6 +1456,22 @@
 	      delete saved[action.id];
 	      return Object.assign({}, state, {
 	        saved: saved
+	      });
+	    case types.HIDE_STORY:
+	      var hidden = state.hidden;
+	      hidden[action.id] = {
+	        url: action.url,
+	        title: action.title,
+	        when: new Date().getTime()
+	      };
+	      return Object.assign({}, state, {
+	        hidden: hidden
+	      });
+	    case types.UNHIDE_STORY:
+	      var hidden = state.hidden;
+	      delete hidden[action.id];
+	      return Object.assign({}, state, {
+	        hidden: hidden
 	      });
 	    default:
 	      return state;
@@ -1546,8 +1565,8 @@
 	    var _props = this.props;
 	    var page = _props.page;
 	    var type = _props.type;
-	    var options = _props.options;
-	    var savedVisible = _props.savedVisible;
+	    var modded = _props.modded;
+	    var moddedVisible = _props.moddedVisible;
 	    var dispatch = _props.dispatch;
 
 	    var loggedIn = page.user.name !== undefined;
@@ -1556,14 +1575,15 @@
 	    switch (type) {
 	      case "submission":
 	        content = _react2.default.createElement(_StoryPage2.default, _extends({ loggedIn: loggedIn,
-	          options: options,
+	          modded: modded,
 	          saveStory: actions.saveStory,
-	          unsaveStory: actions.unsaveStory
+	          unsaveStory: actions.unsaveStory,
+	          hideStory: actions.hideStory
 	        }, page));
 	        break;
 	      case "comments":
 	        content = _react2.default.createElement(_CommentsPage2.default, _extends({ loggedIn: loggedIn,
-	          options: options,
+	          modded: modded,
 	          saveStory: actions.saveStory,
 	          unsaveStory: actions.unsaveStory
 	        }, page));
@@ -1574,14 +1594,15 @@
 	      _react2.default.createElement(_Header2.default, { user: page.user,
 	        show: actions.showSaved,
 	        hide: actions.hideSaved,
-	        savedVisible: savedVisible }),
+	        moddedVisible: moddedVisible }),
 	      _react2.default.createElement(
 	        "div",
 	        null,
-	        _react2.default.createElement(_Saved2.default, { savedVisible: savedVisible,
+	        _react2.default.createElement(_Saved2.default, { moddedVisible: moddedVisible,
 	          hide: actions.hideSaved,
 	          unsave: actions.unsaveStory,
-	          options: options }),
+	          unhide: actions.unhideStory,
+	          modded: modded }),
 	        content
 	      )
 	    );
@@ -1601,8 +1622,8 @@
 	  return {
 	    page: state.page,
 	    type: state.type,
-	    savedVisible: state.savedVisible,
-	    options: state.options
+	    moddedVisible: state.moddedVisible,
+	    modded: state.modded
 	  };
 	}
 
@@ -1617,7 +1638,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.hideSaved = exports.showSaved = exports.unsaveStory = exports.saveStory = undefined;
+	exports.hideSaved = exports.showSaved = exports.unhideStory = exports.hideStory = exports.unsaveStory = exports.saveStory = undefined;
 
 	var _ActionTypes = __webpack_require__(23);
 
@@ -1641,6 +1662,25 @@
 	  };
 	};
 
+	var hideStory = exports.hideStory = function hideStory(id, url, title) {
+	  return {
+	    type: ActionTypes.HIDE_STORY,
+	    id: id,
+	    url: url,
+	    title: title
+	  };
+	};
+
+	var unhideStory = exports.unhideStory = function unhideStory(id) {
+	  return {
+	    type: ActionTypes.UNHIDE_STORY,
+	    id: id
+	  };
+	};
+
+	/*
+	 * show and hide the saved stories, hidden stories, and hidden domains
+	 */
 	var showSaved = exports.showSaved = function showSaved() {
 	  return {
 	    type: ActionTypes.SHOW_SAVED
@@ -1683,7 +1723,7 @@
 	    var user = _props.user;
 	    var show = _props.show;
 	    var hide = _props.hide;
-	    var savedVisible = _props.savedVisible;
+	    var moddedVisible = _props.moddedVisible;
 
 	    return _react2.default.createElement(
 	      "header",
@@ -1712,7 +1752,7 @@
 	      ),
 	      _react2.default.createElement(_User2.default, _extends({ show: show,
 	        hide: hide,
-	        savedVisible: savedVisible
+	        moddedVisible: moddedVisible
 	      }, user)),
 	      _react2.default.createElement(
 	        "nav",
@@ -1880,14 +1920,14 @@
 	exports.default = _react2.default.createClass({
 	  displayName: "User",
 
-	  toggleSaved: function toggleSaved(event) {
+	  toggleModded: function toggleModded(event) {
 	    event.preventDefault();
 	    var _props = this.props;
-	    var savedVisible = _props.savedVisible;
+	    var moddedVisible = _props.moddedVisible;
 	    var show = _props.show;
 	    var hide = _props.hide;
 
-	    if (savedVisible) {
+	    if (moddedVisible) {
 	      hide();
 	    } else {
 	      show();
@@ -2033,8 +2073,8 @@
 	        null,
 	        _react2.default.createElement(
 	          "a",
-	          { href: "#", onClick: this.toggleSaved },
-	          "Saved"
+	          { href: "#", onClick: this.toggleModded },
+	          "Modded Stories"
 	        )
 	      ),
 	      _react2.default.createElement(
@@ -2081,7 +2121,7 @@
 	  displayName: "StoryPage",
 
 	  toggleSave: function toggleSave(id, url, title) {
-	    var saved = this.props.options.saved;
+	    var saved = this.props.modded.saved;
 	    if (saved[id]) {
 	      delete saved[id];
 	      (0, _chrome.unsaveStory)(id);
@@ -2092,15 +2132,13 @@
 	      this.props.saveStory(id, url, title);
 	    }
 	  },
-	  hideStory: function hideStory(id) {
-	    var hidden = this.props.options.hidden;
-	    hidden[id] = true;
-	    (0, _chrome.hideStory)(id);
+	  hideStory: function hideStory(id, url, title) {
+	    (0, _chrome.hideStory)(id, url, title);
+	    this.props.hideStory(id, url, title);
 	  },
 	  hideDomain: function hideDomain(domain) {
-	    var domains = this.props.options.domains;
-	    domains[domain] = true;
 	    (0, _chrome.hideDomain)(domain);
+	    this.props.hideDomain(domain);
 	  },
 	  render: function render() {
 	    var _this = this;
@@ -2108,10 +2146,10 @@
 	    var _props = this.props;
 	    var stories = _props.stories;
 	    var loggedIn = _props.loggedIn;
-	    var options = _props.options;
-	    var saved = options.saved;
-	    var hidden = options.hidden;
-	    var domains = options.domains;
+	    var modded = _props.modded;
+	    var saved = modded.saved;
+	    var hidden = modded.hidden;
+	    var domains = modded.domains;
 
 	    var submissions = stories.map(function (s, i) {
 	      if (hidden[s.id] || domains[s.domain]) {
@@ -2203,10 +2241,10 @@
 	  saveStory: function saveStory() {
 	    this.props.toggleSave(this.props.id, this.props.url, this.props.title);
 	  },
-	  /*
-	  hideStory: function() {
-	    this.props.hideStory(this.props.id);
+	  hideStory: function hideStory() {
+	    this.props.hideStory(this.props.id, this.props.url, this.props.title);
 	  },
+	  /*
 	  hideDomain: function() {
 	    this.props.hideDomain(this.props.domain);
 	  },
@@ -2288,14 +2326,14 @@
 	        { className: "story-controls" },
 	        _react2.default.createElement("i", { className: saved ? "fa fa-star" : "fa fa-star-o",
 	          title: saved ? "unsave story" : "save story",
-	          onClick: this.saveStory })
+	          onClick: this.saveStory }),
+	        _react2.default.createElement("i", { className: "fa fa-times",
+	          title: "hide story",
+	          onClick: this.hideStory })
 	      )
 	    );
 	    /*
 	    not including ability to hide a story/domain until they can also be removed
-	    <i className="fa fa-times"
-	       title="hide story"
-	       onClick={this.hideStory} />
 	    <i className="fa fa-ban"
 	       title="hide domain"
 	       onClick={this.hideDomain} />
@@ -2449,10 +2487,14 @@
 	/*
 	 * hidden
 	 */
-	var hideStory = exports.hideStory = function hideStory(id) {
+	var hideStory = exports.hideStory = function hideStory(id, url, title) {
 	  chrome.storage.local.get("hidden", function (storage) {
 	    var hidden = storage.hidden;
-	    hidden[id] = true;
+	    hidden[id] = {
+	      url: url,
+	      title: title,
+	      when: new Date().getTime()
+	    };
 	    chrome.storage.local.set({ "hidden": hidden });
 	  });
 	};
@@ -2518,7 +2560,7 @@
 	    );
 	  },
 	  toggleSave: function toggleSave(id, url, title) {
-	    var saved = this.props.options.saved;
+	    var saved = this.props.modded.saved;
 	    if (saved[id]) {
 	      delete saved[id];
 	      (0, _chrome.unsaveStory)(id);
@@ -2529,6 +2571,10 @@
 	      this.props.saveStory(id, url, title);
 	    }
 	  },
+	  hideStory: function hideStory(id, url, title) {
+	    (0, _chrome.hideStory)(id, url, title);
+	    this.props.hideStory(id, url, title);
+	  },
 	  render: function render() {
 	    var _props = this.props;
 	    var type = _props.type;
@@ -2536,10 +2582,10 @@
 	    var replyForm = _props.replyForm;
 	    var user = _props.user;
 	    var loggedIn = _props.loggedIn;
-	    var options = _props.options;
-	    var saved = options.saved;
-	    var hidden = options.hidden;
-	    var domains = options.domains;
+	    var modded = _props.modded;
+	    var saved = modded.saved;
+	    var hidden = modded.hidden;
+	    var domains = modded.domains;
 
 	    var commElements = comments.map(function (c, i) {
 	      return _react2.default.createElement(_Comment2.default, _extends({ key: i,
@@ -2556,7 +2602,8 @@
 	      case "all":
 	        header = _react2.default.createElement(_SubStory2.default, _extends({ loggedIn: loggedIn,
 	          saved: saved[this.props.story.id] !== undefined,
-	          toggleSave: this.toggleSave
+	          toggleSave: this.toggleSave,
+	          hideStory: this.hideStory
 	        }, this.props.story));
 	        break;
 	    }
@@ -2768,13 +2815,13 @@
 	  render: function render() {
 	    var _this = this;
 
-	    if (!this.props.savedVisible) {
+	    if (!this.props.moddedVisible) {
 	      return null;
 	    }
-	    var _props$options = this.props.options;
-	    var domains = _props$options.domains;
-	    var hidden = _props$options.hidden;
-	    var saved = _props$options.saved;
+	    var _props$modded = this.props.modded;
+	    var domains = _props$modded.domains;
+	    var hidden = _props$modded.hidden;
+	    var saved = _props$modded.saved;
 
 	    var savedStories = Object.keys(saved).map(function (id, index) {
 	      return _react2.default.createElement(SavedStory, _extends({ key: index,
@@ -2782,6 +2829,14 @@
 	        unsave: _this.props.unsave
 	      }, saved[id]));
 	    });
+
+	    var hiddenStories = Object.keys(hidden).map(function (id, index) {
+	      return _react2.default.createElement(HiddenStory, _extends({ key: index,
+	        id: id,
+	        unhide: _this.props.unhide
+	      }, hidden[id]));
+	    });
+
 	    return _react2.default.createElement(
 	      "div",
 	      { className: "saved-stories" },
@@ -2800,6 +2855,25 @@
 	        )
 	      ),
 	      _react2.default.createElement(
+	        "section",
+	        null,
+	        _react2.default.createElement(
+	          "h2",
+	          null,
+	          "Hidden Stories"
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "Hidden stories are removed after 48 hours since by then the story will be off the main page."
+	        ),
+	        _react2.default.createElement(
+	          "ul",
+	          null,
+	          hiddenStories
+	        )
+	      ),
+	      _react2.default.createElement(
 	        "button",
 	        { onClick: this.hideSaved },
 	        "Hide"
@@ -2807,12 +2881,6 @@
 	    );
 	    /*
 	    not yet implemented
-	    <section>
-	      <h2>Hidden Stories</h2>
-	      <p>
-	        Hidden stories are removed after 48 hours since by then the story will be off the main page.
-	      </p>
-	    </section>
 	    <section>
 	      <h2>Hidden Domains</h2>
 	    </section>
@@ -2836,10 +2904,45 @@
 
 	    return _react2.default.createElement(
 	      "li",
-	      { className: "saved-story" },
+	      { className: "story" },
 	      _react2.default.createElement("i", { className: "fa fa-star",
 	        title: "unsave story",
 	        onClick: this.unsaveStory }),
+	      _react2.default.createElement(
+	        "a",
+	        { href: url },
+	        title
+	      ),
+	      " ",
+	      _react2.default.createElement(
+	        "a",
+	        { className: "comments", href: "https://news.ycombinator.com/item?id=" + id },
+	        "comments"
+	      )
+	    );
+	  }
+	});
+
+	var HiddenStory = _react2.default.createClass({
+	  displayName: "HiddenStory",
+
+	  unhideStory: function unhideStory(event) {
+	    event.preventDefault();
+	    this.props.unhide(this.props.id);
+	    (0, _chrome.unhideStory)(this.props.id);
+	  },
+	  render: function render() {
+	    var _props2 = this.props;
+	    var id = _props2.id;
+	    var url = _props2.url;
+	    var title = _props2.title;
+
+	    return _react2.default.createElement(
+	      "li",
+	      { className: "story" },
+	      _react2.default.createElement("i", { className: "fa fa-times",
+	        title: "unhide story",
+	        onClick: this.unhideStory }),
 	      _react2.default.createElement(
 	        "a",
 	        { href: url },

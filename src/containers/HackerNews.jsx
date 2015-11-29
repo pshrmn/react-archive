@@ -11,7 +11,7 @@ import Saved from "../components/Saved";
 
 const HackerNews = React.createClass({
   render: function() {
-    let { page, type, options, savedVisible, dispatch } = this.props;
+    let { page, type, modded, moddedVisible, dispatch } = this.props;
     let loggedIn = page.user.name !== undefined;
     const actions = bindActionCreators(Actions, dispatch);
     let content = null;
@@ -19,16 +19,17 @@ const HackerNews = React.createClass({
     case "submission":
       content = (
         <StoryPage loggedIn={loggedIn}
-                   options={options}
+                   modded={modded}
                    saveStory={actions.saveStory}
                    unsaveStory={actions.unsaveStory}
+                   hideStory={actions.hideStory}
                    {...page} />
       );
       break;
     case "comments":
       content = (
         <CommentsPage loggedIn={loggedIn}
-                      options={options}
+                      modded={modded}
                       saveStory={actions.saveStory}
                       unsaveStory={actions.unsaveStory}
                       {...page} />
@@ -39,12 +40,13 @@ const HackerNews = React.createClass({
         <Header user={page.user}
                 show={actions.showSaved}
                 hide={actions.hideSaved}
-                savedVisible={savedVisible} />
+                moddedVisible={moddedVisible} />
         <div>
-          <Saved savedVisible={savedVisible}
+          <Saved moddedVisible={moddedVisible}
                  hide={actions.hideSaved}
                  unsave={actions.unsaveStory}
-                 options={options} />
+                 unhide={actions.unhideStory}
+                 modded={modded} />
           {content}
         </div>
       </div>
@@ -65,8 +67,8 @@ function mapStateToProps(state) {
   return {
     page: state.page,
     type: state.type,
-    savedVisible: state.savedVisible,
-    options: state.options
+    moddedVisible: state.moddedVisible,
+    modded: state.modded
   };
 }
 

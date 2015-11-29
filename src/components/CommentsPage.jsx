@@ -3,7 +3,7 @@ import React from "react";
 import SubStory from "./SubStory";
 import Comment from "./Comment";
 
-import { saveStory, unsaveStory } from "../helpers/chrome";
+import { saveStory, unsaveStory, hideStory } from "../helpers/chrome";
 
 export default React.createClass({
   replyElement: function(form) {
@@ -18,7 +18,7 @@ export default React.createClass({
     );
   },
   toggleSave: function(id, url, title) {
-    let saved = this.props.options.saved;
+    let saved = this.props.modded.saved;
     if ( saved[id] ) {
       delete saved[id];
       unsaveStory(id);
@@ -29,9 +29,13 @@ export default React.createClass({
       this.props.saveStory(id, url, title);
     }
   },
+  hideStory: function(id, url, title) {
+    hideStory(id, url, title);
+    this.props.hideStory(id, url, title);
+  },
   render: function() {
-    let { type, comments, replyForm, user, loggedIn, options } = this.props;
-    let { saved, hidden, domains } = options;
+    let { type, comments, replyForm, user, loggedIn, modded } = this.props;
+    let { saved, hidden, domains } = modded;
     let commElements = comments.map((c, i) => {
       return <Comment key={i}
                       loggedIn={loggedIn}
@@ -51,6 +55,7 @@ export default React.createClass({
         <SubStory loggedIn={loggedIn}
                   saved={saved[this.props.story.id] !== undefined }
                   toggleSave={this.toggleSave}
+                  hideStory={this.hideStory}
                   {...this.props.story} />
       );
       break;

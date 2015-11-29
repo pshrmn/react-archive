@@ -17,6 +17,22 @@ export default function(state={}, action) {
     return Object.assign({}, state, {
       saved: saved
     });
+  case types.HIDE_STORY:
+    var hidden = state.hidden;
+    hidden[action.id] = {
+      url: action.url,
+      title: action.title,
+      when: (new Date).getTime()
+    };
+    return Object.assign({}, state, {
+      hidden: hidden
+    });
+  case types.UNHIDE_STORY:
+    var hidden = state.hidden;
+    delete hidden[action.id];
+    return Object.assign({}, state, {
+      hidden: hidden
+    });
   default:
     return state;
   }

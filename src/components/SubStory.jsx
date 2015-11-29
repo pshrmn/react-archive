@@ -19,10 +19,10 @@ const SubStory = React.createClass({
   saveStory: function() {
     this.props.toggleSave(this.props.id, this.props.url, this.props.title);
   },
-  /*
   hideStory: function() {
-    this.props.hideStory(this.props.id);
+    this.props.hideStory(this.props.id, this.props.url, this.props.title);
   },
+  /*
   hideDomain: function() {
     this.props.hideDomain(this.props.domain);
   },
@@ -66,15 +66,14 @@ const SubStory = React.createClass({
           <i className={saved ? "fa fa-star" : "fa fa-star-o"}
              title={saved ? "unsave story" : "save story"}
              onClick={this.saveStory} />
-          
+          <i className="fa fa-times"
+             title="hide story"
+             onClick={this.hideStory} />
         </div>
       </div>
     );
     /*
     not including ability to hide a story/domain until they can also be removed
-    <i className="fa fa-times"
-       title="hide story"
-       onClick={this.hideStory} />
     <i className="fa fa-ban"
        title="hide domain"
        onClick={this.hideDomain} />

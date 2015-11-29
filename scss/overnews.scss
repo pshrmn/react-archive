@@ -184,18 +184,24 @@ body {
     font-size: 1.1em;
   }
 
+  p {
+    font-size: 0.9em;
+  }
+
   ul {
     list-style: none;
     padding-left: 0;
   }
-}
 
-.saved-story {
-  .comments {
-    text-decoration: underline;
-    font-size: 0.9em;
+  .story {
+    .comments {
+      text-decoration: underline;
+      font-size: 0.9em;
+      margin-left: 5px;
+    }
   }
 }
+
 
 blockquote {
   margin: 0 0 0 3px;

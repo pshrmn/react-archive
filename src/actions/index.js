@@ -16,6 +16,25 @@ export const unsaveStory = id => {
   };
 };
 
+export const hideStory = (id, url, title) => {
+  return {
+    type: ActionTypes.HIDE_STORY,
+    id: id,
+    url: url,
+    title: title
+  };
+};
+
+export const unhideStory = id => {
+  return {
+    type: ActionTypes.UNHIDE_STORY,
+    id: id,
+  };
+};
+
+/*
+ * show and hide the saved stories, hidden stories, and hidden domains
+ */
 export const showSaved = () => {
   return {
     type: ActionTypes.SHOW_SAVED

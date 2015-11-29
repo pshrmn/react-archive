@@ -1,10 +1,10 @@
 import React from "react";
 
 export default React.createClass({
-  toggleSaved: function(event) {
+  toggleModded: function(event) {
     event.preventDefault();
-    let { savedVisible, show, hide } = this.props;
-    if ( savedVisible ) {
+    let { moddedVisible, show, hide } = this.props;
+    if ( moddedVisible ) {
       hide();
     } else {
       show();
@@ -76,7 +76,7 @@ export default React.createClass({
           <a href={`/threads?id=${name}`}>Threads</a>
         </li>
         <li>
-          <a href="#" onClick={this.toggleSaved}>Saved</a>
+          <a href="#" onClick={this.toggleModded}>Modded Stories</a>
         </li>
         <li>
           <a href={`/logout?goto=${location.pathname}${location.search}`}>Logout</a>

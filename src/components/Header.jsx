@@ -4,7 +4,7 @@ import User from "./User";
 
 export default React.createClass({
   render: function() {
-    let { user, show, hide, savedVisible } = this.props;
+    let { user, show, hide, moddedVisible } = this.props;
     return (
       <header>
         <nav>
@@ -17,7 +17,7 @@ export default React.createClass({
         </nav>
         <User show={show}
               hide={hide}
-              savedVisible={savedVisible}
+              moddedVisible={moddedVisible}
               {...user} />
         <nav className="general">
           <li><a href="/newest">New</a></li>

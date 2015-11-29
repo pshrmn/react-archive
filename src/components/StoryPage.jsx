@@ -6,7 +6,7 @@ import { saveStory, unsaveStory, hideStory, hideDomain } from "../helpers/chrome
 
 export default React.createClass({
   toggleSave: function(id, url, title) {
-    let saved = this.props.options.saved;
+    let saved = this.props.modded.saved;
     if ( saved[id] ) {
       delete saved[id];
       unsaveStory(id);
@@ -17,19 +17,17 @@ export default React.createClass({
       this.props.saveStory(id, url, title);
     }
   },
-  hideStory: function(id) {
-    let hidden = this.props.options.hidden;
-    hidden[id] = true;
-    hideStory(id);
+  hideStory: function(id, url, title) {
+    hideStory(id, url, title);
+    this.props.hideStory(id, url, title);
   },
   hideDomain: function(domain) {
-    let domains = this.props.options.domains;
-    domains[domain] = true;
     hideDomain(domain);
+    this.props.hideDomain(domain);
   },
   render: function() {
-    let { stories, loggedIn, options } = this.props;
-    let { saved, hidden, domains } = options;
+    let { stories, loggedIn, modded } = this.props;
+    let { saved, hidden, domains } = modded;
     let submissions = stories.map((s, i) => {
       if ( hidden[s.id] || domains[s.domain] ) {
         return null;

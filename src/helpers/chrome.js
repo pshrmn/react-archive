@@ -60,10 +60,14 @@ export const getDomains = callback => {
 /*
  * hidden
  */
-export const hideStory = id => {
+export const hideStory = (id, url, title) => {
   chrome.storage.local.get("hidden", storage => {
     let hidden = storage.hidden;
-    hidden[id] = true;
+    hidden[id] = {
+      url: url,
+      title: title,
+      when: (new Date).getTime()
+    };
     chrome.storage.local.set({"hidden": hidden});
   });
 };

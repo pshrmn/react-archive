@@ -38,8 +38,8 @@ function render(type, page) {
     let initialState = {
       type: type,
       page: page,
-      savedVisible: false,
-      options: storage
+      moddedVisible: false,
+      modded: storage
     };
     let store = createStore(reducer, initialState);
 

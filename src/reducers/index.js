@@ -1,12 +1,12 @@
 import * as types from "../constants/ActionTypes";
 
-import options from "./options";
-import savedVisible from "./savedVisible";
+import modded from "./modded";
+import moddedVisible from "./moddedVisible";
 
 function reducer(state, action) {
   return Object.assign({}, state, {
-    options: options(state.options, action),
-    savedVisible: savedVisible(state.savedVisible, action)
+    modded: modded(state.modded, action),
+    moddedVisible: moddedVisible(state.moddedVisible, action)
   });
 }
 

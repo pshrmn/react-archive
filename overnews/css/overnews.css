@@ -114,13 +114,15 @@ body {
     margin: 2px 0; }
   .saved-stories h2 {
     font-size: 1.1em; }
+  .saved-stories p {
+    font-size: 0.9em; }
   .saved-stories ul {
     list-style: none;
     padding-left: 0; }
-
-.saved-story .comments {
-  text-decoration: underline;
-  font-size: 0.9em; }
+  .saved-stories .story .comments {
+    text-decoration: underline;
+    font-size: 0.9em;
+    margin-left: 5px; }
 
 blockquote {
   margin: 0 0 0 3px;

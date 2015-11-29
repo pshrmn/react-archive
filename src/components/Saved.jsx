@@ -1,6 +1,6 @@
 import React from "react";
 
-import { unsaveStory } from "../helpers/chrome";
+import { unsaveStory, unhideStory } from "../helpers/chrome";
 
 export default React.createClass({
   hideSaved: function(event) {
@@ -8,10 +8,10 @@ export default React.createClass({
     this.props.hide();
   },
   render: function() {
-    if ( !this.props.savedVisible ) {
+    if ( !this.props.moddedVisible ) {
       return null;
     }
-    let { domains, hidden, saved } = this.props.options;
+    let { domains, hidden, saved } = this.props.modded;
     let savedStories = Object.keys(saved).map((id, index) => {
       return (
         <SavedStory key={index}
@@ -20,6 +20,16 @@ export default React.createClass({
                     {...saved[id]} />
       );
     });
+
+    let hiddenStories = Object.keys(hidden).map((id, index) => {
+      return (
+        <HiddenStory key={index}
+                     id={id}
+                     unhide={this.props.unhide}
+                     {...hidden[id]} />
+      );
+    });
+
     return (
       <div className="saved-stories">
         <section>
@@ -28,17 +38,20 @@ export default React.createClass({
             {savedStories}
           </ul>
         </section>
+        <section>
+          <h2>Hidden Stories</h2>
+          <p>
+            Hidden stories are removed after 48 hours since by then the story will be off the main page.
+          </p>
+          <ul>
+            {hiddenStories}
+          </ul>
+        </section>
         <button onClick={this.hideSaved}>Hide</button>
       </div>
     );
     /*
     not yet implemented
-    <section>
-      <h2>Hidden Stories</h2>
-      <p>
-        Hidden stories are removed after 48 hours since by then the story will be off the main page.
-      </p>
-    </section>
     <section>
       <h2>Hidden Domains</h2>
     </section>
@@ -55,7 +68,7 @@ let SavedStory = React.createClass({
   render: function() {
     let { id, url, title } = this.props;
     return (
-      <li className="saved-story">
+      <li className="story">
         <i className="fa fa-star"
            title="unsave story"
            onClick={this.unsaveStory} />
@@ -65,3 +78,23 @@ let SavedStory = React.createClass({
     );
   }
 });
+
+let HiddenStory = React.createClass({
+  unhideStory: function(event) {
+    event.preventDefault();
+    this.props.unhide(this.props.id);
+    unhideStory(this.props.id);
+  },
+  render: function() {
+    let { id, url, title } = this.props;
+    return (
+      <li className="story">
+        <i className="fa fa-times"
+           title="unhide story"
+           onClick={this.unhideStory} />
+        <a href={url}>{title}</a>{" "}
+        <a className="comments" href={`https://news.ycombinator.com/item?id=${id}`}>comments</a>
+      </li>
+    );
+  }
+})
