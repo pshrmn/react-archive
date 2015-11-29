@@ -1,6 +1,6 @@
 import React from "react";
 
-import { unsaveStory, unhideStory } from "../helpers/chrome";
+import { unsaveStory, unhideStory, unbanDomain } from "../helpers/chrome";
 
 export default React.createClass({
   hideSaved: function(event) {
@@ -30,6 +30,14 @@ export default React.createClass({
       );
     });
 
+    let bannedDomains = Object.keys(domains).map((id, index) => {
+      return (
+        <BannedDomain key={index}
+                      domain={id}
+                      unban={this.props.unban} />
+      );
+    });
+
     return (
       <div className="saved-stories">
         <section>
@@ -47,14 +55,20 @@ export default React.createClass({
             {hiddenStories}
           </ul>
         </section>
+        <section>
+          <h2>Banned Domains</h2>
+          <p>
+            Stories from these domains won't be shown.
+          </p>
+          <ul>
+            {bannedDomains}
+          </ul>
+        </section>
         <button onClick={this.hideSaved}>Hide</button>
       </div>
     );
     /*
     not yet implemented
-    <section>
-      <h2>Hidden Domains</h2>
-    </section>
     */
   }
 });
@@ -62,8 +76,8 @@ export default React.createClass({
 let SavedStory = React.createClass({
   unsaveStory: function(event) {
     event.preventDefault();
-    this.props.unsave(this.props.id);
     unsaveStory(this.props.id);
+    this.props.unsave(this.props.id);
   },
   render: function() {
     let { id, url, title } = this.props;
@@ -82,8 +96,8 @@ let SavedStory = React.createClass({
 let HiddenStory = React.createClass({
   unhideStory: function(event) {
     event.preventDefault();
-    this.props.unhide(this.props.id);
     unhideStory(this.props.id);
+    this.props.unhide(this.props.id);
   },
   render: function() {
     let { id, url, title } = this.props;
@@ -97,4 +111,22 @@ let HiddenStory = React.createClass({
       </li>
     );
   }
-})
+});
+
+let BannedDomain = React.createClass({
+  unbanDomain: function(event) {
+    event.preventDefault();
+    unbanDomain(this.props.domain);
+    this.props.unban(this.props.domain);
+  },
+  render: function() {
+    let { domain } = this.props;
+    return (
+      <li className="domain">
+        <i className="fa fa-times"
+           title="unban domain"
+           onClick={this.unbanDomain} /> {domain}
+      </li>
+    );
+  }
+});

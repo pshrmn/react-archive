@@ -35,7 +35,7 @@ export const getSaved = callback => {
 /*
  * domains
  */
-export const hideDomain = domain => {
+export const banDomain = domain => {
   chrome.storage.local.get("domains", storage => {
     let domains = storage.domains;
     domains[domain] = true;
@@ -43,7 +43,7 @@ export const hideDomain = domain => {
   });
 };
 
-export const unhideDomain = domain => {
+export const unbanDomain = domain => {
   chrome.storage.local.get("domains", storage => {
     let domains = storage.domains;
     delete domains[domain];

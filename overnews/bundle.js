@@ -1423,7 +1423,8 @@
 	var UNSAVE_STORY = exports.UNSAVE_STORY = "UNSAVE_STORY";
 	var HIDE_STORY = exports.HIDE_STORY = "HIDE_STORY";
 	var UNHIDE_STORY = exports.UNHIDE_STORY = "UNHIDE_STORY";
-
+	var BAN_DOMAIN = exports.BAN_DOMAIN = "BAN_DOMAIN";
+	var UNBAN_DOMAIN = exports.UNBAN_DOMAIN = "UNBAN_DOMAIN";
 	var SHOW_SAVED = exports.SHOW_SAVED = "SHOW_SAVED";
 	var HIDE_SAVED = exports.HIDE_SAVED = "HIDE_SAVED";
 
@@ -1472,6 +1473,18 @@
 	      delete hidden[action.id];
 	      return Object.assign({}, state, {
 	        hidden: hidden
+	      });
+	    case types.BAN_DOMAIN:
+	      var domains = state.domains;
+	      domains[action.domain] = true;
+	      return Object.assign({}, state, {
+	        domains: domains
+	      });
+	    case types.UNBAN_DOMAIN:
+	      var domains = state.domains;
+	      delete domains[action.domain];
+	      return Object.assign({}, state, {
+	        domains: domains
 	      });
 	    default:
 	      return state;
@@ -1578,14 +1591,16 @@
 	          modded: modded,
 	          saveStory: actions.saveStory,
 	          unsaveStory: actions.unsaveStory,
-	          hideStory: actions.hideStory
+	          hideStory: actions.hideStory,
+	          banDomain: actions.banDomain
 	        }, page));
 	        break;
 	      case "comments":
 	        content = _react2.default.createElement(_CommentsPage2.default, _extends({ loggedIn: loggedIn,
 	          modded: modded,
 	          saveStory: actions.saveStory,
-	          unsaveStory: actions.unsaveStory
+	          unsaveStory: actions.unsaveStory,
+	          banDomain: actions.banDomain
 	        }, page));
 	    }
 	    return _react2.default.createElement(
@@ -1602,6 +1617,7 @@
 	          hide: actions.hideSaved,
 	          unsave: actions.unsaveStory,
 	          unhide: actions.unhideStory,
+	          unban: actions.unbanDomain,
 	          modded: modded }),
 	        content
 	      )
@@ -1638,7 +1654,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.hideSaved = exports.showSaved = exports.unhideStory = exports.hideStory = exports.unsaveStory = exports.saveStory = undefined;
+	exports.hideSaved = exports.showSaved = exports.unbanDomain = exports.banDomain = exports.unhideStory = exports.hideStory = exports.unsaveStory = exports.saveStory = undefined;
 
 	var _ActionTypes = __webpack_require__(23);
 
@@ -1675,6 +1691,20 @@
 	  return {
 	    type: ActionTypes.UNHIDE_STORY,
 	    id: id
+	  };
+	};
+
+	var banDomain = exports.banDomain = function banDomain(domain) {
+	  return {
+	    type: ActionTypes.BAN_DOMAIN,
+	    domain: domain
+	  };
+	};
+
+	var unbanDomain = exports.unbanDomain = function unbanDomain(domain) {
+	  return {
+	    type: ActionTypes.UNBAN_DOMAIN,
+	    domain: domain
 	  };
 	};
 
@@ -2136,9 +2166,9 @@
 	    (0, _chrome.hideStory)(id, url, title);
 	    this.props.hideStory(id, url, title);
 	  },
-	  hideDomain: function hideDomain(domain) {
-	    (0, _chrome.hideDomain)(domain);
-	    this.props.hideDomain(domain);
+	  banDomain: function banDomain(domain) {
+	    (0, _chrome.banDomain)(domain);
+	    this.props.banDomain(domain);
 	  },
 	  render: function render() {
 	    var _this = this;
@@ -2159,7 +2189,7 @@
 	        saved: saved[s.id] !== undefined,
 	        toggleSave: _this.toggleSave,
 	        hideStory: _this.hideStory,
-	        hideDomain: _this.hideDomain,
+	        banDomain: _this.banDomain,
 	        loggedIn: loggedIn
 	      }, s)) : _react2.default.createElement(JobStory, _extends({ key: i,
 	        saved: saved[s.id] === true
@@ -2244,11 +2274,9 @@
 	  hideStory: function hideStory() {
 	    this.props.hideStory(this.props.id, this.props.url, this.props.title);
 	  },
-	  /*
-	  hideDomain: function() {
-	    this.props.hideDomain(this.props.domain);
+	  banDomain: function banDomain() {
+	    this.props.banDomain(this.props.domain);
 	  },
-	  */
 	  render: function render() {
 	    var _props = this.props;
 	    var url = _props.url;
@@ -2329,15 +2357,12 @@
 	          onClick: this.saveStory }),
 	        _react2.default.createElement("i", { className: "fa fa-times",
 	          title: "hide story",
-	          onClick: this.hideStory })
+	          onClick: this.hideStory }),
+	        _react2.default.createElement("i", { className: "fa fa-ban",
+	          title: "ban domain",
+	          onClick: this.banDomain })
 	      )
 	    );
-	    /*
-	    not including ability to hide a story/domain until they can also be removed
-	    <i className="fa fa-ban"
-	       title="hide domain"
-	       onClick={this.hideDomain} />
-	    */
 	  }
 	});
 
@@ -2462,7 +2487,7 @@
 	/*
 	 * domains
 	 */
-	var hideDomain = exports.hideDomain = function hideDomain(domain) {
+	var banDomain = exports.banDomain = function banDomain(domain) {
 	  chrome.storage.local.get("domains", function (storage) {
 	    var domains = storage.domains;
 	    domains[domain] = true;
@@ -2470,7 +2495,7 @@
 	  });
 	};
 
-	var unhideDomain = exports.unhideDomain = function unhideDomain(domain) {
+	var unbanDomain = exports.unbanDomain = function unbanDomain(domain) {
 	  chrome.storage.local.get("domains", function (storage) {
 	    var domains = storage.domains;
 	    delete domains[domain];
@@ -2575,6 +2600,10 @@
 	    (0, _chrome.hideStory)(id, url, title);
 	    this.props.hideStory(id, url, title);
 	  },
+	  banDomain: function banDomain(domain) {
+	    (0, _chrome.banDomain)(domain);
+	    this.props.banDomain(domain);
+	  },
 	  render: function render() {
 	    var _props = this.props;
 	    var type = _props.type;
@@ -2603,7 +2632,8 @@
 	        header = _react2.default.createElement(_SubStory2.default, _extends({ loggedIn: loggedIn,
 	          saved: saved[this.props.story.id] !== undefined,
 	          toggleSave: this.toggleSave,
-	          hideStory: this.hideStory
+	          hideStory: this.hideStory,
+	          banDomain: this.banDomain
 	        }, this.props.story));
 	        break;
 	    }
@@ -2837,6 +2867,12 @@
 	      }, hidden[id]));
 	    });
 
+	    var bannedDomains = Object.keys(domains).map(function (id, index) {
+	      return _react2.default.createElement(BannedDomain, { key: index,
+	        domain: id,
+	        unban: _this.props.unban });
+	    });
+
 	    return _react2.default.createElement(
 	      "div",
 	      { className: "saved-stories" },
@@ -2874,6 +2910,25 @@
 	        )
 	      ),
 	      _react2.default.createElement(
+	        "section",
+	        null,
+	        _react2.default.createElement(
+	          "h2",
+	          null,
+	          "Banned Domains"
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "Stories from these domains won't be shown."
+	        ),
+	        _react2.default.createElement(
+	          "ul",
+	          null,
+	          bannedDomains
+	        )
+	      ),
+	      _react2.default.createElement(
 	        "button",
 	        { onClick: this.hideSaved },
 	        "Hide"
@@ -2881,9 +2936,6 @@
 	    );
 	    /*
 	    not yet implemented
-	    <section>
-	      <h2>Hidden Domains</h2>
-	    </section>
 	    */
 	  }
 	});
@@ -2893,8 +2945,8 @@
 
 	  unsaveStory: function unsaveStory(event) {
 	    event.preventDefault();
-	    this.props.unsave(this.props.id);
 	    (0, _chrome.unsaveStory)(this.props.id);
+	    this.props.unsave(this.props.id);
 	  },
 	  render: function render() {
 	    var _props = this.props;
@@ -2928,8 +2980,8 @@
 
 	  unhideStory: function unhideStory(event) {
 	    event.preventDefault();
-	    this.props.unhide(this.props.id);
 	    (0, _chrome.unhideStory)(this.props.id);
+	    this.props.unhide(this.props.id);
 	  },
 	  render: function render() {
 	    var _props2 = this.props;
@@ -2958,6 +3010,29 @@
 	  }
 	});
 
+	var BannedDomain = _react2.default.createClass({
+	  displayName: "BannedDomain",
+
+	  unbanDomain: function unbanDomain(event) {
+	    event.preventDefault();
+	    (0, _chrome.unbanDomain)(this.props.domain);
+	    this.props.unban(this.props.domain);
+	  },
+	  render: function render() {
+	    var domain = this.props.domain;
+
+	    return _react2.default.createElement(
+	      "li",
+	      { className: "domain" },
+	      _react2.default.createElement("i", { className: "fa fa-times",
+	        title: "unban domain",
+	        onClick: this.unbanDomain }),
+	      " ",
+	      domain
+	    );
+	  }
+	});
+
 /***/ },
 /* 38 */
 /***/ function(module, exports) {
@@ -2977,6 +3052,7 @@
 	    case "/ask":
 	    case "/show":
 	    case "/newest":
+	    case "/from":
 	      return "submission";
 	    case "/item":
 	      return "comments";
@@ -3197,7 +3273,10 @@
 	var submissionData = function submissionData(element) {
 	  var sub = element.querySelector("a");
 	  var domain = element.querySelector(".sitebit a");
-	  var domainText = domain === null ? "" : domain.textContent;
+	  // use the hostname of the link when there is no sitebit. For self-posts,
+	  // this will set the domain to news.ycombinator.com, which doesn't actually
+	  // show anything on the /from?site=news.ycombinator.com page
+	  var domainText = domain === null ? sub.hostname : domain.textContent;
 	  return {
 	    title: sub.textContent,
 	    url: sub.href,

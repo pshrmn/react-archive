@@ -33,6 +33,18 @@ export default function(state={}, action) {
     return Object.assign({}, state, {
       hidden: hidden
     });
+  case types.BAN_DOMAIN:
+    var domains = state.domains;
+    domains[action.domain] = true;
+    return Object.assign({}, state, {
+      domains: domains
+    });
+  case types.UNBAN_DOMAIN:
+    var domains = state.domains;
+    delete domains[action.domain];
+    return Object.assign({}, state, {
+      domains: domains
+    });
   default:
     return state;
   }

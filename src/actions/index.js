@@ -32,6 +32,20 @@ export const unhideStory = id => {
   };
 };
 
+export const banDomain = domain => {
+  return {
+    type: ActionTypes.BAN_DOMAIN,
+    domain: domain
+  };
+};
+
+export const unbanDomain = domain => {
+  return {
+    type: ActionTypes.UNBAN_DOMAIN,
+    domain: domain
+  };
+};
+
 /*
  * show and hide the saved stories, hidden stories, and hidden domains
  */

@@ -15,7 +15,10 @@ const headlineData = headline => {
 const submissionData = element => {
   let sub = element.querySelector("a");
   let domain = element.querySelector(".sitebit a");
-  let domainText = domain === null ? "" : domain.textContent;
+  // use the hostname of the link when there is no sitebit. For self-posts,
+  // this will set the domain to news.ycombinator.com, which doesn't actually
+  // show anything on the /from?site=news.ycombinator.com page
+  let domainText = domain === null ? sub.hostname : domain.textContent;
   return {
     title: sub.textContent,
     url: sub.href,

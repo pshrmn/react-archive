@@ -3,7 +3,7 @@ import React from "react";
 import SubStory from "./SubStory";
 import Comment from "./Comment";
 
-import { saveStory, unsaveStory, hideStory } from "../helpers/chrome";
+import { saveStory, unsaveStory, hideStory, banDomain } from "../helpers/chrome";
 
 export default React.createClass({
   replyElement: function(form) {
@@ -33,6 +33,10 @@ export default React.createClass({
     hideStory(id, url, title);
     this.props.hideStory(id, url, title);
   },
+  banDomain: function(domain) {
+    banDomain(domain);
+    this.props.banDomain(domain);
+  },
   render: function() {
     let { type, comments, replyForm, user, loggedIn, modded } = this.props;
     let { saved, hidden, domains } = modded;
@@ -56,6 +60,7 @@ export default React.createClass({
                   saved={saved[this.props.story.id] !== undefined }
                   toggleSave={this.toggleSave}
                   hideStory={this.hideStory}
+                  banDomain={this.banDomain}
                   {...this.props.story} />
       );
       break;

@@ -22,11 +22,9 @@ const SubStory = React.createClass({
   hideStory: function() {
     this.props.hideStory(this.props.id, this.props.url, this.props.title);
   },
-  /*
-  hideDomain: function() {
-    this.props.hideDomain(this.props.domain);
+  banDomain: function() {
+    this.props.banDomain(this.props.domain);
   },
-  */
   render: function() {
     let { url, title, id, points, comments, user, votes, when, domain, self, saved } = this.props;
     let { canVote } = this.state;
@@ -69,15 +67,12 @@ const SubStory = React.createClass({
           <i className="fa fa-times"
              title="hide story"
              onClick={this.hideStory} />
+          <i className="fa fa-ban"
+             title="ban domain"
+             onClick={this.banDomain} />
         </div>
       </div>
     );
-    /*
-    not including ability to hide a story/domain until they can also be removed
-    <i className="fa fa-ban"
-       title="hide domain"
-       onClick={this.hideDomain} />
-    */
   }
 });
 

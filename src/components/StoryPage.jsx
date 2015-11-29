@@ -2,7 +2,7 @@ import React from "react";
 
 import SubStory from "./SubStory";
 
-import { saveStory, unsaveStory, hideStory, hideDomain } from "../helpers/chrome";
+import { saveStory, unsaveStory, hideStory, banDomain } from "../helpers/chrome";
 
 export default React.createClass({
   toggleSave: function(id, url, title) {
@@ -21,9 +21,9 @@ export default React.createClass({
     hideStory(id, url, title);
     this.props.hideStory(id, url, title);
   },
-  hideDomain: function(domain) {
-    hideDomain(domain);
-    this.props.hideDomain(domain);
+  banDomain: function(domain) {
+    banDomain(domain);
+    this.props.banDomain(domain);
   },
   render: function() {
     let { stories, loggedIn, modded } = this.props;
@@ -37,7 +37,7 @@ export default React.createClass({
                   saved={saved[s.id] !== undefined }
                   toggleSave={this.toggleSave}
                   hideStory={this.hideStory}
-                  hideDomain={this.hideDomain}
+                  banDomain={this.banDomain}
                   loggedIn={loggedIn}
                   {...s} />
       ) : (

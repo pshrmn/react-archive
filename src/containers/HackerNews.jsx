@@ -23,6 +23,7 @@ const HackerNews = React.createClass({
                    saveStory={actions.saveStory}
                    unsaveStory={actions.unsaveStory}
                    hideStory={actions.hideStory}
+                   banDomain={actions.banDomain}
                    {...page} />
       );
       break;
@@ -32,6 +33,7 @@ const HackerNews = React.createClass({
                       modded={modded}
                       saveStory={actions.saveStory}
                       unsaveStory={actions.unsaveStory}
+                      banDomain={actions.banDomain}
                       {...page} />
       );
     }
@@ -46,6 +48,7 @@ const HackerNews = React.createClass({
                  hide={actions.hideSaved}
                  unsave={actions.unsaveStory}
                  unhide={actions.unhideStory}
+                 unban={actions.unbanDomain}
                  modded={modded} />
           {content}
         </div>

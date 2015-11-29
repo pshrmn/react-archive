@@ -15,6 +15,7 @@ export default function() {
   case "/ask":
   case "/show":
   case "/newest":
+  case "/from":
     return "submission";
   case "/item":
     return "comments";
