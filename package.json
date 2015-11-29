@@ -1,6 +1,6 @@
 {
   "name": "overnews",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Chrome extension to rebuild HackerNews with React",
   "main": "src/index.js",
   "scripts": {

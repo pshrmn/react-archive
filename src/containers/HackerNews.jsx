@@ -7,15 +7,14 @@ import * as Actions from "../actions";
 import Header from "../components/Header";
 import StoryPage from "../components/StoryPage";
 import CommentsPage from "../components/CommentsPage";
+import Saved from "../components/Saved";
 
 const HackerNews = React.createClass({
   render: function() {
-    let { page, type, options, dispatch } = this.props;
+    let { page, type, options, savedVisible, dispatch } = this.props;
     let loggedIn = page.user.name !== undefined;
-    let content = null;
-
     const actions = bindActionCreators(Actions, dispatch);
-
+    let content = null;
     switch ( type ) {
     case "submission":
       content = (
@@ -38,9 +37,16 @@ const HackerNews = React.createClass({
     return (
       <div className="hacker-news">
         <Header user={page.user}
-                options={options}
-                actions={actions} />
-        {content}
+                show={actions.showSaved}
+                hide={actions.hideSaved}
+                savedVisible={savedVisible} />
+        <div>
+          <Saved savedVisible={savedVisible}
+                 hide={actions.hideSaved}
+                 unsave={actions.unsaveStory}
+                 options={options} />
+          {content}
+        </div>
       </div>
     );
   },
@@ -59,6 +65,7 @@ function mapStateToProps(state) {
   return {
     page: state.page,
     type: state.type,
+    savedVisible: state.savedVisible,
     options: state.options
   };
 }

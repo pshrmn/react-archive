@@ -17,7 +17,7 @@ const SubStory = React.createClass({
     });
   },
   saveStory: function() {
-    this.props.toggleSave(this.props.id, this.props.url);
+    this.props.toggleSave(this.props.id, this.props.url, this.props.title);
   },
   /*
   hideStory: function() {

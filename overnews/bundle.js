@@ -62,17 +62,17 @@
 
 	var _reducers2 = _interopRequireDefault(_reducers);
 
-	var _HackerNews = __webpack_require__(25);
+	var _HackerNews = __webpack_require__(26);
 
 	var _HackerNews2 = _interopRequireDefault(_HackerNews);
 
-	var _pageType = __webpack_require__(35);
+	var _pageType = __webpack_require__(38);
 
 	var _pageType2 = _interopRequireDefault(_pageType);
 
-	var _pages = __webpack_require__(36);
+	var _pages = __webpack_require__(39);
 
-	var _chrome = __webpack_require__(32);
+	var _chrome = __webpack_require__(34);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -102,6 +102,7 @@
 	    var initialState = {
 	      type: type,
 	      page: page,
+	      savedVisible: false,
 	      options: storage
 	    };
 	    var store = (0, _redux.createStore)(_reducers2.default, initialState);
@@ -1392,13 +1393,18 @@
 
 	var _options2 = _interopRequireDefault(_options);
 
+	var _savedVisible = __webpack_require__(25);
+
+	var _savedVisible2 = _interopRequireDefault(_savedVisible);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 	function reducer(state, action) {
 	  return Object.assign({}, state, {
-	    options: (0, _options2.default)(state.options, action)
+	    options: (0, _options2.default)(state.options, action),
+	    savedVisible: (0, _savedVisible2.default)(state.savedVisible, action)
 	  });
 	}
 
@@ -1415,6 +1421,8 @@
 	});
 	var SAVE_STORY = exports.SAVE_STORY = "SAVE_STORY";
 	var UNSAVE_STORY = exports.UNSAVE_STORY = "UNSAVE_STORY";
+	var SHOW_SAVED = exports.SHOW_SAVED = "SHOW_SAVED";
+	var HIDE_SAVED = exports.HIDE_SAVED = "HIDE_SAVED";
 
 /***/ },
 /* 24 */
@@ -1433,7 +1441,10 @@
 	  switch (action.type) {
 	    case types.SAVE_STORY:
 	      var saved = state.saved;
-	      saved[action.id] = action.url;
+	      saved[action.id] = {
+	        url: action.url,
+	        title: action.title
+	      };
 	      return Object.assign({}, state, {
 	        saved: saved
 	      });
@@ -1460,6 +1471,36 @@
 
 	"use strict";
 
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	exports.default = function () {
+	  var state = arguments.length <= 0 || arguments[0] === undefined ? false : arguments[0];
+	  var action = arguments[1];
+
+	  switch (action.type) {
+	    case types.SHOW_SAVED:
+	      return true;
+	    case types.HIDE_SAVED:
+	      return false;
+	    default:
+	      return state;
+	  }
+	};
+
+	var _ActionTypes = __webpack_require__(23);
+
+	var types = _interopRequireWildcard(_ActionTypes);
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+/***/ },
+/* 26 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 	Object.defineProperty(exports, "__esModule", {
@@ -1474,21 +1515,25 @@
 
 	var _reactRedux = __webpack_require__(13);
 
-	var _actions = __webpack_require__(26);
+	var _actions = __webpack_require__(27);
 
 	var Actions = _interopRequireWildcard(_actions);
 
-	var _Header = __webpack_require__(27);
+	var _Header = __webpack_require__(28);
 
 	var _Header2 = _interopRequireDefault(_Header);
 
-	var _StoryPage = __webpack_require__(28);
+	var _StoryPage = __webpack_require__(30);
 
 	var _StoryPage2 = _interopRequireDefault(_StoryPage);
 
-	var _CommentsPage = __webpack_require__(33);
+	var _CommentsPage = __webpack_require__(35);
 
 	var _CommentsPage2 = _interopRequireDefault(_CommentsPage);
+
+	var _Saved = __webpack_require__(37);
+
+	var _Saved2 = _interopRequireDefault(_Saved);
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -1502,13 +1547,12 @@
 	    var page = _props.page;
 	    var type = _props.type;
 	    var options = _props.options;
+	    var savedVisible = _props.savedVisible;
 	    var dispatch = _props.dispatch;
 
 	    var loggedIn = page.user.name !== undefined;
-	    var content = null;
-
 	    var actions = (0, _redux.bindActionCreators)(Actions, dispatch);
-
+	    var content = null;
 	    switch (type) {
 	      case "submission":
 	        content = _react2.default.createElement(_StoryPage2.default, _extends({ loggedIn: loggedIn,
@@ -1528,9 +1572,18 @@
 	      "div",
 	      { className: "hacker-news" },
 	      _react2.default.createElement(_Header2.default, { user: page.user,
-	        options: options,
-	        actions: actions }),
-	      content
+	        show: actions.showSaved,
+	        hide: actions.hideSaved,
+	        savedVisible: savedVisible }),
+	      _react2.default.createElement(
+	        "div",
+	        null,
+	        _react2.default.createElement(_Saved2.default, { savedVisible: savedVisible,
+	          hide: actions.hideSaved,
+	          unsave: actions.unsaveStory,
+	          options: options }),
+	        content
+	      )
 	    );
 	  },
 	  componentDidMount: function componentDidMount() {
@@ -1548,43 +1601,12 @@
 	  return {
 	    page: state.page,
 	    type: state.type,
+	    savedVisible: state.savedVisible,
 	    options: state.options
 	  };
 	}
 
 	exports.default = (0, _reactRedux.connect)(mapStateToProps)(HackerNews);
-
-/***/ },
-/* 26 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.unsaveStory = exports.saveStory = undefined;
-
-	var _ActionTypes = __webpack_require__(23);
-
-	var ActionTypes = _interopRequireWildcard(_ActionTypes);
-
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-	var saveStory = exports.saveStory = function saveStory(id, url) {
-	  return {
-	    type: ActionTypes.SAVE_STORY,
-	    id: id,
-	    url: url
-	  };
-	};
-
-	var unsaveStory = exports.unsaveStory = function unsaveStory(id) {
-	  return {
-	    type: ActionTypes.UNSAVE_STORY,
-	    id: id
-	  };
-	};
 
 /***/ },
 /* 27 */
@@ -1595,21 +1617,73 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	exports.hideSaved = exports.showSaved = exports.unsaveStory = exports.saveStory = undefined;
+
+	var _ActionTypes = __webpack_require__(23);
+
+	var ActionTypes = _interopRequireWildcard(_ActionTypes);
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+	var saveStory = exports.saveStory = function saveStory(id, url, title) {
+	  return {
+	    type: ActionTypes.SAVE_STORY,
+	    id: id,
+	    url: url,
+	    title: title
+	  };
+	};
+
+	var unsaveStory = exports.unsaveStory = function unsaveStory(id) {
+	  return {
+	    type: ActionTypes.UNSAVE_STORY,
+	    id: id
+	  };
+	};
+
+	var showSaved = exports.showSaved = function showSaved() {
+	  return {
+	    type: ActionTypes.SHOW_SAVED
+	  };
+	};
+
+	var hideSaved = exports.hideSaved = function hideSaved() {
+	  return {
+	    type: ActionTypes.HIDE_SAVED
+	  };
+	};
+
+/***/ },
+/* 28 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
 
 	var _react = __webpack_require__(1);
 
 	var _react2 = _interopRequireDefault(_react);
+
+	var _User = __webpack_require__(29);
+
+	var _User2 = _interopRequireDefault(_User);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	exports.default = _react2.default.createClass({
 	  displayName: "Header",
 
-	  shouldComponentUpdate: function shouldComponentUpdate(nextProps, nextState) {
-	    return false;
-	  },
 	  render: function render() {
-	    var user = this.props.user;
+	    var _props = this.props;
+	    var user = _props.user;
+	    var show = _props.show;
+	    var hide = _props.hide;
+	    var savedVisible = _props.savedVisible;
 
 	    return _react2.default.createElement(
 	      "header",
@@ -1636,7 +1710,10 @@
 	          )
 	        )
 	      ),
-	      _react2.default.createElement(User, user),
+	      _react2.default.createElement(_User2.default, _extends({ show: show,
+	        hide: hide,
+	        savedVisible: savedVisible
+	      }, user)),
 	      _react2.default.createElement(
 	        "nav",
 	        { className: "general" },
@@ -1784,160 +1861,200 @@
 	  }
 	});
 
-	var User = _react2.default.createClass({
+/***/ },
+/* 29 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.default = _react2.default.createClass({
 	  displayName: "User",
 
-	  render: function render() {
-	    if (this.props.name === undefined) {
-	      var _location = window.location;
-	      var nextURL = "";
-	      return _react2.default.createElement(
-	        "nav",
-	        { className: "user logged-out" },
-	        _react2.default.createElement(
-	          "li",
-	          null,
-	          _react2.default.createElement(
-	            "form",
-	            { method: "post", action: "login" },
-	            _react2.default.createElement(
-	              "p",
-	              null,
-	              _react2.default.createElement(
-	                "a",
-	                { href: "/login?goto=" + _location.pathname + _location.search },
-	                "Login"
-	              )
-	            ),
-	            _react2.default.createElement("input", { type: "hidden", name: "goto", value: "/" }),
-	            _react2.default.createElement(
-	              "p",
-	              null,
-	              _react2.default.createElement("input", { type: "text", name: "acct", size: "20",
-	                placeholder: "username",
-	                autoCorrect: "off",
-	                autoCapitalize: "off" })
-	            ),
-	            _react2.default.createElement(
-	              "p",
-	              null,
-	              _react2.default.createElement("input", { type: "password", name: "pw", size: "20",
-	                placeholder: "password" })
-	            ),
-	            _react2.default.createElement(
-	              "p",
-	              null,
-	              _react2.default.createElement(
-	                "button",
-	                null,
-	                "Login"
-	              )
-	            )
-	          ),
-	          _react2.default.createElement(
-	            "form",
-	            { method: "post", action: "login" },
-	            _react2.default.createElement(
-	              "p",
-	              null,
-	              _react2.default.createElement(
-	                "a",
-	                { href: "/login?goto=" + _location.pathname + _location.search },
-	                "Create account"
-	              )
-	            ),
-	            _react2.default.createElement("input", { type: "hidden", name: "goto", value: "/" }),
-	            _react2.default.createElement("input", { type: "hidden", name: "creating", value: "t" }),
-	            _react2.default.createElement(
-	              "p",
-	              null,
-	              _react2.default.createElement("input", { type: "text", name: "acct", size: "20",
-	                placeholder: "username",
-	                autoCorrect: "off",
-	                autoCapitalize: "off" })
-	            ),
-	            _react2.default.createElement(
-	              "p",
-	              null,
-	              _react2.default.createElement("input", { type: "password", name: "pw", size: "20",
-	                placeholder: "password" })
-	            ),
-	            _react2.default.createElement(
-	              "p",
-	              null,
-	              _react2.default.createElement(
-	                "button",
-	                null,
-	                "Create Account"
-	              )
-	            )
-	          )
-	        ),
-	        _react2.default.createElement(
-	          "li",
-	          null,
-	          _react2.default.createElement(
-	            "a",
-	            { href: "/forgot?id=" },
-	            "Forgot Password?"
-	          )
-	        )
-	      );
-	    } else {
-	      var _props = this.props;
-	      var name = _props.name;
-	      var url = _props.url;
-	      var points = _props.points;
+	  toggleSaved: function toggleSaved(event) {
+	    event.preventDefault();
+	    var _props = this.props;
+	    var savedVisible = _props.savedVisible;
+	    var show = _props.show;
+	    var hide = _props.hide;
 
-	      return _react2.default.createElement(
-	        "nav",
-	        { className: "user logged-in" },
+	    if (savedVisible) {
+	      hide();
+	    } else {
+	      show();
+	    }
+	  },
+	  _loggedOut: function _loggedOut() {
+	    var location = window.location;
+	    var loginHref = "/login?goto=" + location.pathname + location.search;
+	    return _react2.default.createElement(
+	      "nav",
+	      { className: "user logged-out" },
+	      _react2.default.createElement(
+	        "li",
+	        null,
 	        _react2.default.createElement(
-	          "li",
-	          null,
+	          "form",
+	          { method: "post", action: "login" },
 	          _react2.default.createElement(
-	            "a",
-	            { href: "/user?id=" + name },
-	            name
+	            "p",
+	            null,
+	            _react2.default.createElement(
+	              "a",
+	              { href: loginHref },
+	              "Login"
+	            )
 	          ),
-	          " (",
-	          points,
-	          ")"
-	        ),
-	        _react2.default.createElement(
-	          "li",
-	          null,
+	          _react2.default.createElement("input", { type: "hidden", name: "goto", value: "/" }),
 	          _react2.default.createElement(
-	            "a",
-	            { href: "/submit" },
-	            "Submit"
+	            "p",
+	            null,
+	            _react2.default.createElement("input", { type: "text", name: "acct", size: "20",
+	              placeholder: "username",
+	              autoCorrect: "off",
+	              autoCapitalize: "off" })
+	          ),
+	          _react2.default.createElement(
+	            "p",
+	            null,
+	            _react2.default.createElement("input", { type: "password", name: "pw", size: "20",
+	              placeholder: "password" })
+	          ),
+	          _react2.default.createElement(
+	            "p",
+	            null,
+	            _react2.default.createElement(
+	              "button",
+	              null,
+	              "Login"
+	            )
 	          )
 	        ),
 	        _react2.default.createElement(
-	          "li",
-	          null,
+	          "form",
+	          { method: "post", action: "login" },
 	          _react2.default.createElement(
-	            "a",
-	            { href: "/threads?id=" + name },
-	            "Threads"
-	          )
-	        ),
-	        _react2.default.createElement(
-	          "li",
-	          null,
+	            "p",
+	            null,
+	            _react2.default.createElement(
+	              "a",
+	              { href: loginHref },
+	              "Create account"
+	            )
+	          ),
+	          _react2.default.createElement("input", { type: "hidden", name: "goto", value: "/" }),
+	          _react2.default.createElement("input", { type: "hidden", name: "creating", value: "t" }),
 	          _react2.default.createElement(
-	            "a",
-	            { href: "/logout?goto=" + location.pathname + location.search },
-	            "Logout"
+	            "p",
+	            null,
+	            _react2.default.createElement("input", { type: "text", name: "acct", size: "20",
+	              placeholder: "username",
+	              autoCorrect: "off",
+	              autoCapitalize: "off" })
+	          ),
+	          _react2.default.createElement(
+	            "p",
+	            null,
+	            _react2.default.createElement("input", { type: "password", name: "pw", size: "20",
+	              placeholder: "password" })
+	          ),
+	          _react2.default.createElement(
+	            "p",
+	            null,
+	            _react2.default.createElement(
+	              "button",
+	              null,
+	              "Create Account"
+	            )
 	          )
 	        )
-	      );
-	    }
+	      ),
+	      _react2.default.createElement(
+	        "li",
+	        null,
+	        _react2.default.createElement(
+	          "a",
+	          { href: "/forgot?id=" },
+	          "Forgot Password?"
+	        )
+	      )
+	    );
+	  },
+	  _loggedIn: function _loggedIn() {
+	    var _props2 = this.props;
+	    var name = _props2.name;
+	    var url = _props2.url;
+	    var points = _props2.points;
+
+	    return _react2.default.createElement(
+	      "nav",
+	      { className: "user logged-in" },
+	      _react2.default.createElement(
+	        "li",
+	        null,
+	        _react2.default.createElement(
+	          "a",
+	          { href: "/user?id=" + name },
+	          name
+	        ),
+	        " (",
+	        points,
+	        ")"
+	      ),
+	      _react2.default.createElement(
+	        "li",
+	        null,
+	        _react2.default.createElement(
+	          "a",
+	          { href: "/submit" },
+	          "Submit"
+	        )
+	      ),
+	      _react2.default.createElement(
+	        "li",
+	        null,
+	        _react2.default.createElement(
+	          "a",
+	          { href: "/threads?id=" + name },
+	          "Threads"
+	        )
+	      ),
+	      _react2.default.createElement(
+	        "li",
+	        null,
+	        _react2.default.createElement(
+	          "a",
+	          { href: "#", onClick: this.toggleSaved },
+	          "Saved"
+	        )
+	      ),
+	      _react2.default.createElement(
+	        "li",
+	        null,
+	        _react2.default.createElement(
+	          "a",
+	          { href: "/logout?goto=" + location.pathname + location.search },
+	          "Logout"
+	        )
+	      )
+	    );
+	  },
+	  render: function render() {
+	    return this.props.name === undefined ? this._loggedOut() : this._loggedIn();
 	  }
 	});
 
 /***/ },
-/* 28 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1952,18 +2069,18 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _SubStory = __webpack_require__(29);
+	var _SubStory = __webpack_require__(31);
 
 	var _SubStory2 = _interopRequireDefault(_SubStory);
 
-	var _chrome = __webpack_require__(32);
+	var _chrome = __webpack_require__(34);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	exports.default = _react2.default.createClass({
 	  displayName: "StoryPage",
 
-	  toggleSave: function toggleSave(id, url) {
+	  toggleSave: function toggleSave(id, url, title) {
 	    var saved = this.props.options.saved;
 	    if (saved[id]) {
 	      delete saved[id];
@@ -1971,8 +2088,8 @@
 	      this.props.unsaveStory(id);
 	    } else {
 	      saved[id] = url;
-	      (0, _chrome.saveStory)(id, url);
-	      this.props.saveStory(id, url);
+	      (0, _chrome.saveStory)(id, url, title);
+	      this.props.saveStory(id, url, title);
 	    }
 	  },
 	  hideStory: function hideStory(id) {
@@ -2048,7 +2165,7 @@
 	});
 
 /***/ },
-/* 29 */
+/* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2061,7 +2178,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _Vote = __webpack_require__(30);
+	var _Vote = __webpack_require__(32);
 
 	var _Vote2 = _interopRequireDefault(_Vote);
 
@@ -2084,7 +2201,7 @@
 	    });
 	  },
 	  saveStory: function saveStory() {
-	    this.props.toggleSave(this.props.id, this.props.url);
+	    this.props.toggleSave(this.props.id, this.props.url, this.props.title);
 	  },
 	  /*
 	  hideStory: function() {
@@ -2189,7 +2306,7 @@
 	exports.default = SubStory;
 
 /***/ },
-/* 30 */
+/* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2202,7 +2319,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _vote = __webpack_require__(31);
+	var _vote = __webpack_require__(33);
 
 	var _vote2 = _interopRequireDefault(_vote);
 
@@ -2237,7 +2354,7 @@
 	});
 
 /***/ },
-/* 31 */
+/* 33 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -2262,7 +2379,7 @@
 	};
 
 /***/ },
-/* 32 */
+/* 34 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -2279,10 +2396,13 @@
 	/*
 	 * stories
 	 */
-	var saveStory = exports.saveStory = function saveStory(id, url) {
+	var saveStory = exports.saveStory = function saveStory(id, url, title) {
 	  chrome.storage.local.get("saved", function (storage) {
 	    var saved = storage.saved;
-	    saved[id] = url;
+	    saved[id] = {
+	      url: url,
+	      title: title
+	    };
 	    chrome.storage.local.set({ "saved": saved });
 	  });
 	};
@@ -2352,7 +2472,7 @@
 	};
 
 /***/ },
-/* 33 */
+/* 35 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2367,15 +2487,15 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _SubStory = __webpack_require__(29);
+	var _SubStory = __webpack_require__(31);
 
 	var _SubStory2 = _interopRequireDefault(_SubStory);
 
-	var _Comment = __webpack_require__(34);
+	var _Comment = __webpack_require__(36);
 
 	var _Comment2 = _interopRequireDefault(_Comment);
 
-	var _chrome = __webpack_require__(32);
+	var _chrome = __webpack_require__(34);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2397,7 +2517,7 @@
 	      )
 	    );
 	  },
-	  toggleSave: function toggleSave(id, url) {
+	  toggleSave: function toggleSave(id, url, title) {
 	    var saved = this.props.options.saved;
 	    if (saved[id]) {
 	      delete saved[id];
@@ -2405,8 +2525,8 @@
 	      this.props.unsaveStory(id);
 	    } else {
 	      saved[id] = url;
-	      (0, _chrome.saveStory)(id, url);
-	      this.props.saveStory(id, url);
+	      (0, _chrome.saveStory)(id, url, title);
+	      this.props.saveStory(id, url, title);
 	    }
 	  },
 	  render: function render() {
@@ -2460,7 +2580,7 @@
 	});
 
 /***/ },
-/* 34 */
+/* 36 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2475,7 +2595,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _Vote = __webpack_require__(30);
+	var _Vote = __webpack_require__(32);
 
 	var _Vote2 = _interopRequireDefault(_Vote);
 
@@ -2619,7 +2739,124 @@
 	exports.default = Comment;
 
 /***/ },
-/* 35 */
+/* 37 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _chrome = __webpack_require__(34);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.default = _react2.default.createClass({
+	  displayName: "Saved",
+
+	  hideSaved: function hideSaved(event) {
+	    event.preventDefault();
+	    this.props.hide();
+	  },
+	  render: function render() {
+	    var _this = this;
+
+	    if (!this.props.savedVisible) {
+	      return null;
+	    }
+	    var _props$options = this.props.options;
+	    var domains = _props$options.domains;
+	    var hidden = _props$options.hidden;
+	    var saved = _props$options.saved;
+
+	    var savedStories = Object.keys(saved).map(function (id, index) {
+	      return _react2.default.createElement(SavedStory, _extends({ key: index,
+	        id: id,
+	        unsave: _this.props.unsave
+	      }, saved[id]));
+	    });
+	    return _react2.default.createElement(
+	      "div",
+	      { className: "saved-stories" },
+	      _react2.default.createElement(
+	        "section",
+	        null,
+	        _react2.default.createElement(
+	          "h2",
+	          null,
+	          "Saved Stories"
+	        ),
+	        _react2.default.createElement(
+	          "ul",
+	          null,
+	          savedStories
+	        )
+	      ),
+	      _react2.default.createElement(
+	        "button",
+	        { onClick: this.hideSaved },
+	        "Hide"
+	      )
+	    );
+	    /*
+	    not yet implemented
+	    <section>
+	      <h2>Hidden Stories</h2>
+	      <p>
+	        Hidden stories are removed after 48 hours since by then the story will be off the main page.
+	      </p>
+	    </section>
+	    <section>
+	      <h2>Hidden Domains</h2>
+	    </section>
+	    */
+	  }
+	});
+
+	var SavedStory = _react2.default.createClass({
+	  displayName: "SavedStory",
+
+	  unsaveStory: function unsaveStory(event) {
+	    event.preventDefault();
+	    this.props.unsave(this.props.id);
+	    (0, _chrome.unsaveStory)(this.props.id);
+	  },
+	  render: function render() {
+	    var _props = this.props;
+	    var id = _props.id;
+	    var url = _props.url;
+	    var title = _props.title;
+
+	    return _react2.default.createElement(
+	      "li",
+	      { className: "saved-story" },
+	      _react2.default.createElement("i", { className: "fa fa-star",
+	        title: "unsave story",
+	        onClick: this.unsaveStory }),
+	      _react2.default.createElement(
+	        "a",
+	        { href: url },
+	        title
+	      ),
+	      " ",
+	      _react2.default.createElement(
+	        "a",
+	        { className: "comments", href: "https://news.ycombinator.com/item?id=" + id },
+	        "comments"
+	      )
+	    );
+	  }
+	});
+
+/***/ },
+/* 38 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -2659,7 +2896,7 @@
 	   */
 
 /***/ },
-/* 36 */
+/* 39 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2668,7 +2905,7 @@
 	  value: true
 	});
 
-	var _storyPage = __webpack_require__(37);
+	var _storyPage = __webpack_require__(40);
 
 	Object.defineProperty(exports, "storyPage", {
 	  enumerable: true,
@@ -2677,7 +2914,7 @@
 	  }
 	});
 
-	var _commentsPage = __webpack_require__(44);
+	var _commentsPage = __webpack_require__(47);
 
 	Object.defineProperty(exports, "commentsPage", {
 	  enumerable: true,
@@ -2686,7 +2923,7 @@
 	  }
 	});
 
-	var _replyPage = __webpack_require__(48);
+	var _replyPage = __webpack_require__(51);
 
 	Object.defineProperty(exports, "replyPage", {
 	  enumerable: true,
@@ -2695,7 +2932,7 @@
 	  }
 	});
 
-	var _noopPage = __webpack_require__(50);
+	var _noopPage = __webpack_require__(53);
 
 	Object.defineProperty(exports, "noopPage", {
 	  enumerable: true,
@@ -2705,7 +2942,7 @@
 	});
 
 /***/ },
-/* 37 */
+/* 40 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2714,11 +2951,11 @@
 	  value: true
 	});
 
-	var _user = __webpack_require__(38);
+	var _user = __webpack_require__(41);
 
 	var _user2 = _interopRequireDefault(_user);
 
-	var _stories = __webpack_require__(39);
+	var _stories = __webpack_require__(42);
 
 	var _stories2 = _interopRequireDefault(_stories);
 
@@ -2729,7 +2966,7 @@
 	};
 
 /***/ },
-/* 38 */
+/* 41 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -2769,7 +3006,7 @@
 	exports.default = user;
 
 /***/ },
-/* 39 */
+/* 42 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2778,7 +3015,7 @@
 	  value: true
 	});
 
-	var _story = __webpack_require__(40);
+	var _story = __webpack_require__(43);
 
 	var _story2 = _interopRequireDefault(_story);
 
@@ -2801,7 +3038,7 @@
 	exports.default = stories;
 
 /***/ },
-/* 40 */
+/* 43 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2810,11 +3047,11 @@
 	  value: true
 	});
 
-	var _headline = __webpack_require__(41);
+	var _headline = __webpack_require__(44);
 
 	var _headline2 = _interopRequireDefault(_headline);
 
-	var _byline = __webpack_require__(43);
+	var _byline = __webpack_require__(46);
 
 	var _byline2 = _interopRequireDefault(_byline);
 
@@ -2827,7 +3064,7 @@
 	exports.default = story;
 
 /***/ },
-/* 41 */
+/* 44 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2836,7 +3073,7 @@
 	  value: true
 	});
 
-	var _votes = __webpack_require__(42);
+	var _votes = __webpack_require__(45);
 
 	var _votes2 = _interopRequireDefault(_votes);
 
@@ -2868,7 +3105,7 @@
 	exports.default = headlineData;
 
 /***/ },
-/* 42 */
+/* 45 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -2888,7 +3125,7 @@
 	exports.default = votingData;
 
 /***/ },
-/* 43 */
+/* 46 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -2956,7 +3193,7 @@
 	exports.default = bylineData;
 
 /***/ },
-/* 44 */
+/* 47 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2965,11 +3202,11 @@
 	  value: true
 	});
 
-	var _user = __webpack_require__(38);
+	var _user = __webpack_require__(41);
 
 	var _user2 = _interopRequireDefault(_user);
 
-	var _comments = __webpack_require__(45);
+	var _comments = __webpack_require__(48);
 
 	var _comments2 = _interopRequireDefault(_comments);
 
@@ -2980,7 +3217,7 @@
 	};
 
 /***/ },
-/* 45 */
+/* 48 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2989,15 +3226,15 @@
 	  value: true
 	});
 
-	var _story = __webpack_require__(40);
+	var _story = __webpack_require__(43);
 
 	var _story2 = _interopRequireDefault(_story);
 
-	var _comment = __webpack_require__(46);
+	var _comment = __webpack_require__(49);
 
 	var _comment2 = _interopRequireDefault(_comment);
 
-	var _commentForm = __webpack_require__(47);
+	var _commentForm = __webpack_require__(50);
 
 	var _commentForm2 = _interopRequireDefault(_commentForm);
 
@@ -3091,7 +3328,7 @@
 	exports.default = comments;
 
 /***/ },
-/* 46 */
+/* 49 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3100,7 +3337,7 @@
 	  value: true
 	});
 
-	var _votes = __webpack_require__(42);
+	var _votes = __webpack_require__(45);
 
 	var _votes2 = _interopRequireDefault(_votes);
 
@@ -3168,7 +3405,7 @@
 	exports.default = comment;
 
 /***/ },
-/* 47 */
+/* 50 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -3193,7 +3430,7 @@
 	exports.default = commentForm;
 
 /***/ },
-/* 48 */
+/* 51 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3202,11 +3439,11 @@
 	  value: true
 	});
 
-	var _user = __webpack_require__(38);
+	var _user = __webpack_require__(41);
 
 	var _user2 = _interopRequireDefault(_user);
 
-	var _reply = __webpack_require__(49);
+	var _reply = __webpack_require__(52);
 
 	var _reply2 = _interopRequireDefault(_reply);
 
@@ -3217,7 +3454,7 @@
 	};
 
 /***/ },
-/* 49 */
+/* 52 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3226,11 +3463,11 @@
 	  value: true
 	});
 
-	var _comment = __webpack_require__(46);
+	var _comment = __webpack_require__(49);
 
 	var _comment2 = _interopRequireDefault(_comment);
 
-	var _commentForm = __webpack_require__(47);
+	var _commentForm = __webpack_require__(50);
 
 	var _commentForm2 = _interopRequireDefault(_commentForm);
 
@@ -3246,7 +3483,7 @@
 	exports.default = reply;
 
 /***/ },
-/* 50 */
+/* 53 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3255,11 +3492,11 @@
 	  value: true
 	});
 
-	var _user = __webpack_require__(38);
+	var _user = __webpack_require__(41);
 
 	var _user2 = _interopRequireDefault(_user);
 
-	var _stories = __webpack_require__(39);
+	var _stories = __webpack_require__(42);
 
 	var _stories2 = _interopRequireDefault(_stories);
 

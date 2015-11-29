@@ -7,10 +7,13 @@ export const getStorage = callback => {
 /*
  * stories
  */
-export const saveStory = (id, url) => {
+export const saveStory = (id, url, title) => {
   chrome.storage.local.get("saved", storage => {
     let saved = storage.saved;
-    saved[id] = url;
+    saved[id] = {
+      url: url,
+      title: title
+    };
     chrome.storage.local.set({"saved": saved});
   });
 };

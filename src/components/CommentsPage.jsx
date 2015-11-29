@@ -17,7 +17,7 @@ export default React.createClass({
       </form>
     );
   },
-  toggleSave: function(id, url) {
+  toggleSave: function(id, url, title) {
     let saved = this.props.options.saved;
     if ( saved[id] ) {
       delete saved[id];
@@ -25,8 +25,8 @@ export default React.createClass({
       this.props.unsaveStory(id);
     } else {
       saved[id] = url;
-      saveStory(id, url);
-      this.props.saveStory(id, url);
+      saveStory(id, url, title);
+      this.props.saveStory(id, url, title);
     }
   },
   render: function() {

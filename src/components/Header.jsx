@@ -1,11 +1,10 @@
 import React from "react";
 
+import User from "./User";
+
 export default React.createClass({
-  shouldComponentUpdate: function(nextProps, nextState) {
-    return false;
-  },
   render: function() {
-    let { user } = this.props;
+    let { user, show, hide, savedVisible } = this.props;
     return (
       <header>
         <nav>
@@ -16,7 +15,10 @@ export default React.createClass({
             </form>
           </li>
         </nav>
-        <User {...user} />
+        <User show={show}
+              hide={hide}
+              savedVisible={savedVisible}
+              {...user} />
         <nav className="general">
           <li><a href="/newest">New</a></li>
           <li><a href="/newcomments">Comments</a></li>
@@ -38,80 +40,5 @@ export default React.createClass({
         </nav>
       </header>
     );
-  }
-});
-
-const User = React.createClass({
-  render: function() {
-    if ( this.props.name === undefined ) {
-      let location = window.location;
-      let nextURL = ``
-      return (
-        <nav className="user logged-out">
-          <li>
-            <form method="post" action="login">
-              <p>
-                <a href={`/login?goto=${location.pathname}${location.search}`}>Login</a>
-              </p>
-              <input type="hidden" name="goto" value="/" />
-              <p>
-                <input type="text" name="acct" size="20"
-                       placeholder="username"
-                       autoCorrect="off"
-                       autoCapitalize="off" />
-              </p>
-              <p>
-                <input type="password" name="pw" size="20"
-                       placeholder="password" />
-              </p>
-              <p>
-                <button>Login</button>
-              </p>
-            </form>
-            <form method="post" action="login">
-              <p>
-                <a href={`/login?goto=${location.pathname}${location.search}`}>Create account</a>
-              </p>
-              <input type="hidden" name="goto" value="/" />
-              <input type="hidden" name="creating" value="t" />
-              <p>
-                <input type="text" name="acct" size="20"
-                       placeholder="username"
-                       autoCorrect="off"
-                       autoCapitalize="off" />
-              </p>
-              <p>
-                <input type="password" name="pw" size="20"
-                       placeholder="password" />
-              </p>
-              <p>
-                <button>Create Account</button>
-              </p>
-            </form>
-          </li>
-          <li>
-            <a href={`/forgot?id=`}>Forgot Password?</a>
-          </li>
-        </nav>
-      );
-    } else {
-      let { name, url, points } = this.props;
-      return (
-        <nav className="user logged-in">
-          <li>
-            <a href={`/user?id=${name}`}>{name}</a> ({points})
-          </li>
-          <li>
-            <a href="/submit">Submit</a>
-          </li>
-          <li>
-            <a href={`/threads?id=${name}`}>Threads</a>
-          </li>
-          <li>
-            <a href={`/logout?goto=${location.pathname}${location.search}`}>Logout</a>
-          </li>
-        </nav>
-      );
-    }
   }
 });

@@ -8,22 +8,22 @@ body {
   display: flex;
   min-height: 100vh;
   font-size: 16px;
-  color: #444;
+  color: #444444;
   background: #efefef; }
   .hacker-news a, .hacker-news a:visited {
-    color: #000; }
+    color: #000000; }
   .hacker-news header {
     padding: 5px;
     box-sizing: border-box;
     background: #F26522;
     min-width: 200px;
     width: 200px;
-    color: #000;
+    color: #000000;
     overflow-wrap: break-word; }
     .hacker-news header nav {
       margin-bottom: 15px;
       text-align: center;
-      border-bottom: 1px solid #fff;
+      border-bottom: 1px solid #ffffff;
       padding-bottom: 15px;
       list-style: none; }
       .hacker-news header nav:last-child {
@@ -41,13 +41,13 @@ body {
       font-weight: bold;
       padding: 5px 0; }
     .hacker-news header .points {
-      background: #fff;
+      background: #ffffff;
       color: #F26522;
       font-weight: bold;
       border-radius: 3px; }
 
 .story-page .story:hover {
-  border-color: #444;
+  border-color: #444444;
   background: #ddd; }
 
 .story {
@@ -56,7 +56,7 @@ body {
   border-left: 5px solid transparent; }
   .story a.more {
     color: #999;
-    text-shadow: 1px 1px #fff;
+    text-shadow: 1px 1px #ffffff;
     margin-left: 15px; }
   .story .byline {
     font-size: 0.75em;
@@ -65,14 +65,6 @@ body {
       text-decoration: underline; }
   .story .story-controls {
     margin-left: auto; }
-    .story .story-controls i {
-      margin: 0 5px; }
-      .story .story-controls i.fa {
-        cursor: pointer; }
-      .story .story-controls i.fa-star-o:hover, .story .story-controls i.fa-star {
-        color: #BDA211; }
-      .story .story-controls i.fa-times:hover, .story .story-controls i.fa-ban:hover {
-        color: #C14242; }
 
 .voting {
   width: 50px;
@@ -82,7 +74,7 @@ body {
   .voting .points {
     width: 100%;
     background: transparent;
-    color: #444; }
+    color: #444444; }
   .voting .filler {
     height: 15px; }
 
@@ -92,7 +84,7 @@ body {
 
 .comments-main {
   margin-bottom: 25px;
-  border-bottom: 2px solid #444; }
+  border-bottom: 2px solid #444444; }
   .comments-main form {
     padding: 15px 25px; }
     .comments-main form textarea, .comments-main form button {
@@ -113,7 +105,33 @@ body {
     cursor: pointer;
     padding: 0; }
 
+.saved-stories {
+  padding: 15px;
+  border-bottom: 1px solid #444444; }
+  .saved-stories section {
+    padding-bottom: 15px; }
+  .saved-stories h2, .saved-stories h3, .saved-stories h4, .saved-stories h5, .saved-stories h6, .saved-stories p, .saved-stories ul {
+    margin: 2px 0; }
+  .saved-stories h2 {
+    font-size: 1.1em; }
+  .saved-stories ul {
+    list-style: none;
+    padding-left: 0; }
+
+.saved-story .comments {
+  text-decoration: underline;
+  font-size: 0.9em; }
+
 blockquote {
   margin: 0 0 0 3px;
-  border-left: 2px solid #444;
+  border-left: 2px solid #444444;
   padding-left: 5px; }
+
+/* fontawesome related css */
+i.fa {
+  margin: 0 5px;
+  cursor: pointer; }
+  i.fa.fa-star-o:hover, i.fa.fa-star {
+    color: #BDA211; }
+  i.fa.fa-times:hover, i.fa.fa-ban:hover {
+    color: #C14242; }

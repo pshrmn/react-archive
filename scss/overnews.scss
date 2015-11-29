@@ -1,3 +1,11 @@
+$dark-gray: #444444;
+$light-gray: #efefef;
+$black: #000000;
+$white: #ffffff;
+$gold: #BDA211;
+$red: #C14242;
+$hn-orange: #F26522;
+
 body {
   margin: 0;
 }
@@ -10,26 +18,26 @@ body {
   display: flex;
   min-height: 100vh;
   font-size: 16px;
-  color: #444;
-  background: #efefef;
+  color: $dark-gray;
+  background: $light-gray;
 
   a, a:visited {
-    color: #000;
+    color: $black;
   }
 
   header {
     padding: 5px;
     box-sizing: border-box;
-    background: #F26522;
+    background: $hn-orange;
     min-width: 200px;
     width: 200px;
-    color: #000;
+    color: $black;
     overflow-wrap: break-word;
 
     nav {
       margin-bottom: 15px;
       text-align: center;
-      border-bottom: 1px solid #fff;
+      border-bottom: 1px solid $white;
       padding-bottom: 15px;
       list-style: none;
 
@@ -61,8 +69,8 @@ body {
     }
 
     .points {
-      background: #fff;
-      color: #F26522;
+      background: $white;
+      color: $hn-orange;
       font-weight: bold;
       border-radius: 3px;
     }
@@ -72,7 +80,7 @@ body {
 .story-page {
 
   .story:hover {
-    border-color: #444;
+    border-color: $dark-gray;
     background: #ddd;
   }
 }
@@ -84,7 +92,7 @@ body {
 
   a.more {
     color: #999;
-    text-shadow: 1px 1px #fff;
+    text-shadow: 1px 1px $white;
     margin-left: 15px;
   }
 
@@ -100,21 +108,6 @@ body {
   .story-controls {
     margin-left: auto;
 
-    i {
-      margin: 0 5px;
-
-      &.fa {
-        cursor: pointer;
-      }
-
-      &.fa-star-o:hover, &.fa-star {
-        color: #BDA211;
-      }
-
-      &.fa-times:hover, &.fa-ban:hover {
-        color: #C14242;
-      }
-    }
   }
 }
 
@@ -127,7 +120,7 @@ body {
   .points {
     width: 100%;
     background: transparent;
-    color: #444;
+    color: $dark-gray;
   }
 
   .filler {
@@ -143,7 +136,7 @@ body {
 
 .comments-main {
   margin-bottom: 25px;
-  border-bottom: 2px solid #444;
+  border-bottom: 2px solid $dark-gray;
 
   form {
     padding: 15px 25px;
@@ -176,9 +169,50 @@ body {
   }
 }
 
+.saved-stories {
+  padding: 15px;
+  border-bottom: 1px solid $dark-gray;
+  section {
+    padding-bottom: 15px;
+  }
+
+  h2, h3, h4, h5, h6, p, ul {
+    margin: 2px 0;
+  }
+
+  h2 {
+    font-size: 1.1em;
+  }
+
+  ul {
+    list-style: none;
+    padding-left: 0;
+  }
+}
+
+.saved-story {
+  .comments {
+    text-decoration: underline;
+    font-size: 0.9em;
+  }
+}
 
 blockquote {
   margin: 0 0 0 3px;
-  border-left: 2px solid #444;
+  border-left: 2px solid $dark-gray;
   padding-left: 5px;
+}
+
+/* fontawesome related css */
+i.fa {
+  margin: 0 5px;
+  cursor: pointer;
+
+  &.fa-star-o:hover, &.fa-star {
+    color: $gold;
+  }
+
+  &.fa-times:hover, &.fa-ban:hover {
+    color: $red;
+  }
 }
