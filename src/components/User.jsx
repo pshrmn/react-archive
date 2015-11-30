@@ -16,6 +16,9 @@ export default React.createClass({
     return (
       <nav className="user logged-out">
         <li>
+          <a href="#" onClick={this.toggleModded}>Modded Stories</a>
+        </li>
+        <li>
           <form method="post" action="login">
             <p>
               <a href={loginHref}>Login</a>

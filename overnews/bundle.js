@@ -1973,6 +1973,15 @@
 	        "li",
 	        null,
 	        _react2.default.createElement(
+	          "a",
+	          { href: "#", onClick: this.toggleModded },
+	          "Modded Stories"
+	        )
+	      ),
+	      _react2.default.createElement(
+	        "li",
+	        null,
+	        _react2.default.createElement(
 	          "form",
 	          { method: "post", action: "login" },
 	          _react2.default.createElement(
@@ -2170,6 +2179,20 @@
 	    (0, _chrome.banDomain)(domain);
 	    this.props.banDomain(domain);
 	  },
+	  _nextPage: function _nextPage() {
+	    var loc = window.location;
+	    var pathname = loc.pathname;
+	    if (pathname === "/") {
+	      return "/news?p=2";
+	    }
+	    return pathname + "?" + loc.search.slice(1).split("&").map(function (pair) {
+	      var parts = pair.split("=");
+	      if (parts[0] === "p") {
+	        var currentPage = parseInt(parts[1], 10);
+	        return "p=" + (currentPage + 1);
+	      }
+	    }).join("&");
+	  },
 	  render: function render() {
 	    var _this = this;
 
@@ -2198,7 +2221,12 @@
 	    return _react2.default.createElement(
 	      "div",
 	      { className: "story-page" },
-	      submissions
+	      submissions,
+	      _react2.default.createElement(
+	        "a",
+	        { href: this._nextPage() },
+	        "more"
+	      )
 	    );
 	  }
 	});

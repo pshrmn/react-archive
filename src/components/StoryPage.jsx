@@ -25,6 +25,20 @@ export default React.createClass({
     banDomain(domain);
     this.props.banDomain(domain);
   },
+  _nextPage: function() {
+    let loc = window.location;
+    let pathname = loc.pathname;
+    if ( pathname === "/" ) {
+      return "/news?p=2"
+    }
+    return pathname + "?" + loc.search.slice(1).split("&").map(pair => {
+      let parts = pair.split("=");
+      if ( parts[0] === "p" ) {
+        let currentPage = parseInt(parts[1], 10);
+        return `p=${currentPage + 1}`;
+      }
+    }).join("&");
+  },
   render: function() {
     let { stories, loggedIn, modded } = this.props;
     let { saved, hidden, domains } = modded;
@@ -45,10 +59,11 @@ export default React.createClass({
                   saved={saved[s.id] === true}
                   {...s} />
       );
-    })
+    });
     return (
       <div className="story-page">
         {submissions}
+        <a href={this._nextPage()}>more</a>
       </div>
     );
   }
