@@ -50,6 +50,9 @@ body {
   border-color: #444444;
   background: #ddd; }
 
+.story-page .more {
+  margin: 0 0 15px 15px; }
+
 .story {
   margin: 10px 0;
   display: flex;

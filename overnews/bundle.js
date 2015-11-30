@@ -2184,14 +2184,20 @@
 	    var pathname = loc.pathname;
 	    if (pathname === "/") {
 	      return "/news?p=2";
+	    } else if (loc.search === "") {
+	      return pathname + "?p=2";
+	    } else {
+	      var nextPage = 2;
+	      loc.search.slice(1).split("&").some(function (query) {
+	        var parts = query.split("=");
+	        if (parts[0] === "p") {
+	          nextPage = parseInt(parts[1], 10) + 1;
+	          return true;
+	        }
+	        return false;
+	      });
+	      return pathname + "?p=" + nextPage;
 	    }
-	    return pathname + "?" + loc.search.slice(1).split("&").map(function (pair) {
-	      var parts = pair.split("=");
-	      if (parts[0] === "p") {
-	        var currentPage = parseInt(parts[1], 10);
-	        return "p=" + (currentPage + 1);
-	      }
-	    }).join("&");
 	  },
 	  render: function render() {
 	    var _this = this;
@@ -2223,9 +2229,13 @@
 	      { className: "story-page" },
 	      submissions,
 	      _react2.default.createElement(
-	        "a",
-	        { href: this._nextPage() },
-	        "more"
+	        "div",
+	        { className: "more" },
+	        _react2.default.createElement(
+	          "a",
+	          { href: this._nextPage() },
+	          "more"
+	        )
 	      )
 	    );
 	  }

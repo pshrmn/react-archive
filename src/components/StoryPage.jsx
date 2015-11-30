@@ -30,14 +30,20 @@ export default React.createClass({
     let pathname = loc.pathname;
     if ( pathname === "/" ) {
       return "/news?p=2"
+    } else if ( loc.search === "" ) {
+      return pathname + "?p=2";
+    } else {
+      let nextPage = 2;
+      loc.search.slice(1).split("&").some(query => {
+        let parts = query.split("=");
+        if ( parts[0] === "p" ) {
+          nextPage = parseInt(parts[1], 10) + 1;
+          return true;
+        } 
+        return false;
+      });
+      return pathname + "?p=" + nextPage;
     }
-    return pathname + "?" + loc.search.slice(1).split("&").map(pair => {
-      let parts = pair.split("=");
-      if ( parts[0] === "p" ) {
-        let currentPage = parseInt(parts[1], 10);
-        return `p=${currentPage + 1}`;
-      }
-    }).join("&");
   },
   render: function() {
     let { stories, loggedIn, modded } = this.props;
@@ -63,7 +69,9 @@ export default React.createClass({
     return (
       <div className="story-page">
         {submissions}
-        <a href={this._nextPage()}>more</a>
+        <div className="more">
+          <a href={this._nextPage()}>more</a>
+        </div>
       </div>
     );
   }
