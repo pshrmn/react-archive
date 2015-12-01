@@ -65,12 +65,11 @@ export default React.createClass({
       );
       break;
     }
-
     return (
       <div>
         <div className="comments-main">
           {header}
-          {this.replyElement(replyForm)}
+          {replyForm !== null ? this.replyElement(replyForm) : null}
         </div>
         <div className="comments">
           {commElements}

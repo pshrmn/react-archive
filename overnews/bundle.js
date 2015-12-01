@@ -2675,7 +2675,6 @@
 	        }, this.props.story));
 	        break;
 	    }
-
 	    return _react2.default.createElement(
 	      "div",
 	      null,
@@ -2683,7 +2682,7 @@
 	        "div",
 	        { className: "comments-main" },
 	        header,
-	        this.replyElement(replyForm)
+	        replyForm !== null ? this.replyElement(replyForm) : null
 	      ),
 	      _react2.default.createElement(
 	        "div",
