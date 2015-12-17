@@ -1612,7 +1612,7 @@
 	        moddedVisible: moddedVisible }),
 	      _react2.default.createElement(
 	        "div",
-	        null,
+	        { className: "content" },
 	        _react2.default.createElement(_Saved2.default, { moddedVisible: moddedVisible,
 	          hide: actions.hideSaved,
 	          unsave: actions.unsaveStory,

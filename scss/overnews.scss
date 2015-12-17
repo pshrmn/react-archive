@@ -77,6 +77,10 @@ body {
   }
 }
 
+.content {
+  padding-bottom: 100px;
+}
+
 .story-page {
 
   .story:hover {
@@ -147,6 +151,7 @@ body {
 
     textarea, button {
       display: block;
+      margin: 5px 0;
     }
   }
 }

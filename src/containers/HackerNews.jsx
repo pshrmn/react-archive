@@ -43,7 +43,7 @@ const HackerNews = React.createClass({
                 show={actions.showSaved}
                 hide={actions.hideSaved}
                 moddedVisible={moddedVisible} />
-        <div>
+        <div className="content">
           <Saved moddedVisible={moddedVisible}
                  hide={actions.hideSaved}
                  unsave={actions.unsaveStory}
