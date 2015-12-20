@@ -22,13 +22,18 @@ case "comments":
   break;
 }
 
+function addFont(href) {
+  let style = document.createElement("link");
+  style.rel = "stylesheet";
+  style.href = href;
+  document.head.appendChild(style);
+}
 
 function render(type, page) {
   // fontawesome
-  let style = document.createElement("link");
-  style.rel = "stylesheet";
-  style.href = "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css";
-  document.head.appendChild(style);
+  addFont("https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css");
+  addFont("https://fonts.googleapis.com/css?family=Oxygen|Noto+Serif")
+  let fonts = document.createElement("link");
 
   let holder = document.createElement("div");
   holder.classList.add("hn-react");

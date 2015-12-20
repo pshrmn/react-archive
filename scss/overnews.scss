@@ -20,7 +20,7 @@ body {
   font-size: 16px;
   color: $dark-gray;
   background: $light-gray;
-
+  font-family: "Oxygen", sans-serif;
   a, a:visited {
     color: $black;
   }
@@ -65,6 +65,7 @@ body {
 
     .home {
       font-weight: bold;
+      font-size: 20px;
       padding: 5px 0;
     }
 
@@ -115,7 +116,7 @@ body {
 
   .story-controls {
     margin-left: auto;
-
+    align-self: center;
   }
 }
 
@@ -164,7 +165,13 @@ body {
     margin-left: 20px;
   }
 
+  .user {
+    font-size: 14px;
+  }
+
   .message {
+    font-family: "Noto Serif", serif;
+    font-size: 14px;
     padding: 5px;
     background: #ddd;
   }

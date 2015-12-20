@@ -87,12 +87,18 @@
 	    break;
 	}
 
-	function render(type, page) {
-	  // fontawesome
+	function addFont(href) {
 	  var style = document.createElement("link");
 	  style.rel = "stylesheet";
-	  style.href = "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css";
+	  style.href = href;
 	  document.head.appendChild(style);
+	}
+
+	function render(type, page) {
+	  // fontawesome
+	  addFont("https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css");
+	  addFont("https://fonts.googleapis.com/css?family=Oxygen|Noto+Serif");
+	  var fonts = document.createElement("link");
 
 	  var holder = document.createElement("div");
 	  holder.classList.add("hn-react");
@@ -1767,7 +1773,7 @@
 	          _react2.default.createElement(
 	            "a",
 	            { href: "/" },
-	            "Hacker News"
+	            "HN"
 	          )
 	        ),
 	        _react2.default.createElement(
@@ -1776,7 +1782,7 @@
 	          _react2.default.createElement(
 	            "form",
 	            { method: "get", action: "//hn.algolia.com" },
-	            _react2.default.createElement("input", { type: "text", placeholder: "Search", name: "q" })
+	            _react2.default.createElement("input", { type: "text", placeholder: "Search...", name: "q" })
 	          )
 	        )
 	      ),

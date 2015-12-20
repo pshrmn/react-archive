@@ -8,10 +8,10 @@ export default React.createClass({
     return (
       <header>
         <nav>
-          <li className="home"><a href="/">Hacker News</a></li>
+          <li className="home"><a href="/">HN</a></li>
           <li>
             <form method="get" action="//hn.algolia.com">
-              <input type="text" placeholder="Search" name="q" />
+              <input type="text" placeholder="Search..." name="q" />
             </form>
           </li>
         </nav>
