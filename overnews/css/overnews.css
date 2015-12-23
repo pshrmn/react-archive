@@ -90,6 +90,8 @@ body {
 .vote {
   text-align: center;
   cursor: pointer; }
+  .vote:hover {
+    color: #F26522; }
 
 .comments-main {
   margin-bottom: 25px;

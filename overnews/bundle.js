@@ -2445,17 +2445,17 @@
 	    var id = _props.id;
 	    var type = _props.type;
 
-	    var code = 9632;
+	    var arrow = null;
 	    if (type === "up") {
-	      code = 9650;
+	      arrow = _react2.default.createElement("i", { className: "fa fa-arrow-up" });
 	    } else if (type === "down") {
-	      code = 9660;
+	      arrow = _react2.default.createElement("i", { className: "fa fa-arrow-down" });
 	    }
 	    return _react2.default.createElement(
 	      "div",
 	      { className: "vote",
 	        onClick: this.voteHandler },
-	      String.fromCharCode(code)
+	      arrow
 	    );
 	  }
 	});

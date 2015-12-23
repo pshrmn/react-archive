@@ -10,16 +10,16 @@ export default React.createClass({
   },
   render: function() {
     let { id, type } = this.props;
-    let code = 9632;
+    let arrow = null;
     if ( type === "up" ) {
-      code = 9650;
+      arrow = <i className="fa fa-arrow-up"></i>
     } else if ( type === "down" ) {
-      code = 9660;
+      arrow = <i className="fa fa-arrow-down"></i>
     }
     return (
       <div className="vote"
            onClick={this.voteHandler}>
-        {String.fromCharCode(code)}
+        {arrow}
       </div>
     );
   }

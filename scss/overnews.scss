@@ -141,6 +141,10 @@ body {
 .vote {
   text-align: center;
   cursor: pointer;
+
+  &:hover {
+    color: $hn-orange;
+  }
 }
 
 .comments-main {
