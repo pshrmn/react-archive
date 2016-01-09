@@ -3595,7 +3595,13 @@
 	  var commClone = commentHolder.cloneNode(true);
 	  var cloneReply = commClone.querySelector(".reply");
 	  if (cloneReply !== null) {
-	    commClone.removeChild(cloneReply);
+	    // an unclosed tag can break this by wrapping the reply in an additional element,
+	    // so we need to remove the senior-est element that isn't the commClone
+	    var parent = cloneReply;
+	    while (parent.parentElement !== commClone) {
+	      parent = parent.parentElement;
+	    }
+	    commClone.removeChild(parent);
 	  }
 	  var message = {
 	    __html: commClone.innerHTML

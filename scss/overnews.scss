@@ -14,6 +14,7 @@ body {
   display: none;
 }
 
+
 .hacker-news {
   display: flex;
   min-height: 100vh;
@@ -21,8 +22,13 @@ body {
   color: $dark-gray;
   background: $light-gray;
   font-family: "Oxygen", sans-serif;
+
   a, a:visited {
     color: $black;
+  }
+
+  input[type=text], textarea {
+    font-family: "Oxygen";
   }
 
   header {

@@ -13,6 +13,8 @@ body {
   font-family: "Oxygen", sans-serif; }
   .hacker-news a, .hacker-news a:visited {
     color: #000000; }
+  .hacker-news input[type=text], .hacker-news textarea {
+    font-family: "Oxygen"; }
   .hacker-news header {
     padding: 5px;
     box-sizing: border-box;
