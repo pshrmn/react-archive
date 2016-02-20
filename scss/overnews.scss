@@ -5,6 +5,7 @@ $white: #ffffff;
 $gold: #BDA211;
 $red: #C14242;
 $hn-orange: #F26522;
+$burnt-orange: #A24C31;
 
 body {
   margin: 0;
@@ -80,6 +81,11 @@ body {
       color: $hn-orange;
       font-weight: bold;
       border-radius: 3px;
+    }
+  }
+  .story {
+    a:visited {
+      color: $burnt-orange;
     }
   }
 }
@@ -164,6 +170,9 @@ body {
       display: block;
       margin: 5px 0;
     }
+  }
+  .story-controls {
+    align-self: flex-start;
   }
 }
 
