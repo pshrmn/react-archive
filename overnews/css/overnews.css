@@ -128,8 +128,15 @@ body {
     padding: 0; }
 
 .saved-stories {
+  position: fixed;
   padding: 15px;
-  border-bottom: 1px solid #444444; }
+  /* left: 0; */
+  background: white;
+  left: 25%;
+  width: 50%;
+  top: 25%;
+  border: 1px solid #444444;
+  box-shadow: 2px 2px #444444; }
   .saved-stories section {
     padding-bottom: 15px; }
   .saved-stories h2, .saved-stories h3, .saved-stories h4, .saved-stories h5, .saved-stories h6, .saved-stories p, .saved-stories ul {
@@ -145,6 +152,13 @@ body {
     text-decoration: underline;
     font-size: 0.9em;
     margin-left: 5px; }
+  .saved-stories button.hide {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: transparent;
+    border: 0;
+    font-size: 1.5em; }
 
 blockquote {
   margin: 0 0 0 3px;

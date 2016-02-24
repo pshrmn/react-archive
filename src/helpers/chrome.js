@@ -82,6 +82,17 @@ export const unhideStory = id => {
 
 export const getHidden = callback => {
   chrome.storage.local.get("hidden", storage => {
-    callback(storage.hidden);
+    // clear out old hidden stories when getting object
+    // of hidden stories
+    const now = new Date();
+    const twoDays = 2*24*60*60*1000;
+    let hidden = storage.hidden;
+    for ( const key in hidden ) {
+      if (now - hidden[key] > twoDays ) {
+        delete hidden[key];
+      }
+    }
+    chrome.storage.local.set({"hidden": hidden});
+    callback(hidden);
   });
 };

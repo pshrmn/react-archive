@@ -1,11 +1,13 @@
 import React from "react";
+import { connect } from "react-redux";
+
+import * as actions from "../actions";
+import * as chrome from "../helpers/chrome";
 
 import SubStory from "./SubStory";
 import Comment from "./Comment";
 
-import { saveStory, unsaveStory, hideStory, banDomain } from "../helpers/chrome";
-
-export default React.createClass({
+const CommentsPage = React.createClass({
   replyElement: function(form) {
     return (
       <form method="post" action={form.action}>
@@ -21,33 +23,34 @@ export default React.createClass({
     let saved = this.props.modded.saved;
     if ( saved[id] ) {
       delete saved[id];
-      unsaveStory(id);
+      chrome.unsaveStory(id);
       this.props.unsaveStory(id);
     } else {
       saved[id] = url;
-      saveStory(id, url, title);
+      chrome.saveStory(id, url, title);
       this.props.saveStory(id, url, title);
     }
   },
   hideStory: function(id, url, title) {
-    hideStory(id, url, title);
+    chrome.hideStory(id, url, title);
     this.props.hideStory(id, url, title);
   },
   banDomain: function(domain) {
-    banDomain(domain);
+    chrome.banDomain(domain);
     this.props.banDomain(domain);
   },
   render: function() {
-    let { type, comments, replyForm, user, loggedIn, modded } = this.props;
-    let { saved, hidden, domains } = modded;
-    let commElements = comments.map((c, i) => {
+    const { loggedIn, modded,
+      headerType, comments, replyForm, user, story } = this.props;
+    const { saved, hidden, domains } = modded;
+    const commElements = comments.map((c, i) => {
       return <Comment key={i}
                       loggedIn={loggedIn}
                       {...c} />;
     });
 
     let header = null;
-    switch ( type ) {
+    switch ( headerType ) {
     case "single":
       header = (
         <Comment loggedIn={loggedIn}
@@ -57,11 +60,11 @@ export default React.createClass({
     case "all":
       header = (
         <SubStory loggedIn={loggedIn}
-                  saved={saved[this.props.story.id] !== undefined }
+                  saved={saved[story.id] !== undefined }
                   toggleSave={this.toggleSave}
                   hideStory={this.hideStory}
                   banDomain={this.banDomain}
-                  {...this.props.story} />
+                  {...story} />
       );
       break;
     }
@@ -78,3 +81,17 @@ export default React.createClass({
     );
   }
 });
+
+export default connect(
+  state => Object.assign({},
+    {
+      loggedIn: state.page.user.name !== undefined,
+      modded: state.modded,
+    }, state.page),
+  {
+    saveStory: actions.saveStory,
+    unsaveStory: actions.unsaveStory,
+    hideStory: actions.hideStory,
+    banDomain: actions.banDomain
+  }
+)(CommentsPage);

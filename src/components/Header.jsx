@@ -3,8 +3,10 @@ import React from "react";
 import User from "./User";
 
 export default React.createClass({
+  shouldComponentUpdate: function(nextProps, nextState) {
+    return false;
+  },
   render: function() {
-    let { user, show, hide, moddedVisible } = this.props;
     return (
       <header>
         <nav>
@@ -15,10 +17,7 @@ export default React.createClass({
             </form>
           </li>
         </nav>
-        <User show={show}
-              hide={hide}
-              moddedVisible={moddedVisible}
-              {...user} />
+        <User />
         <nav className="general">
           <li><a href="/newest">New</a></li>
           <li><a href="/newcomments">Comments</a></li>

@@ -35,12 +35,12 @@ const header = element => {
       };
     }
     return {
-      type: "all",
+      headerType: "all",
       story: storyData
     }
   } else {
     return {
-      type: "single",
+      headerType: "single",
       comment: comment(element)
     }
   }

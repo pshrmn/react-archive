@@ -1,13 +1,19 @@
 import React from "react";
+import { connect } from "react-redux";
 
-export default React.createClass({
+import { showSaved, hideSaved } from "../actions";
+
+const User = React.createClass({
+  shouldComponentUpdate: function(nextProps, nextState) {
+    return nextProps.moddedVisible !== this.props.moddedVisible;
+  },
   toggleModded: function(event) {
     event.preventDefault();
-    let { moddedVisible, show, hide } = this.props;
+    let { moddedVisible, showSaved, hideSaved } = this.props;
     if ( moddedVisible ) {
-      hide();
+      hideSaved();
     } else {
-      show();
+      showSaved();
     }
   },
   _loggedOut: function() {
@@ -91,3 +97,16 @@ export default React.createClass({
     return this.props.name === undefined ? this._loggedOut() : this._loggedIn();
   }
 });
+
+export default connect(
+  state => ({
+    moddedVisible: state.moddedVisible,
+    name: state.page.user.name,
+    url: state.page.user.url,
+    points: state.page.user.points
+  }),
+  {
+    showSaved,
+    hideSaved
+  }
+)(User);

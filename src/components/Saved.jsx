@@ -1,8 +1,10 @@
 import React from "react";
+import { connect } from "react-redux";
 
-import { unsaveStory, unhideStory, unbanDomain } from "../helpers/chrome";
+import * as actions from "../actions";
+import * as chrome from "../helpers/chrome";
 
-export default React.createClass({
+const Saved = React.createClass({
   hideSaved: function(event) {
     event.preventDefault();
     this.props.hide();
@@ -64,19 +66,19 @@ export default React.createClass({
             {bannedDomains}
           </ul>
         </section>
-        <button onClick={this.hideSaved}>Hide</button>
+        <button className="hide"
+                onClick={this.hideSaved}>
+          <i className="fa fa-times"></i>
+        </button>
       </div>
     );
-    /*
-    not yet implemented
-    */
   }
 });
 
 let SavedStory = React.createClass({
   unsaveStory: function(event) {
     event.preventDefault();
-    unsaveStory(this.props.id);
+    chrome.unsaveStory(this.props.id);
     this.props.unsave(this.props.id);
   },
   render: function() {
@@ -96,7 +98,7 @@ let SavedStory = React.createClass({
 let HiddenStory = React.createClass({
   unhideStory: function(event) {
     event.preventDefault();
-    unhideStory(this.props.id);
+    chrome.unhideStory(this.props.id);
     this.props.unhide(this.props.id);
   },
   render: function() {
@@ -116,7 +118,7 @@ let HiddenStory = React.createClass({
 let BannedDomain = React.createClass({
   unbanDomain: function(event) {
     event.preventDefault();
-    unbanDomain(this.props.domain);
+    chrome.unbanDomain(this.props.domain);
     this.props.unban(this.props.domain);
   },
   render: function() {
@@ -130,3 +132,16 @@ let BannedDomain = React.createClass({
     );
   }
 });
+
+export default connect(
+  state => ({
+    moddedVisible: state.moddedVisible,
+    modded: state.modded
+  }),
+  {
+    hide: actions.hideSaved,
+    unsave: actions.unsaveStory,
+    unhide: actions.unhideStory,
+    unban: actions.unbanDomain
+  }
+)(Saved);
