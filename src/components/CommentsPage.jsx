@@ -2,7 +2,6 @@ import React from "react";
 import { connect } from "react-redux";
 
 import * as actions from "../actions";
-import * as chrome from "../helpers/chrome";
 
 import SubStory from "./SubStory";
 import Comment from "./Comment";
@@ -22,21 +21,15 @@ const CommentsPage = React.createClass({
   toggleSave: function(id, url, title) {
     let saved = this.props.modded.saved;
     if ( saved[id] ) {
-      delete saved[id];
-      chrome.unsaveStory(id);
       this.props.unsaveStory(id);
     } else {
-      saved[id] = url;
-      chrome.saveStory(id, url, title);
       this.props.saveStory(id, url, title);
     }
   },
   hideStory: function(id, url, title) {
-    chrome.hideStory(id, url, title);
     this.props.hideStory(id, url, title);
   },
   banDomain: function(domain) {
-    chrome.banDomain(domain);
     this.props.banDomain(domain);
   },
   render: function() {

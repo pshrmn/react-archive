@@ -2,7 +2,6 @@ import React from "react";
 import { connect } from "react-redux";
 
 import * as actions from "../actions";
-import * as chrome from "../helpers/chrome";
 
 import SubStory from "./SubStory";
 
@@ -10,19 +9,15 @@ const StoryPage = React.createClass({
   toggleSave: function(id, url, title) {
     const { modded, saveStory, unsaveStory } = this.props;
     if ( modded.saved[id] ) {
-      chrome.unsaveStory(id);
       unsaveStory(id);
     } else {
-      chrome.saveStory(id, url, title);
       saveStory(id, url, title);
     }
   },
   hideStory: function(id, url, title) {
-    chrome.hideStory(id, url, title);
     this.props.hideStory(id, url, title);
   },
   banDomain: function(domain) {
-    chrome.banDomain(domain);
     this.props.banDomain(domain);
   },
   _nextPage: function() {

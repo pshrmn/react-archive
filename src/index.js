@@ -4,6 +4,7 @@ import { createStore, applyMiddleware } from "redux";
 import { Provider } from "react-redux";
 
 import reducer from "./reducers";
+import chromeMiddleware from "./middleware/chrome";
 
 import HackerNews from "./components/HackerNews";
 
@@ -11,9 +12,7 @@ import pageType from "./data/pageType";
 import { storyPage, commentsPage } from "./data/pages";
 import { getStorage } from "./helpers/chrome";
 
-let pType = pageType();
-let page;
-switch ( pType ) {
+switch ( pageType() ) {
 case "submission":
   render("submission", storyPage());
   break;
@@ -42,13 +41,16 @@ function render(pType, page) {
   document.querySelector("center").style.display = "none";
 
   getStorage(storage => {
-    let initialState = {
-      pageType: pType,
-      page: page,
-      moddedVisible: false,
-      modded: storage
-    };
-    let store = createStore(reducer, initialState);
+    let store = createStore(
+      reducer,
+      {
+        pageType: pType,
+        page: page,
+        moddedVisible: false,
+        modded: storage
+      },
+      applyMiddleware(chromeMiddleware)
+    );
 
     ReactDOM.render(
       <Provider store={store}>

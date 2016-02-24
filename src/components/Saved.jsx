@@ -2,7 +2,6 @@ import React from "react";
 import { connect } from "react-redux";
 
 import * as actions from "../actions";
-import * as chrome from "../helpers/chrome";
 
 const Saved = React.createClass({
   hideSaved: function(event) {
@@ -78,7 +77,6 @@ const Saved = React.createClass({
 let SavedStory = React.createClass({
   unsaveStory: function(event) {
     event.preventDefault();
-    chrome.unsaveStory(this.props.id);
     this.props.unsave(this.props.id);
   },
   render: function() {
@@ -98,7 +96,6 @@ let SavedStory = React.createClass({
 let HiddenStory = React.createClass({
   unhideStory: function(event) {
     event.preventDefault();
-    chrome.unhideStory(this.props.id);
     this.props.unhide(this.props.id);
   },
   render: function() {
@@ -118,7 +115,6 @@ let HiddenStory = React.createClass({
 let BannedDomain = React.createClass({
   unbanDomain: function(event) {
     event.preventDefault();
-    chrome.unbanDomain(this.props.domain);
     this.props.unban(this.props.domain);
   },
   render: function() {
