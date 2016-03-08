@@ -119,7 +119,8 @@ body {
     font-family: "Noto Serif", serif;
     font-size: 14px;
     padding: 5px;
-    background: #ddd; }
+    background: #ddd;
+    max-width: 650px; }
   .comment button {
     background: transparent;
     border: 0;
