@@ -4,10 +4,11 @@
   "description": "write down recipes while watching youtube cooking videos",
   "main": "index.js",
   "scripts": {
-    "test": "mocha tests --compilers js:babel/register",
-    "sass": "node-sass scss/** -o public/static/css/**",
     "autoprefix": "postcss --use autoprefixer --autoprefixer.browsers \"last 2 versions\" public/static/css/index.css --dir public/static/css/",
+    "build": "npm run webpack & npm run css",
     "css": "npm run sass && npm run autoprefix",
+    "sass": "node-sass scss/** -o public/static/css/**",
+    "test": "mocha tests --compilers js:babel/register",
     "webpack": "webpack && webpack --config=webpack.config.min.js"
   },
   "engines": {
@@ -37,9 +38,9 @@
     "webpack": "^1.12.2"
   },
   "dependencies": {
-    "react": "^0.14.0",
-    "react-dom": "^0.14.0",
+    "react": "^15.0.0",
+    "react-dom": "^15.0.0",
     "react-redux": "^3.1.0",
-    "redux": "^3.0.2"
+    "redux": "^3.0.4"
   }
 }

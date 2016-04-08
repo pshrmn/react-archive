@@ -2585,7 +2585,7 @@
 	      });
 	      break;
 	    case "youtu.be":
-	      var parts = url.split("/");
+	      var parts = url.pathname.split("/");
 	      id = parts[parts.length - 1];
 	      break;
 	  }
