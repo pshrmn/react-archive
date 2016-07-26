@@ -19,7 +19,7 @@ const CommentsPage = React.createClass({
     );
   },
   toggleSave: function(id, url, title) {
-    let saved = this.props.modded.saved;
+    const saved = this.props.modded.saved;
     if ( saved[id] ) {
       this.props.unsaveStory(id);
     } else {

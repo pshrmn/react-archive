@@ -9,6 +9,6 @@
  * the story's id
  */
 export default url => {
-  let pinger = new Image();
+  const pinger = new Image();
   pinger.src = url;
 };

@@ -13,8 +13,8 @@ import commentForm from "./commentForm";
  *     comments in a comment tree
  */
 const comments = () => {
-  let headline = document.querySelector(".athing");
-  let commentTree = document.querySelector(".comment-tree");
+  const headline = document.querySelector(".athing");
+  const commentTree = document.querySelector(".comment-tree");
   return Object.assign({},
     header(headline),
     commentData(commentTree),
@@ -24,12 +24,12 @@ const comments = () => {
 
 const header = element => {
   if ( element.querySelector(".title") !== null ) {
-    let storyData = story(element);
-    let parentElement = element.parentElement;
+    const storyData = story(element);
+    const parentElement = element.parentElement;
     if ( storyData.url.startsWith("https://news.ycombinator.com/item?id=") &&
       parentElement.childElementCount === 6) {
       // this is a self-post, so we want to get the post's text
-      let selfHolder = parentElement.children[3];
+      const selfHolder = parentElement.children[3];
       storyData.self = {
         __html: selfHolder.innerHTML
       };
@@ -69,17 +69,17 @@ const commentData = tree => {
  * exisiting in the children array of their parent
  */
 const buildTree = comments => {
-  let commentTree = [];
-  let levels = {};
+  const commentTree = [];
+  const levels = {};
   comments.forEach(c => {
-    let { level } = c;
+    const { level } = c;
     // set the comment at current level to current comment
     levels[level] = c;
     // special case for root (level=0) comments
     if ( level === 0 ) {
       commentTree.push(c);
     } else {
-      let parent = levels[level-1];
+      const parent = levels[level-1];
       if ( parent === undefined ) {
         console.error("missing parent", (level-1), comments, levels);
       }

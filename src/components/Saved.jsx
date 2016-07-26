@@ -12,8 +12,8 @@ const Saved = React.createClass({
     if ( !this.props.moddedVisible ) {
       return null;
     }
-    let { domains, hidden, saved } = this.props.modded;
-    let savedStories = Object.keys(saved).map((id, index) => {
+    const { domains, hidden, saved } = this.props.modded;
+    const savedStories = Object.keys(saved).map((id, index) => {
       return (
         <SavedStory key={index}
                     id={id}
@@ -22,7 +22,7 @@ const Saved = React.createClass({
       );
     });
 
-    let hiddenStories = Object.keys(hidden).map((id, index) => {
+    const hiddenStories = Object.keys(hidden).map((id, index) => {
       return (
         <HiddenStory key={index}
                      id={id}
@@ -31,7 +31,7 @@ const Saved = React.createClass({
       );
     });
 
-    let bannedDomains = Object.keys(domains).map((id, index) => {
+    const bannedDomains = Object.keys(domains).map((id, index) => {
       return (
         <BannedDomain key={index}
                       domain={id}
@@ -74,13 +74,13 @@ const Saved = React.createClass({
   }
 });
 
-let SavedStory = React.createClass({
+const SavedStory = React.createClass({
   unsaveStory: function(event) {
     event.preventDefault();
     this.props.unsave(this.props.id);
   },
   render: function() {
-    let { id, url, title } = this.props;
+    const { id, url, title } = this.props;
     return (
       <li className="story">
         <i className="fa fa-star"
@@ -93,13 +93,13 @@ let SavedStory = React.createClass({
   }
 });
 
-let HiddenStory = React.createClass({
+const HiddenStory = React.createClass({
   unhideStory: function(event) {
     event.preventDefault();
     this.props.unhide(this.props.id);
   },
   render: function() {
-    let { id, url, title } = this.props;
+    const { id, url, title } = this.props;
     return (
       <li className="story">
         <i className="fa fa-times"
@@ -112,13 +112,13 @@ let HiddenStory = React.createClass({
   }
 });
 
-let BannedDomain = React.createClass({
+const BannedDomain = React.createClass({
   unbanDomain: function(event) {
     event.preventDefault();
     this.props.unban(this.props.domain);
   },
   render: function() {
-    let { domain } = this.props;
+    const { domain } = this.props;
     return (
       <li className="domain">
         <i className="fa fa-times"

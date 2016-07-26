@@ -32,7 +32,7 @@ function render(pType, page) {
   // fontawesome
   addFont("https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css");
   addFont("https://fonts.googleapis.com/css?family=Oxygen|Noto+Serif")
-  let fonts = document.createElement("link");
+  const fonts = document.createElement("link");
 
   const holder = document.createElement("div");
   holder.classList.add("hn-react");
@@ -41,7 +41,7 @@ function render(pType, page) {
   document.querySelector("center").style.display = "none";
 
   getStorage(storage => {
-    let store = createStore(
+    const store = createStore(
       reducer,
       {
         pageType: pType,

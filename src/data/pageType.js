@@ -7,7 +7,7 @@
  * no-op - a page where nothing should be done?
  */
 export default function() {
-  let location = window.location;
+  const location = window.location;
   switch ( location.pathname ) {
   case "/":
   case "/news":

@@ -26,18 +26,18 @@ const SubStory = React.createClass({
     this.props.banDomain(this.props.domain);
   },
   render: function() {
-    let { url, title, id, points, comments, user, votes, when, domain, self, saved } = this.props;
-    let { canVote } = this.state;
-    let upVote = canVote && votes.up !== undefined ? (
+    const { url, title, id, points, comments, user, votes, when, domain, self, saved } = this.props;
+    const { canVote } = this.state;
+    const upVote = canVote && votes.up !== undefined ? (
       <Vote id={id} type="up" url={votes.up} voted={this.voted} />
     ) : <div className="filler"></div>;
-    let downVote = canVote && votes.down !== undefined ? (
+    const downVote = canVote && votes.down !== undefined ? (
       <Vote id={id} type="down" url={votes.down} voted={this.voted} />
     ) : <div className="filler"></div>;
-    let more = domain !== "" ? (
+    const more = domain !== "" ? (
         <a className="more" href={`/from?site=${domain}`}>{domain}</a>
     ) : null;
-    let selfText = self !== undefined ? (
+    const selfText = self !== undefined ? (
       <div dangerouslySetInnerHTML={self} />
     ) : null;
 

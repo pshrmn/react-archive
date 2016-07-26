@@ -21,8 +21,8 @@ const StoryPage = React.createClass({
     this.props.banDomain(domain);
   },
   _nextPage: function() {
-    let loc = window.location;
-    let pathname = loc.pathname;
+    const loc = window.location;
+    const pathname = loc.pathname;
     if ( pathname === "/" ) {
       return "/news?p=2"
     } else if ( loc.search === "" ) {
@@ -30,7 +30,7 @@ const StoryPage = React.createClass({
     } else {
       let nextPage = 2;
       loc.search.slice(1).split("&").some(query => {
-        let parts = query.split("=");
+        const parts = query.split("=");
         if ( parts[0] === "p" ) {
           nextPage = parseInt(parts[1], 10) + 1;
           return true;
@@ -41,9 +41,9 @@ const StoryPage = React.createClass({
     }
   },
   render: function() {
-    let { stories, loggedIn, modded } = this.props;
-    let { saved, hidden, domains } = modded;
-    let submissions = stories.map((s, i) => {
+    const { stories, loggedIn, modded } = this.props;
+    const { saved, hidden, domains } = modded;
+    const submissions = stories.map((s, i) => {
       if ( hidden[s.id] || domains[s.domain] ) {
         return null;
       }
@@ -74,7 +74,7 @@ const StoryPage = React.createClass({
 
 const JobStory = React.createClass({
   render: function() {
-    let { url, title } = this.props;
+    const { url, title } = this.props;
     return (
       <div className="story job">
         <div className="voting">(job)</div>

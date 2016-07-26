@@ -2,8 +2,8 @@
  * data from the byline of a submission
  */
 const bylineData = byline => {
-  let subtext = byline.querySelector(".subtext");
-  let score = subtext.querySelector(".score");
+  const subtext = byline.querySelector(".subtext");
+  const score = subtext.querySelector(".score");
   if ( score === null ) {
     // a job post
     return {
@@ -12,9 +12,9 @@ const bylineData = byline => {
     };
   }
 
-  let links = subtext.querySelectorAll("a");
-  // the comments is the last link
-  let last = links[links.length-1];
+  const links = subtext.querySelectorAll("a");
+  // the comments is the second to last link
+  const last = links[links.length-2];
   return Object.assign({},
     {type: "sub"},
     pointsData(score),
@@ -50,8 +50,8 @@ const whenData = element => {
  * but has not yet been fixed
  */
 const commentsData = element => {
-  let text = element.textContent;
-  let commentCount = text === "discuss" ? 0 : parseInt(text.split(" ")[0], 10);
+  const text = element.textContent;
+  const commentCount = text === "discuss" ? 0 : parseInt(text.split(" ")[0], 10);
   return {
     id: element.href.split("=")[1],
     comments: {

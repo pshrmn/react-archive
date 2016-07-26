@@ -9,7 +9,7 @@ export default React.createClass({
     this.props.voted();
   },
   render: function() {
-    let { id, type } = this.props;
+    const { id, type } = this.props;
     let arrow = null;
     if ( type === "up" ) {
       arrow = <i className="fa fa-arrow-up"></i>

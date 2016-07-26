@@ -9,7 +9,7 @@ const User = React.createClass({
   },
   toggleModded: function(event) {
     event.preventDefault();
-    let { moddedVisible, showSaved, hideSaved } = this.props;
+    const { moddedVisible, showSaved, hideSaved } = this.props;
     if ( moddedVisible ) {
       hideSaved();
     } else {
@@ -17,8 +17,8 @@ const User = React.createClass({
     }
   },
   _loggedOut: function() {
-    let location = window.location;
-    let loginHref = `/login?goto=${location.pathname}${location.search}`;
+    const location = window.location;
+    const loginHref = `/login?goto=${location.pathname}${location.search}`;
     return (
       <nav className="user logged-out">
         <li>
@@ -72,7 +72,7 @@ const User = React.createClass({
     );
   },
   _loggedIn: function() {
-    let { name, url, points } = this.props;
+    const { name, url, points } = this.props;
     return (
       <nav className="user logged-in">
         <li>
