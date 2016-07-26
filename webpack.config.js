@@ -1,32 +1,38 @@
-var webpack = require("webpack");
+var path = require('path');
+var webpack = require('webpack');
 
-module.exports = {
-  context: __dirname + "/src",
+var config = {
+  context: path.join(__dirname, 'src'),
   entry: {
-    "overnews": "./index.js"
+    'overnews': './index.js'
   },
   resolve: {
-    extensions: ["", ".js", ".jsx"]
+    extensions: ['', '.js', '.jsx']
   },
   externals: {
-    "chrome": "chrome"
+    'chrome': 'chrome'
   },
   output: {
-    path: __dirname + "/overnews/",
-    filename: "[name].js",
+    path: path.join(__dirname, 'overnews'),
+    filename: '[name].js',
   },
   module: {
     loaders: [
      {
         test: /\.jsx?$/,
         exclude: /node_modules/,
-        loader: "babel-loader"
+        loader: 'babel-loader'
       }
     ]
   },
-  plugins: [
+  plugins: []
+};
+
+switch(process.env.npm_lifecycle_event) {
+case 'build':
+config.plugins = config.plugins.concat([
     new webpack.DefinePlugin({
-      "process.env.NODE_ENV": "\"production\""
+      'process.env.NODE_ENV': '\'production\''
     }),
     new webpack.optimize.UglifyJsPlugin({
       minimize: true,
@@ -35,5 +41,10 @@ module.exports = {
         warnings: false
       }
     })
-  ]
-};
+  ])
+  break;
+case 'dev':
+  break;
+}
+
+module.exports = config;

@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "sass": "node-sass scss/** -o overnews/css/**",
-    "build": "webpack & npm run sass"
+    "build": "webpack & npm run sass",
+    "dev": "webpack"
   },
   "repository": {
     "type": "git",
