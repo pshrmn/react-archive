@@ -2,6 +2,8 @@ import React from "react";
 
 import User from "./User";
 
+import '../scss/header.scss';
+
 export default React.createClass({
   shouldComponentUpdate: function(nextProps, nextState) {
     return false;

@@ -6,6 +6,8 @@ import * as actions from "../actions";
 import SubStory from "./SubStory";
 import Comment from "./Comment";
 
+import '../scss/comments-main.scss';
+
 const CommentsPage = React.createClass({
   replyElement: function(form) {
     return (

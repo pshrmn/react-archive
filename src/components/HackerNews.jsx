@@ -1,10 +1,12 @@
 import React from "react";
 import { connect } from "react-redux";
 
-import Header from "../components/Header";
-import StoryPage from "../components/StoryPage";
-import CommentsPage from "../components/CommentsPage";
-import Saved from "../components/Saved";
+import Header from "./Header";
+import StoryPage from "./StoryPage";
+import CommentsPage from "./CommentsPage";
+import Saved from "./Saved";
+
+import '../scss/base.scss';
 
 const HackerNews = React.createClass({
   renderContent: function() {

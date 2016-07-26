@@ -2,6 +2,8 @@ import React from "react";
 
 import Vote from "./Vote";
 
+import '../scss/voting.scss';
+
 const SubStory = React.createClass({
   getInitialState: function() {
     return {

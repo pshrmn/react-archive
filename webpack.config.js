@@ -18,10 +18,14 @@ var config = {
   },
   module: {
     loaders: [
-     {
+      {
         test: /\.jsx?$/,
         exclude: /node_modules/,
         loader: 'babel-loader'
+      },
+      {
+        test: /\.scss$/,
+        loaders: ['style', 'css', 'sass']
       }
     ]
   },

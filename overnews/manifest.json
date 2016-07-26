@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "Overnews",
   "description": "Rebuild Hacker News with React",
-  "version": "0.6.2",
+  "version": "0.8.0",
   "permissions": [
     "activeTab",
     "storage"
@@ -14,7 +14,6 @@
   "content_scripts": [
     {
       "matches": ["https://news.ycombinator.com/*"],
-      "css": ["css/overnews.css"],
       "js": ["overnews.js"]
     }
   ],

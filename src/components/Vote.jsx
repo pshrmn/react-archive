@@ -2,6 +2,8 @@ import React from "react";
 
 import vote from "../helpers/vote";
 
+import '../scss/vote.scss';
+
 export default React.createClass({
   voteHandler: function(event) {
     event.preventDefault();

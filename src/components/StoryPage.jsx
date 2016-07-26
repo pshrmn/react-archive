@@ -2,8 +2,9 @@ import React from "react";
 import { connect } from "react-redux";
 
 import * as actions from "../actions";
-
 import SubStory from "./SubStory";
+
+import '../scss/story-page.scss';
 
 const StoryPage = React.createClass({
   toggleSave: function(id, url, title) {

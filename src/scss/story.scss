@@ -1,0 +1,27 @@
+@import 'variables';
+
+.story {
+  margin: 10px 0;
+  display: flex;
+  border-left: 5px solid transparent;
+
+  a.more {
+    color: #999;
+    text-shadow: 1px 1px $white;
+    margin-left: 15px;
+  }
+
+  .byline {
+    font-size: 0.75em;
+    line-height: 1.5em;
+    
+    a {
+      text-decoration: underline;
+    }
+  }
+
+  .story-controls {
+    margin-left: auto;
+    align-self: center;
+  }
+}
