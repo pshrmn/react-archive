@@ -14,15 +14,27 @@ const bylineData = byline => {
 
   const links = subtext.querySelectorAll("a");
   // the comments is the second to last link
-  const last = links[links.length-2];
+  let commentLink = null;
+  for ( var i=0; i<links.length; i++) {
+    const curr = links[i];
+    if ( isCommentsLink(curr) ) {
+      commentLink = curr;
+      break;
+    }
+  }
   return Object.assign({},
     {type: "sub"},
     pointsData(score),
     userData(links[0]),
     whenData(links[1]),
-    commentsData(last)
+    commentsData(commentLink)
   );
 };
+
+function isCommentsLink(link) {
+  const commentReg = /^\d+ comment/;
+  return link.textContent === "discuss" || commentReg.test(link.textContent);
+}
 
 const pointsData = element => {
   return {
