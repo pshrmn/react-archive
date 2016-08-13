@@ -11,9 +11,7 @@ const bylineData = byline => {
       when: subtext.textContent.trim()
     };
   }
-
   const links = subtext.querySelectorAll("a");
-  // the comments is the second to last link
   let commentLink = null;
   for ( var i=0; i<links.length; i++) {
     const curr = links[i];
@@ -32,7 +30,7 @@ const bylineData = byline => {
 };
 
 function isCommentsLink(link) {
-  const commentReg = /^\d+ comment/;
+  const commentReg = /^\d+\scomment/;
   return link.textContent === "discuss" || commentReg.test(link.textContent);
 }
 
@@ -62,6 +60,15 @@ const whenData = element => {
  * but has not yet been fixed
  */
 const commentsData = element => {
+  if ( element === null ) {
+    return {
+      id: -1,
+      comments: {
+        count: -1,
+        url: '#'
+      }
+    };
+  }
   const text = element.textContent;
   const commentCount = text === "discuss" ? 0 : parseInt(text.split(" ")[0], 10);
   return {
