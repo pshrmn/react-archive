@@ -28,12 +28,6 @@ export function setInstructions(instructions) {
   };
 }
 
-export function saveRecipes() {
-  return {
-    type: types.SAVE_RECIPES
-  };
-}
-
 export function deleteRecipe(index) {
   return {
     type: types.DELETE_RECIPE,
@@ -46,10 +40,4 @@ export function loadRecipe(index) {
     type: types.LOAD_RECIPE,
     index: index
   };
-}
-
-export function resetRecipe() {
-  return {
-    type: types.RESET_RECIPE
-  }
 }

@@ -2,7 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import {
-  saveRecipes,
   resetRecipe,
   setName,
   setIngredients,
@@ -10,50 +9,35 @@ import {
 } from '../actions';
 
 const LiveEditor = React.createClass({
-  getDefaultProps: function() {
-    return {
-      name: "",
-      ytID: "",
-      ingredients: [],
-      instructions: [],
-    };
-  },
-  propTypes: {
-    name: React.PropTypes.string.isRequired,
-    ytID: React.PropTypes.string.isRequired,
-    ingredients: React.PropTypes.array.isRequired,
-    instructions: React.PropTypes.array.isRequired
-  },
-  save: function(event) {
-    event.preventDefault();
-    this.props.saveRecipes();
-  },
   render: function() {
-    //<button onClick={() => this.props.reset()}>Reset</button>
+    const {
+      name = '',
+      ingredients = [],
+      instructions = [],
+      setName,
+      setIngredients,
+      setInstructions
+    } = this.props;
     return (
       <div className="live-editor">
-        <p>
-          <button onClick={this.save}>Save</button>
-          <button onClick={() => this.props.resetRecipe() }>Cancel</button>
-        </p>
         <UserInput name="name"
-                   submit={ (val) => {this.props.setName(val);} }
-                   value={this.props.name} />
+                   submit={ (val) => { setName(val); } }
+                   value={name} />
         <UserTextarea name="ingredients"
-                      submit={ (val) => {this.props.setIngredients(val);} }
-                      value={this.props.ingredients.join("\n")} />
+                      submit={ (val) => { setIngredients(val); } }
+                      value={ingredients.join("\n")} />
         <UserTextarea name="instructions"
-                      submit={ (val) => {this.props.setInstructions(val);} }
-                      value={this.props.instructions.join("\n")} />
+                      submit={ (val) => { setInstructions(val); } }
+                      value={instructions.join("\n")} />
       </div>
-    );
+    );    
   }
 });
+
 
 export default connect(
   null,
   {
-    saveRecipes,
     resetRecipe,
     setName,
     setIngredients,

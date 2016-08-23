@@ -23,10 +23,8 @@ export function SetupStorage() {
     StoreRecipes(recipes);
   }
   return {
-    recipe: {},
     recipes: recipes,
-    index: -1,
-    editing: false
+    index: null
   };
 }
 
@@ -43,7 +41,7 @@ export function NewRecipe(ytID = "") {
 }
 
 export function VideoID(url) {
-      /*
+  /*
    * This can take either a youtube.com url and look for the v parameter
    * or a youtu.be url and use the last part of the url
    */

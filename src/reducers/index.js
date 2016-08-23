@@ -2,121 +2,74 @@ import * as types from "../constants/ActionTypes";
 import { NewRecipe } from "../helpers";
 
 const initialState = {
-  recipe: {
-    name: "",
-    ytID: "",
-    ingredients: [],
-    instructions: []
-  },
   recipes: [],
-  index: -1,
-  editing: false
+  index: null
 };
 
-function recipeReducer(state={}, action) {
-  switch (action.type) {
+export default function reducer(state = initialState, action) {
+  const {
+    index = null,
+    recipes = []
+  } = state;
+
+  switch ( action.type ) {
   case types.CREATE_RECIPE:
-    return NewRecipe(action.ytID);
+    var currentCount = recipes.length;
+    return Object.assign({}, {
+      index: currentCount,
+      recipes: recipes.concat({
+        name: '',
+        ytID: action.ytID,
+        ingredients: [],
+        instructions: []
+      })
+    });
+
+  case types.LOAD_RECIPE:
+    return Object.assign({}, state, {
+      index: action.index
+    });
+
+  case types.DELETE_RECIPE:
+    // this sets the deleted recipe to null so that indices do not need
+    // to be recalculated.
+    return Object.assign({}, state, {
+      recipes: recipes.map((r,i) => i !== action.index ? r : null),
+      index: action.index === index ? null : index
+    });
+
   case types.SET_NAME:
     return Object.assign({}, state, {
-      name: action.name
+      recipes: recipes.map((r,i) => {
+        if ( i === index ) {
+          return Object.assign({}, r, {name: action.name});
+        } else {
+          return r;
+        }
+      })
     });
   case types.SET_INGREDIENTS:
     return Object.assign({}, state, {
-      ingredients: action.ingredients
+      recipes: recipes.map((r,i) => {
+        if ( i === index ) {
+          return Object.assign({}, r, {ingredients: action.ingredients});
+        } else {
+          return r;
+        }
+      })
     });
   case types.SET_INSTRUCTIONS:
     return Object.assign({}, state, {
-      instructions: action.instructions
+      recipes: recipes.map((r,i) => {
+        if ( i === index ) {
+          return Object.assign({}, r, {instructions: action.instructions});
+        } else {
+          return r;
+        }
+      })
     });
-  case types.RESET_RECIPE:
-    return NewRecipe();
+
   default:
     return state;
   }
 }
-
-function editingReducer(state, action) {
-  switch (action.type) {
-  case types.CREATE_RECIPE:
-    return true;
-  case types.RESET_RECIPE:
-    return false;
-  default:
-    return state;
-  }
-}
-
-function indexReducer(state=-1, action) {
-  switch (action.type) {
-  case types.CREATE_RECIPE:
-  case types.RESET_RECIPE:
-    return -1;
-  case types.DELETE_RECIPE:
-    // figure out the new index
-    // if the current index is less than the deleted value, keep it the same
-    // if the current index recipe was deleted, set it to -1
-    // if the current index is greater than the deleter value, subtract 1
-    let newIndex = state;
-    if ( state === action.index ) {
-      newIndex = -1;
-    } else if ( state > action.index ) {
-      newIndex -= 1;
-    }
-    return newIndex;
-  default:
-    return state;
-  }
-}
-
-/*
- * Index is required when saving the recipes
- */
-function recipesReducer(state=[], action) {
-  switch (action.type) {
-  case types.DELETE_RECIPE:
-    var index = action.index
-    return state.filter((v, i) => {
-      return i !== index;
-    });    
-  default:
-    return state;
-  }
-}
-
-function reducer(state = initialState, action) {
-  
-  /*
-   * most store values are derived from their current state and the action
-   * however some actions require knowledge of other parts of the the state,
-   * and so they are handled separately below
-   */
-  switch (action.type) {
-  case types.LOAD_RECIPE:
-    return Object.assign({}, state, {
-      index: action.index,
-      editing: true,
-      recipe: Object.assign({}, state.recipe, state.recipes[action.index])
-    });
-  case types.SAVE_RECIPES:
-    var recipes = [];
-    if ( state.index !== -1 ) {
-      recipes = state.recipes.slice();
-      recipes[state.index] = state.recipe;
-    } else {
-      recipes = state.recipes.concat(state.recipe);
-    }
-    return Object.assign({}, state, {
-      recipes: recipes
-    });
-  default:
-    return {
-      recipes: recipesReducer(state.recipes, action),
-      recipe: recipeReducer(state.recipe, action),
-      index: indexReducer(state.index, action),
-      editing: editingReducer(state.editing, action)
-    };
-  }
-}
-
-export default reducer;

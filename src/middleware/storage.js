@@ -1,35 +1,26 @@
-import * as ActionTypes from "../constants/ActionTypes";
+import * as types from "../constants/ActionTypes";
 import { StoreRecipes } from "../helpers";
 
 /*
  * StorageAPI responds to storage related actions, updating the localStorage.
- * A recipes array should be added to the action element so that the reducer can
- * just use the updated recipes array that is created by storage.
- * SAVE_RECIPES:
- *    If the action index !== -1, replace the recipe at index with the one being saved
- *    If the action index === -1, append the recipe at the end of the recipes array
- * DELETE_RECIPE:
- *    Filter out the recipe at action.index
+ * This will update the localStorage any time one of the relevant actions is
+ * dispatched. The action is allowed to reach the store and then the saving
+ * is done afterwards so that the new state of the store is used.
  */
 export const StorageAPI = store => next => action => {
   switch ( action.type ) {
-  case ActionTypes.SAVE_RECIPES:
-    var { recipes, recipe, index } = store.getState();
-    let newRecipes = recipes.slice();
-    if ( index !== -1 ) {
-      newRecipes[index] = recipe;
-    } else {
-      newRecipes = newRecipes.concat(recipe);
-    }
-    StoreRecipes(newRecipes);
-    break;
-  case ActionTypes.DELETE_RECIPE:
+  case types.SET_NAME:
+  case types.SET_INGREDIENTS:
+  case types.SET_INSTRUCTIONS:
+  case types.DELETE_RECIPE:
+    // let the action reach the reducer
+    const resp = next(action);
+    // now get the updated state
     var { recipes } = store.getState();
-    var keptRecipes = recipes.filter((v, i) => {
-      return i !== action.index;
-    });
-    StoreRecipes(keptRecipes);
+    StoreRecipes(recipes.filter(r => r !== null));
+    return resp;
     break;
+  default:
+    return next(action);
   }
-  return next(action);
 }

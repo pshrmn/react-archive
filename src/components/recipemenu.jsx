@@ -12,36 +12,37 @@ import {
 const RecipeMenu = React.createClass({
   propTypes: {
     recipes: React.PropTypes.array.isRequired,
-    index: React.PropTypes.number.isRequired
-  },
-  createRecipe: function(url) {
-    this.props.createRecipe(url);
+    index: React.PropTypes.number
   },
   render: function() {
-    let recipes = this.props.recipes.map((r, i) => {
-      return (
-        <Thumbnail key={i}
-                   index={i}
-                   active={i===this.props.index}
-                   delete={this.props.deleteRecipe}
-                   load={this.props.loadRecipe}
-                   {...r} />
-      );
-    }, this);
+    let recipes = this.props.recipes.map((r, i) =>
+      r === null ? null : (
+        <Thumbnail
+          key={i}
+          index={i}
+          active={i===this.props.index}
+          delete={this.props.deleteRecipe}
+          load={this.props.loadRecipe}
+          {...r} />
+      )
+    );
     return (
       <div className='recipe-menu'>
         Saved Recipes:
         <ul className='saved-recipes'>
           {recipes}
         </ul>
-        <RecipeCreator createRecipe={this.createRecipe} />
+        <RecipeCreator createRecipe={this.props.createRecipe} />
       </div>
     );
   }
 });
 
 export default connect(
-  null,
+  state => ({
+    recipes: state.recipes,
+    index: state.index
+  }),
   {
     deleteRecipe,
     loadRecipe,
