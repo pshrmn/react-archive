@@ -2,7 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import {
-  resetRecipe,
   setName,
   setIngredients,
   setInstructions
@@ -38,7 +37,6 @@ const LiveEditor = React.createClass({
 export default connect(
   null,
   {
-    resetRecipe,
     setName,
     setIngredients,
     setInstructions

@@ -1,6 +1,6 @@
 import {expect} from "chai";
 import { createRecipe, setName, setIngredients, setInstructions,
-  saveRecipes, deleteRecipe, loadRecipe, resetRecipe } from "../src/actions";
+  deleteRecipe, loadRecipe } from "../src/actions";
 import * as ActionTypes from "../src/constants/ActionTypes";
 
 describe("actions", () => {
@@ -56,13 +56,6 @@ describe("actions", () => {
     });
   });
 
-  describe("saveRecipes()", () => {
-    it("returns an action with expected type", () => {
-      let action = saveRecipes();
-      expect(action.type).equal(ActionTypes.SAVE_RECIPES);
-    });
-  });
-
   describe("deleteRecipe(index)", () => {
     it("returns an action with expected type", () => {
       let action = deleteRecipe();
@@ -87,10 +80,4 @@ describe("actions", () => {
     });
   });
 
-  describe("resetRecipe()", () => {
-    it("returns an action with expected type", () => {
-      let action = resetRecipe();
-      expect(action.type).equal(ActionTypes.RESET_RECIPE);
-    });
-  });
 });

@@ -18,24 +18,6 @@ describe("helpers", () => {
   */
   });
 
-  describe("NewRecipe(ytID)", () => {
-    it("return an object representing a recipe", () => {
-      let recipe = NewRecipe();
-      expect(recipe).to.have.property("name");
-      expect(recipe).to.have.property("ytID");
-      expect(recipe).to.have.property("ingredients").with.length(0);
-      expect(recipe).to.have.property("instructions").with.length(0);
-      expect(recipe.name).equal("");
-      expect(recipe.ytID).equal("");
-    });
-
-    it("sets ytID property when passed as argument", () => {
-      let id = "example_id";
-      let recipe = NewRecipe(id);
-      expect(recipe.ytID).equal(id);
-    });
-  });
-
   describe("VideoID(url)", () => {
     /*
     // need to mock document

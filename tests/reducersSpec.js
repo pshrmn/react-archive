@@ -1,172 +1,135 @@
-import {expect} from "chai";
+import {expect} from 'chai';
 
-import reducer from "../src/reducers";
-import * as ActionTypes from "../src/constants/ActionTypes";
+import reducer from '../src/reducers';
+import * as ActionTypes from '../src/constants/ActionTypes';
 
-describe("reducers", () => {
+describe('reducers', () => {
   let initialState = {
-    recipe: {
-      name: "",
-      ytID: "",
+    recipes: [{
+      name: 'Noodles',
+      ytID: 'fakeurlid',
       ingredients: [],
       instructions: []
-    },
-    recipes: [],
-    editing: false,
-    index: -1
+    }],
+    index: 0
   };
   var state;
   beforeEach(() => {
     state = Object.assign({}, initialState);
   });
 
-  describe("CREATE_RECIPE", () => {
-    it("returns a new state with the recipe's ytID set", () => {
-      let ytID = "example_id";
-      let action = {
+  describe('CREATE_RECIPE', () => {
+    it('adds a new recipe to the recipes array and sets the corret index', () => {
+      const ytID = 'example_id';
+      const action = {
         type: ActionTypes.CREATE_RECIPE,
         ytID: ytID
       };
-      let result = reducer(state, action);
-      expect(result.recipe).to.have.property("name");
-      expect(result.recipe).to.have.property("ytID");
-      expect(result.recipe).to.have.property("ingredients");
-      expect(result.recipe).to.have.property("instructions");
-      expect(result.recipe.ytID).equal(ytID);
+      const result = reducer(state, action);
+      expect(result.index).to.equal(1);
+      const newRecipe = result.recipes[result.index];
+      expect(newRecipe).to.have.property('name');
+      expect(newRecipe).to.have.property('ytID');
+      expect(newRecipe).to.have.property('ingredients');
+      expect(newRecipe).to.have.property('instructions');
+      expect(newRecipe.ytID).equal(ytID);
     });
   });
 
-  describe("SET_NAME", () => {
-    it("sets the name of the recipe", () => {
-      let name = "Top Ramen";
-      let action = {
+  describe('SET_NAME', () => {
+    it('sets the name of the current recipe', () => {
+      const name = 'Top Ramen';
+      const action = {
         type: ActionTypes.SET_NAME,
         name: name
       };
-      expect(state.recipe.name).equal("");
-      let result = reducer(state, action);
-      expect(result.recipe.name).equal(name);
+      expect(state.recipes[state.index].name).equal('Noodles');
+      const result = reducer(state, action);
+      expect(result.recipes[result.index].name).equal(name);
     });
   });
 
-  describe("SET_INGREDIENTS", () => {
-    it("sets the ingredients array of the recipe", () => {
-      let ingredients = ["ramen", "water"];
-      let action = {
+  describe('SET_INGREDIENTS', () => {
+    it('sets the ingredients array of the recipe', () => {
+      const ingredients = ['ramen', 'water'];
+      const action = {
         type: ActionTypes.SET_INGREDIENTS,
         ingredients: ingredients
       };
-      let result = reducer(state, action);
-      expect(result.recipe.ingredients).equal(ingredients);
+      const { recipes, index } = reducer(state, action);
+      expect(recipes[index].ingredients).equal(ingredients);
     });
   });
 
-  describe("SET_INSTRUCTIONS", () => {
-    it("sets the instructions array of the recipe", () => {
-      let instructions = ["boil water", "add ramen", "wait 4 minutes"];
-      let action = {
+  describe('SET_INSTRUCTIONS', () => {
+    it('sets the instructions array of the recipe', () => {
+      const instructions = ['boil water', 'add ramen', 'wait 4 minutes'];
+      const action = {
         type: ActionTypes.SET_INSTRUCTIONS,
         instructions: instructions
       };
-      let result = reducer(state, action);
-      expect(result.recipe.instructions).equal(instructions);
+      const { recipes, index } = reducer(state, action);
+      expect(recipes[index].instructions).equal(instructions);
     });
   });
 
-  // currently the middleware updates the action, but that probably shouldn't
-  // actually happen, so no tests for DELETE_RECIPE or SAVE_RECIPES
-  describe("DELETE_RECIPE", () => {
-    it("", () => {
-      state = Object.assign({}, state, {
-        recipes: [
-          "one", "two", "three"
-        ]
-      });
-
-      let action = {
+  describe('DELETE_RECIPE', () => {
+    it('sets the recipe at the current index to null', () => {
+      const startIndex = 0;
+      const action = {
         type: ActionTypes.DELETE_RECIPE,
-        index: 1
+        index: startIndex
       };
-      let result = reducer(state, action);
-      expect(result.recipes.length).equal(2);
-      expect(result.recipes).deep.equal(["one", "three"]);
+      const { recipes, index } = reducer(state, action);
+      expect(index).to.equal(null);
+      expect(recipes[startIndex]).to.equal(null);
     });
   });
 
-  describe("SAVE_RECIPES", () => {
-    it("adds a new recipe to the end of the recipes array when index = -1", () => {
-      state = Object.assign({}, state, {
-        recipes: [1,2,3],
-        recipe: 4,
-        index: -1
-      });
-      let action = {
-        type: ActionTypes.SAVE_RECIPES
-      };
-      let result = reducer(state, action);
-      expect(result.recipes.length).equal(4);
-      expect(result.recipes).deep.equal([1,2,3,4]);
-    });
-
-    it("replaces existing recipe for index != -1", () => {
-      state = Object.assign({}, state, {
-        recipes: [1,2,3],
-        recipe: 4,
-        index: 1
-      });
-      let action = {
-        type: ActionTypes.SAVE_RECIPES
-      };
-      let result = reducer(state, action);
-      expect(result.recipes.length).equal(3);
-      expect(result.recipes).deep.equal([1,4,3]);
-    });
-  });
-
-  describe("LOAD_RECIPE", () => {
-    it("sets the recipe at state.recipes[index] to state.recipe", () => {
-      let recipes = [
-        {name: "foo", ytID: "foo", ingredients: [], instructions: []},
-        {name: "bar", ytID: "bar", ingredients: [], instructions: []},
-        {name: "baz", ytID: "baz", ingredients: [], instructions: []}
+  describe('LOAD_RECIPE', () => {
+    it('sets the index value', () => {
+      const recipes = [
+        {name: 'foo', ytID: 'foo', ingredients: [], instructions: []},
+        {name: 'bar', ytID: 'bar', ingredients: [], instructions: []},
+        {name: 'baz', ytID: 'baz', ingredients: [], instructions: []}
       ];
-      let index = 1;
-      let state = Object.assign({}, state, {
-        recipes: recipes
+      const index = 1;
+      const state = Object.assign({}, state, {
+        recipes: recipes,
+        index: null
       });
       let action = {
         type: ActionTypes.LOAD_RECIPE,
         index: index
       };
-      let result = reducer(state, action);
-      let currentRecipe = result.recipe;
-      let matchedRecipe = recipes[index];
-      expect(currentRecipe.name).equal(matchedRecipe.name);
-      expect(currentRecipe.ytID).equal(matchedRecipe.ytID);
-      expect(result.index).equal(index);
+      const result = reducer(state, action);
+      expect(result.index).to.equal(index);
     });
-  });
 
-  describe("RESET_RECIPE", () => {
-    it("sets the properties of state.recipe to empty vals", () => {
-      state = Object.assign({}, state, {
-        recipe: {
-          name: "foo",
-          ytID: "bar",
-          ingredients: ["foo", "bar", "baz"],
-          instructions: ["one", "two", "three"]
-        }
+    it('sets the value to null for index values outside of the size of the recipes array', () => {
+      const recipes = [
+        {name: 'foo', ytID: 'foo', ingredients: [], instructions: []},
+        {name: 'bar', ytID: 'bar', ingredients: [], instructions: []},
+        {name: 'baz', ytID: 'baz', ingredients: [], instructions: []}
+      ];
+      const state = Object.assign({}, state, {
+        recipes: recipes,
+        index: null
       });
-      let action = {
-        type: ActionTypes.RESET_RECIPE
-      };
-      let result = reducer(state, action);
-      expect(result.index).equal(-1);
-      expect(result.recipe.name).equal("");
-      expect(result.recipe.ytID).equal("");
-      expect(result.recipe.ingredients.length).equal(0);
-      expect(result.recipe.instructions.length).equal(0);
+
+      // too small
+      const lowResult = reducer(state, {
+        type: ActionTypes.LOAD_RECIPE,
+        index: -1
+      });
+      expect(lowResult.index).to.equal(null);
+
+      // too big
+      const highResult = reducer(state, {
+        type: ActionTypes.LOAD_RECIPE,
+        index: 100
+      });
+      expect(highResult.index).to.equal(null);
     });
   });
-
 });

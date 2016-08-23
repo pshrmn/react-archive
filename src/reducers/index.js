@@ -1,5 +1,4 @@
 import * as types from "../constants/ActionTypes";
-import { NewRecipe } from "../helpers";
 
 const initialState = {
   recipes: [],
@@ -26,8 +25,12 @@ export default function reducer(state = initialState, action) {
     });
 
   case types.LOAD_RECIPE:
+    var loadIndex = null;
+    if ( action.index >= 0 && action.index < recipes.length) {
+      loadIndex = action.index;
+    }
     return Object.assign({}, state, {
-      index: action.index
+      index: loadIndex
     });
 
   case types.DELETE_RECIPE:

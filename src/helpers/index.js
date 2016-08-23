@@ -28,18 +28,6 @@ export function SetupStorage() {
   };
 }
 
-/*
- * Return a new object representing a recipe. Sets the ytID if the argument is provided
- */
-export function NewRecipe(ytID = "") {
-  return {
-    name: "",
-    ytID: ytID,
-    ingredients: [],
-    instructions: []
-  };
-}
-
 export function VideoID(url) {
   /*
    * This can take either a youtube.com url and look for the v parameter
