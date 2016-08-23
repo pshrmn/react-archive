@@ -66,7 +66,7 @@ export function VideoID(url) {
     });
     break;
   case "youtu.be":
-    var parts = url.pathname.split("/");
+    var parts = a.pathname.split("/");
     id = parts[parts.length-1];
     break;
   }

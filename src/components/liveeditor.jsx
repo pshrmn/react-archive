@@ -1,6 +1,15 @@
-import React from "react";
+import React from 'react';
+import { connect } from 'react-redux';
 
-export default React.createClass({
+import {
+  saveRecipes,
+  resetRecipe,
+  setName,
+  setIngredients,
+  setInstructions
+} from '../actions';
+
+const LiveEditor = React.createClass({
   getDefaultProps: function() {
     return {
       name: "",
@@ -17,7 +26,7 @@ export default React.createClass({
   },
   save: function(event) {
     event.preventDefault();
-    this.props.actions.saveRecipes();
+    this.props.saveRecipes();
   },
   render: function() {
     //<button onClick={() => this.props.reset()}>Reset</button>
@@ -25,21 +34,32 @@ export default React.createClass({
       <div className="live-editor">
         <p>
           <button onClick={this.save}>Save</button>
-          <button onClick={() => this.props.actions.resetRecipe() }>Cancel</button>
+          <button onClick={() => this.props.resetRecipe() }>Cancel</button>
         </p>
         <UserInput name="name"
-                   submit={ (val) => {this.props.actions.setName(val);} }
+                   submit={ (val) => {this.props.setName(val);} }
                    value={this.props.name} />
         <UserTextarea name="ingredients"
-                      submit={ (val) => {this.props.actions.setIngredients(val);} }
+                      submit={ (val) => {this.props.setIngredients(val);} }
                       value={this.props.ingredients.join("\n")} />
         <UserTextarea name="instructions"
-                      submit={ (val) => {this.props.actions.setInstructions(val);} }
+                      submit={ (val) => {this.props.setInstructions(val);} }
                       value={this.props.instructions.join("\n")} />
       </div>
     );
   }
 });
+
+export default connect(
+  null,
+  {
+    saveRecipes,
+    resetRecipe,
+    setName,
+    setIngredients,
+    setInstructions
+  }
+)(LiveEditor);
 
 var UserInput = React.createClass({
   propTypes: {
