@@ -1,7 +1,7 @@
 import {expect} from "chai";
 import { createRecipe, setName, setIngredients, setInstructions,
-  saveRecipes, deleteRecipe, loadRecipe, resetRecipe } from "../actions";
-import * as ActionTypes from "../constants/ActionTypes";
+  saveRecipes, deleteRecipe, loadRecipe, resetRecipe } from "../src/actions";
+import * as ActionTypes from "../src/constants/ActionTypes";
 
 describe("actions", () => {
   describe("createRecipe(ytID)", () => {

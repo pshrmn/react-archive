@@ -1,15 +1,16 @@
 {
   "name": "annotated-meals",
-  "version": "0.7.6",
+  "version": "0.8.0",
   "description": "write down recipes while watching youtube cooking videos",
   "main": "index.js",
   "scripts": {
     "autoprefix": "postcss --use autoprefixer --autoprefixer.browsers \"last 2 versions\" public/static/css/index.css --dir public/static/css/",
-    "build": "npm run webpack & npm run css",
+    "build": "npm run webpack:build & npm run css",
     "css": "npm run sass && npm run autoprefix",
     "sass": "node-sass scss/** -o public/static/css/**",
-    "test": "mocha tests --compilers js:babel/register",
-    "webpack": "webpack && webpack --config=webpack.config.min.js"
+    "test": "mocha tests --compilers js:babel-register",
+    "webpack:dev": "webpack",
+    "webpack:build": "webpack"
   },
   "engines": {
     "node": "4.x",
@@ -27,9 +28,11 @@
   "homepage": "https://github.com/psherman/annotated-meals#readme",
   "devDependencies": {
     "autoprefixer": "^6.0.3",
-    "babel": "^5.8.23",
-    "babel-loader": "^5.3.2",
-    "babel-runtime": "^5.8.25",
+    "babel-core": "^6.13.2",
+    "babel-loader": "^6.2.5",
+    "babel-preset-es2015": "^6.13.2",
+    "babel-preset-react": "^6.11.1",
+    "babel-register": "^6.11.6",
     "chai": "^3.4.0",
     "mocha": "^2.3.3",
     "node-sass": "^3.3.3",
@@ -38,9 +41,9 @@
     "webpack": "^1.12.2"
   },
   "dependencies": {
-    "react": "^15.0.0",
-    "react-dom": "^15.0.0",
-    "react-redux": "^3.1.0",
-    "redux": "^3.0.4"
+    "react": "^15.3.1",
+    "react-dom": "^15.3.1",
+    "react-redux": "^3.1.2",
+    "redux": "^3.5.2"
   }
 }

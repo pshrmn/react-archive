@@ -159,7 +159,7 @@ footer {
 }
 
 @media print {
-  .edit-view, header, .recipe-menu {
+  .edit-view, header, .recipe-menu, footer {
     display: none;
   }
 

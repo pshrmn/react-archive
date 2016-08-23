@@ -1,28 +1,56 @@
-module.exports = {
-  context: __dirname + "/",
-  entry: "./index.js",
-  resolve: {
-    extensions: ["", ".js", ".jsx"]
+const webpack = require('webpack');
+const path = require('path');
+
+const config = {
+  context: path.join(__dirname, 'src'),
+  entry: {
+    bundle: './index.js',
+    vendor: ['react', 'react-dom', 'redux', 'react-redux']
   },
-  externals: {
-    "react": "React",
-    "react-dom": "ReactDOM"
+  resolve: {
+    extensions: ['', '.js', '.jsx']
   },
   output: {
-    path: __dirname + "/public/static/js/",
-    filename: "bundle.js",
+    path: path.join(__dirname, 'public'),
+    filename: '/static/js/bundle.js',
   },
   module: {
     loaders: [
      {
         test: /\.jsx?$/,
         exclude: /node_modules/,
-        loader: "babel-loader",
-        query: {
-          stage: 0,
-          optional: ["runtime"]
-        }
+        loader: 'babel-loader'
       }
     ]
-  }
+  },
+  plugins: [
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'vendor',
+      filename: '/static/js/vendor.js',
+      minChunks: Infinity
+    })
+  ]
 };
+
+switch(process.env.npm_lifecycle_event) {
+  case 'webpack:dev':
+    break;
+  case 'webpack:build':
+    config.plugins = config.plugins.concat([
+      new webpack.DefinePlugin({
+        'process.env': {
+          'NODE_ENV': JSON.stringify('production')
+        }
+      }),
+      new webpack.optimize.UglifyJsPlugin({
+        minimize: true,
+        sourceMap: false,
+        compress: {
+          warnings: false
+        }
+      })
+    ]);
+    break;
+}
+
+module.exports = config;

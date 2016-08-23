@@ -1,7 +1,7 @@
 import {expect} from "chai";
 
-import reducer from "../reducers";
-import * as ActionTypes from "../constants/ActionTypes";
+import reducer from "../src/reducers";
+import * as ActionTypes from "../src/constants/ActionTypes";
 
 describe("reducers", () => {
   let initialState = {

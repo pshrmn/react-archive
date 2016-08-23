@@ -116,7 +116,7 @@ footer {
   font-size: 1.5em; }
 
 @media print {
-  .edit-view, header, .recipe-menu {
+  .edit-view, header, .recipe-menu, footer {
     display: none; }
   html, body {
     /*

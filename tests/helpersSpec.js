@@ -1,6 +1,6 @@
 import {expect} from "chai";
 import { LoadRecipes, StoreRecipes, SetupStorage,
-  NewRecipe, VideoID } from "../helpers";
+  NewRecipe, VideoID } from "../src/helpers";
 
 describe("helpers", () => {
   describe("SetupStorage()", () => {
