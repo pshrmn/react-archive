@@ -36,7 +36,7 @@ switch(process.env.npm_lifecycle_event) {
 case 'build':
 config.plugins = config.plugins.concat([
     new webpack.DefinePlugin({
-      'process.env.': {
+      'process.env': {
         'NODE_ENV': JSON.stringify('production')
       }
     }),
