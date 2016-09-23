@@ -28,7 +28,22 @@ const SubStory = React.createClass({
     this.props.banDomain(this.props.domain);
   },
   render: function() {
-    const { url, title, id, points, comments, user, votes, when, domain, self, saved } = this.props;
+    const {
+      url,
+      title,
+      id,
+      points,
+      comments,
+      user,
+      votes,
+      when,
+      domain,
+      self,
+      saved,
+      webURL,
+      pastURL
+    } = this.props;
+
     const { canVote } = this.state;
     const upVote = canVote && votes.up !== undefined ? (
       <Vote id={id} type="up" url={votes.up} voted={this.voted} />
@@ -58,7 +73,9 @@ const SubStory = React.createClass({
           <div className="byline">
             <a href={comments.url} target="_blank">{comments.count} comments</a>{" "}
             submitted by <a href={user.url} target="_blank">{user.name}</a>{" "}
-            {when}
+            {when}{" "}
+            { webURL ? <a href={webURL}>web</a> : null}{" "}
+            { pastURL ? <a href={pastURL}>past</a> : null}
           </div>
           {selfText}
         </div>

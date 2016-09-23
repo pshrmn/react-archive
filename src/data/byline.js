@@ -11,21 +11,18 @@ const bylineData = byline => {
       when: subtext.textContent.trim()
     };
   }
-  const links = subtext.querySelectorAll("a");
-  let commentLink = null;
-  for ( var i=0; i<links.length; i++) {
-    const curr = links[i];
-    if ( isCommentsLink(curr) ) {
-      commentLink = curr;
-      break;
-    }
-  }
+  const links = Array.from(subtext.querySelectorAll("a"));
+  const commentLink = links.find(isCommentsLink);
+  const webLink = links.find(link => link.textContent === 'web');
+  const pastLink = links.find(link => link.textContent === 'past');
   return Object.assign({},
     {type: "sub"},
     pointsData(score),
     userData(links[0]),
     whenData(links[1]),
-    commentsData(commentLink)
+    commentsData(commentLink),
+    webData(webLink),
+    pastData(pastLink)
   );
 };
 
@@ -33,6 +30,7 @@ function isCommentsLink(link) {
   const commentReg = /^\d+\scomment/;
   return link.textContent === "discuss" || commentReg.test(link.textContent);
 }
+
 
 const pointsData = element => {
   return {
@@ -60,7 +58,7 @@ const whenData = element => {
  * but has not yet been fixed
  */
 const commentsData = element => {
-  if ( element === null ) {
+  if ( element === undefined ) {
     return {
       id: -1,
       comments: {
@@ -79,5 +77,23 @@ const commentsData = element => {
     }
   };
 };
+
+const webData = element => {
+  if ( element === undefined ) {
+    return {};
+  }
+  return {
+    webURL: element.href
+  };
+}
+
+const pastData = element => {
+  if ( element === undefined ) {
+    return {};
+  }
+  return {
+    pastURL: element.href
+  };
+}
 
 export default bylineData;
