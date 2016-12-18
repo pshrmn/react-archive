@@ -99,6 +99,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = __webpack_require__(20);
@@ -116,10 +118,32 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var PixelCanvas = function (_React$Component) {
   _inherits(PixelCanvas, _React$Component);
 
-  function PixelCanvas() {
+  function PixelCanvas(props) {
     _classCallCheck(this, PixelCanvas);
 
-    return _possibleConstructorReturn(this, (PixelCanvas.__proto__ || Object.getPrototypeOf(PixelCanvas)).apply(this, arguments));
+    var _this = _possibleConstructorReturn(this, (PixelCanvas.__proto__ || Object.getPrototypeOf(PixelCanvas)).call(this, props));
+
+    var width = props.width,
+        height = props.height;
+
+
+    var pixels = [];
+    for (var h = 0; h < height; h++) {
+      var row = [];
+      for (var w = 0; w < width; w++) {
+        row.push(undefined);
+      }
+      pixels.push(row);
+    }
+
+    _this.state = {
+      pixels: pixels,
+      drawing: false
+    };
+
+    _this.startPaint = _this.startPaint.bind(_this);
+    _this.endPaint = _this.endPaint.bind(_this);
+    return _this;
   }
 
   _createClass(PixelCanvas, [{
@@ -142,7 +166,17 @@ var PixelCanvas = function (_React$Component) {
   }, {
     key: 'draw',
     value: function draw() {
-      // tbd
+      var pixels = this.state.pixels;
+      var pixelSize = this.props.pixelSize;
+
+      for (var r = 0; r < pixels.length; r++) {
+        var row = pixels[r];
+        for (var c = 0; c < row.length; c++) {
+          var color = row[c] || 'transparent';
+          this.context.fillStyle = color;
+          this.context.fillRect(c * pixelSize, r * pixelSize, pixelSize, pixelSize);
+        }
+      }
     }
   }, {
     key: 'drawGrid',
@@ -152,7 +186,7 @@ var PixelCanvas = function (_React$Component) {
           height = _props2.height,
           pixelSize = _props2.pixelSize;
 
-      this.context.strokeStyle = '#ccc';
+      this.context.strokeStyle = '#efefef';
       this.context.lineWidth = 1;
       // vertical
       for (var w = 1; w < width; w++) {
@@ -170,6 +204,71 @@ var PixelCanvas = function (_React$Component) {
       }
     }
   }, {
+    key: 'startPaint',
+    value: function startPaint(event) {
+      var _coordinates = coordinates(this.canvas, event),
+          x = _coordinates.x,
+          y = _coordinates.y;
+
+      var pixelSize = this.props.pixelSize;
+
+      // determine which "pixel" we are in
+
+      var row = Math.floor(y / pixelSize);
+      var column = Math.floor(x / pixelSize);
+
+      this.setState({
+        drawing: true,
+        startRow: row,
+        startColumn: column
+      });
+    }
+  }, {
+    key: 'endPaint',
+    value: function endPaint(event) {
+      var _coordinates2 = coordinates(this.canvas, event),
+          x = _coordinates2.x,
+          y = _coordinates2.y;
+
+      var pixelSize = this.props.pixelSize;
+
+      // determine which "pixel" we are in
+
+      var row = Math.floor(y / pixelSize);
+      var column = Math.floor(x / pixelSize);
+
+      var _state = this.state,
+          pixels = _state.pixels,
+          startRow = _state.startRow,
+          startColumn = _state.startColumn;
+
+      var _ref = startRow < row ? [startRow, row] : [row, startRow],
+          _ref2 = _slicedToArray(_ref, 2),
+          minRow = _ref2[0],
+          maxRow = _ref2[1];
+
+      var _ref3 = startColumn < column ? [startColumn, column] : [column, startColumn],
+          _ref4 = _slicedToArray(_ref3, 2),
+          minCol = _ref4[0],
+          maxCol = _ref4[1];
+
+      var copy = copy2dArray(pixels);
+      for (var r = minRow; r <= maxRow; r++) {
+        for (var c = minCol; c <= maxCol; c++) {
+          copy[r][c] = '#abcdef';
+        }
+      }
+      this.setState({
+        drawing: false,
+        pixels: copy
+      });
+    }
+  }, {
+    key: 'componentDidUpdate',
+    value: function componentDidUpdate() {
+      this.refresh();
+    }
+  }, {
     key: 'render',
     value: function render() {
       var _this2 = this;
@@ -184,7 +283,9 @@ var PixelCanvas = function (_React$Component) {
           return _this2.canvas = node;
         },
         width: width * pixelSize,
-        height: height * pixelSize });
+        height: height * pixelSize,
+        onMouseDown: this.startPaint,
+        onMouseUp: this.endPaint });
     }
   }, {
     key: 'componentDidMount',
@@ -203,6 +304,22 @@ var PixelCanvas = function (_React$Component) {
 }(_react2.default.Component);
 
 exports.default = PixelCanvas;
+
+
+function copy2dArray(array) {
+  var copy = [];
+  for (var r = 0; r < array.length; r++) {
+    copy.push(array[r].slice());
+  }
+  return copy;
+}
+
+function coordinates(canvas, event) {
+  var rect = canvas.getBoundingClientRect();
+  var x = event.clientX - rect.left;
+  var y = event.clientY - rect.top;
+  return { x: x, y: y };
+}
 
 /***/ }
 
