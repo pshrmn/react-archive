@@ -21,6 +21,7 @@ export default class PixelCanvas extends React.Component {
     };
 
     this.startPaint = this.startPaint.bind(this);
+    this.midPaint = this.midPaint.bind(this);
     this.endPaint = this.endPaint.bind(this);
   }
 
@@ -78,9 +79,27 @@ export default class PixelCanvas extends React.Component {
 
     this.setState({
       drawing: true,
+      startX: x,
+      startY: y,
       startRow: row,
       startColumn: column
     })
+  }
+
+  midPaint(event) {
+    const { x, y} = coordinates(this.canvas, event);
+    const { drawing, startX, startY } = this.state;
+    if (!drawing) {
+      return;
+    }
+    const [minX, maxX] = startX < x ? [startX, x] : [x, startX];
+    const [minY, maxY] = startY < y ? [startY, y] : [y, startY];
+    const width = maxX - minX;
+    const height = maxY - minY;
+    this.refresh();
+    this.context.strokeStyle = '#666';
+    this.context.fillStyle = '#abcdef';
+    this.context.fillRect(minX, minY, width, height);
   }
 
   endPaint(event) {
@@ -92,8 +111,8 @@ export default class PixelCanvas extends React.Component {
     const column = Math.floor(x/pixelSize);
 
     const { pixels, startRow, startColumn } = this.state;
-    let [minRow, maxRow] = startRow < row ? [startRow, row] : [row, startRow];
-    let [minCol, maxCol] = startColumn < column ? [startColumn, column] : [column, startColumn];
+    const [minRow, maxRow] = startRow < row ? [startRow, row] : [row, startRow];
+    const [minCol, maxCol] = startColumn < column ? [startColumn, column] : [column, startColumn];
 
     const copy = copy2dArray(pixels);
     for (let r=minRow; r<=maxRow; r++) {
@@ -119,6 +138,7 @@ export default class PixelCanvas extends React.Component {
         width={width*pixelSize}
         height={height*pixelSize}
         onMouseDown={this.startPaint}
+        onMouseMove={this.midPaint}
         onMouseUp={this.endPaint} >
       </canvas>
     )

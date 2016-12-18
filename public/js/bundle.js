@@ -142,6 +142,7 @@ var PixelCanvas = function (_React$Component) {
     };
 
     _this.startPaint = _this.startPaint.bind(_this);
+    _this.midPaint = _this.midPaint.bind(_this);
     _this.endPaint = _this.endPaint.bind(_this);
     return _this;
   }
@@ -219,16 +220,51 @@ var PixelCanvas = function (_React$Component) {
 
       this.setState({
         drawing: true,
+        startX: x,
+        startY: y,
         startRow: row,
         startColumn: column
       });
     }
   }, {
-    key: 'endPaint',
-    value: function endPaint(event) {
+    key: 'midPaint',
+    value: function midPaint(event) {
       var _coordinates2 = coordinates(this.canvas, event),
           x = _coordinates2.x,
           y = _coordinates2.y;
+
+      var _state = this.state,
+          drawing = _state.drawing,
+          startX = _state.startX,
+          startY = _state.startY;
+
+      if (!drawing) {
+        return;
+      }
+
+      var _ref = startX < x ? [startX, x] : [x, startX],
+          _ref2 = _slicedToArray(_ref, 2),
+          minX = _ref2[0],
+          maxX = _ref2[1];
+
+      var _ref3 = startY < y ? [startY, y] : [y, startY],
+          _ref4 = _slicedToArray(_ref3, 2),
+          minY = _ref4[0],
+          maxY = _ref4[1];
+
+      var width = maxX - minX;
+      var height = maxY - minY;
+      this.refresh();
+      this.context.strokeStyle = '#666';
+      this.context.fillStyle = '#abcdef';
+      this.context.fillRect(minX, minY, width, height);
+    }
+  }, {
+    key: 'endPaint',
+    value: function endPaint(event) {
+      var _coordinates3 = coordinates(this.canvas, event),
+          x = _coordinates3.x,
+          y = _coordinates3.y;
 
       var pixelSize = this.props.pixelSize;
 
@@ -237,20 +273,20 @@ var PixelCanvas = function (_React$Component) {
       var row = Math.floor(y / pixelSize);
       var column = Math.floor(x / pixelSize);
 
-      var _state = this.state,
-          pixels = _state.pixels,
-          startRow = _state.startRow,
-          startColumn = _state.startColumn;
+      var _state2 = this.state,
+          pixels = _state2.pixels,
+          startRow = _state2.startRow,
+          startColumn = _state2.startColumn;
 
-      var _ref = startRow < row ? [startRow, row] : [row, startRow],
-          _ref2 = _slicedToArray(_ref, 2),
-          minRow = _ref2[0],
-          maxRow = _ref2[1];
+      var _ref5 = startRow < row ? [startRow, row] : [row, startRow],
+          _ref6 = _slicedToArray(_ref5, 2),
+          minRow = _ref6[0],
+          maxRow = _ref6[1];
 
-      var _ref3 = startColumn < column ? [startColumn, column] : [column, startColumn],
-          _ref4 = _slicedToArray(_ref3, 2),
-          minCol = _ref4[0],
-          maxCol = _ref4[1];
+      var _ref7 = startColumn < column ? [startColumn, column] : [column, startColumn],
+          _ref8 = _slicedToArray(_ref7, 2),
+          minCol = _ref8[0],
+          maxCol = _ref8[1];
 
       var copy = copy2dArray(pixels);
       for (var r = minRow; r <= maxRow; r++) {
@@ -285,6 +321,7 @@ var PixelCanvas = function (_React$Component) {
         width: width * pixelSize,
         height: height * pixelSize,
         onMouseDown: this.startPaint,
+        onMouseMove: this.midPaint,
         onMouseUp: this.endPaint });
     }
   }, {
