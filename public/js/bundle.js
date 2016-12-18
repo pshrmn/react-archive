@@ -208,6 +208,8 @@ var _react = __webpack_require__(1);
 
 var _react2 = _interopRequireDefault(_react);
 
+var _helpers = __webpack_require__(422);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -310,7 +312,7 @@ var PixelCanvas = function (_React$Component) {
   }, {
     key: 'startPaint',
     value: function startPaint(event) {
-      var _coordinates = coordinates(this.canvas, event),
+      var _coordinates = (0, _helpers.coordinates)(this.canvas, event),
           x = _coordinates.x,
           y = _coordinates.y;
 
@@ -331,7 +333,7 @@ var PixelCanvas = function (_React$Component) {
   }, {
     key: 'midPaint',
     value: function midPaint(event) {
-      var _coordinates2 = coordinates(this.canvas, event),
+      var _coordinates2 = (0, _helpers.coordinates)(this.canvas, event),
           x = _coordinates2.x,
           y = _coordinates2.y;
 
@@ -348,15 +350,15 @@ var PixelCanvas = function (_React$Component) {
           background = _props4.background,
           mode = _props4.mode;
 
-      var _ref = startX < x ? [startX, x] : [x, startX],
-          _ref2 = _slicedToArray(_ref, 2),
-          minX = _ref2[0],
-          maxX = _ref2[1];
+      var _minMax = (0, _helpers.minMax)(startX, x),
+          _minMax2 = _slicedToArray(_minMax, 2),
+          minX = _minMax2[0],
+          maxX = _minMax2[1];
 
-      var _ref3 = startY < y ? [startY, y] : [y, startY],
-          _ref4 = _slicedToArray(_ref3, 2),
-          minY = _ref4[0],
-          maxY = _ref4[1];
+      var _minMax3 = (0, _helpers.minMax)(startY, y),
+          _minMax4 = _slicedToArray(_minMax3, 2),
+          minY = _minMax4[0],
+          maxY = _minMax4[1];
 
       var width = maxX - minX;
       var height = maxY - minY;
@@ -368,7 +370,7 @@ var PixelCanvas = function (_React$Component) {
   }, {
     key: 'endPaint',
     value: function endPaint(event) {
-      var _coordinates3 = coordinates(this.canvas, event),
+      var _coordinates3 = (0, _helpers.coordinates)(this.canvas, event),
           x = _coordinates3.x,
           y = _coordinates3.y;
 
@@ -387,18 +389,18 @@ var PixelCanvas = function (_React$Component) {
           startRow = _state2.startRow,
           startColumn = _state2.startColumn;
 
-      var _ref5 = startRow < row ? [startRow, row] : [row, startRow],
-          _ref6 = _slicedToArray(_ref5, 2),
-          minRow = _ref6[0],
-          maxRow = _ref6[1];
+      var _minMax5 = (0, _helpers.minMax)(startRow, row),
+          _minMax6 = _slicedToArray(_minMax5, 2),
+          minRow = _minMax6[0],
+          maxRow = _minMax6[1];
 
-      var _ref7 = startColumn < column ? [startColumn, column] : [column, startColumn],
-          _ref8 = _slicedToArray(_ref7, 2),
-          minCol = _ref8[0],
-          maxCol = _ref8[1];
+      var _minMax7 = (0, _helpers.minMax)(startColumn, column),
+          _minMax8 = _slicedToArray(_minMax7, 2),
+          minCol = _minMax8[0],
+          maxCol = _minMax8[1];
 
       var pixelValue = mode === 'DRAW' ? color : undefined;
-      var copy = copy2dArray(pixels);
+      var copy = (0, _helpers.copy2dArray)(pixels);
       for (var r = minRow; r <= maxRow; r++) {
         for (var c = minCol; c <= maxCol; c++) {
           copy[r][c] = pixelValue;
@@ -459,22 +461,6 @@ PixelCanvas.propTypes = {
   mode: _react.PropTypes.string.isRequired
 };
 exports.default = PixelCanvas;
-
-
-function copy2dArray(array) {
-  var copy = [];
-  for (var r = 0; r < array.length; r++) {
-    copy.push(array[r].slice());
-  }
-  return copy;
-}
-
-function coordinates(canvas, event) {
-  var rect = canvas.getBoundingClientRect();
-  var x = event.clientX - rect.left;
-  var y = event.clientY - rect.top;
-  return { x: x, y: y };
-}
 
 /***/ },
 
@@ -589,6 +575,39 @@ var ModePicker = function (_React$Component) {
 }(_react2.default.Component);
 
 exports.default = ModePicker;
+
+/***/ },
+
+/***/ 422:
+/***/ function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.copy2dArray = copy2dArray;
+exports.coordinates = coordinates;
+exports.minMax = minMax;
+function copy2dArray(array) {
+  var copy = [];
+  for (var r = 0; r < array.length; r++) {
+    copy.push(array[r].slice());
+  }
+  return copy;
+}
+
+function coordinates(canvas, event) {
+  var rect = canvas.getBoundingClientRect();
+  var x = event.clientX - rect.left;
+  var y = event.clientY - rect.top;
+  return { x: x, y: y };
+}
+
+function minMax(one, two) {
+  return one < two ? [one, two] : [two, one];
+}
 
 /***/ }
 

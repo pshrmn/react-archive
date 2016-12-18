@@ -1,5 +1,7 @@
 import React, { PropTypes } from 'react';
 
+import { copy2dArray, coordinates, minMax } from '../helpers';
+
 export default class PixelCanvas extends React.Component {
 
   static propTypes = {
@@ -102,8 +104,8 @@ export default class PixelCanvas extends React.Component {
     }
     const { color, background, mode } = this.props;
 
-    const [minX, maxX] = startX < x ? [startX, x] : [x, startX];
-    const [minY, maxY] = startY < y ? [startY, y] : [y, startY];
+    const [minX, maxX] = minMax(startX, x);
+    const [minY, maxY] = minMax(startY, y);
     const width = maxX - minX;
     const height = maxY - minY;
     this.refresh();
@@ -121,8 +123,8 @@ export default class PixelCanvas extends React.Component {
     const column = Math.floor(x/pixelSize);
 
     const { pixels, startRow, startColumn } = this.state;
-    const [minRow, maxRow] = startRow < row ? [startRow, row] : [row, startRow];
-    const [minCol, maxCol] = startColumn < column ? [startColumn, column] : [column, startColumn];
+    const [minRow, maxRow] = minMax(startRow, row);
+    const [minCol, maxCol] = minMax(startColumn, column);
 
     const pixelValue = mode === 'DRAW' ? color : undefined;
     const copy = copy2dArray(pixels);
@@ -163,19 +165,4 @@ export default class PixelCanvas extends React.Component {
   componentDidUpdate() {
     this.refresh()
   }
-}
-
-function copy2dArray(array) {
-  const copy = []
-  for (let r=0; r<array.length; r++) {
-    copy.push(array[r].slice());
-  }
-  return copy;
-}
-
-function coordinates(canvas, event) {
-  const rect = canvas.getBoundingClientRect();
-  const x = event.clientX - rect.left;
-  const y = event.clientY - rect.top;
-  return { x, y };
 }
