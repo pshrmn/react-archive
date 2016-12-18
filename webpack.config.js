@@ -5,7 +5,7 @@ const config = {
   context: path.join(__dirname, 'src'),
   entry: {
     bundle: './index.js',
-    vendor: ['react', 'react-dom']
+    vendor: ['react', 'react-dom', 'react-color']
   },
   output: {
     path: path.join(__dirname, 'public', 'js'),
