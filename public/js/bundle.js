@@ -24,6 +24,10 @@ var _ColorPicker = __webpack_require__(153);
 
 var _ColorPicker2 = _interopRequireDefault(_ColorPicker);
 
+var _ModePicker = __webpack_require__(421);
+
+var _ModePicker2 = _interopRequireDefault(_ModePicker);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -42,10 +46,12 @@ var PixelArt = function (_React$Component) {
 
     _this.state = {
       color: props.color,
-      background: props.background
+      background: props.background,
+      mode: 'DRAW'
     };
 
     _this.setColor = _this.setColor.bind(_this);
+    _this.setMode = _this.setMode.bind(_this);
     return _this;
   }
 
@@ -53,6 +59,11 @@ var PixelArt = function (_React$Component) {
     key: 'setColor',
     value: function setColor(color) {
       this.setState({ color: color });
+    }
+  }, {
+    key: 'setMode',
+    value: function setMode(mode) {
+      this.setState({ mode: mode });
     }
   }, {
     key: 'render',
@@ -63,7 +74,8 @@ var PixelArt = function (_React$Component) {
           pixelSize = _props.pixelSize;
       var _state = this.state,
           color = _state.color,
-          background = _state.background;
+          background = _state.background,
+          mode = _state.mode;
 
       return _react2.default.createElement(
         'div',
@@ -72,9 +84,15 @@ var PixelArt = function (_React$Component) {
           width: width,
           height: height,
           pixelSize: pixelSize,
+          mode: mode,
           color: color,
           background: background }),
-        _react2.default.createElement(_ColorPicker2.default, { color: color, setColor: this.setColor })
+        _react2.default.createElement(
+          'div',
+          { className: 'controls' },
+          _react2.default.createElement(_ColorPicker2.default, { color: color, setColor: this.setColor }),
+          _react2.default.createElement(_ModePicker2.default, { setMode: this.setMode })
+        )
       );
     }
   }]);
@@ -325,6 +343,10 @@ var PixelCanvas = function (_React$Component) {
       if (!drawing) {
         return;
       }
+      var _props4 = this.props,
+          color = _props4.color,
+          background = _props4.background,
+          mode = _props4.mode;
 
       var _ref = startX < x ? [startX, x] : [x, startX],
           _ref2 = _slicedToArray(_ref, 2),
@@ -340,7 +362,7 @@ var PixelCanvas = function (_React$Component) {
       var height = maxY - minY;
       this.refresh();
       this.context.strokeStyle = '#666';
-      this.context.fillStyle = this.props.color;
+      this.context.fillStyle = mode === 'DRAW' ? color : background;
       this.context.fillRect(minX, minY, width, height);
     }
   }, {
@@ -350,9 +372,10 @@ var PixelCanvas = function (_React$Component) {
           x = _coordinates3.x,
           y = _coordinates3.y;
 
-      var _props4 = this.props,
-          pixelSize = _props4.pixelSize,
-          color = _props4.color;
+      var _props5 = this.props,
+          mode = _props5.mode,
+          pixelSize = _props5.pixelSize,
+          color = _props5.color;
 
       // determine which "pixel" we are in
 
@@ -374,10 +397,11 @@ var PixelCanvas = function (_React$Component) {
           minCol = _ref8[0],
           maxCol = _ref8[1];
 
+      var pixelValue = mode === 'DRAW' ? color : undefined;
       var copy = copy2dArray(pixels);
       for (var r = minRow; r <= maxRow; r++) {
         for (var c = minCol; c <= maxCol; c++) {
-          copy[r][c] = color;
+          copy[r][c] = pixelValue;
         }
       }
       this.setState({
@@ -395,10 +419,10 @@ var PixelCanvas = function (_React$Component) {
     value: function render() {
       var _this2 = this;
 
-      var _props5 = this.props,
-          width = _props5.width,
-          height = _props5.height,
-          pixelSize = _props5.pixelSize;
+      var _props6 = this.props,
+          width = _props6.width,
+          height = _props6.height,
+          pixelSize = _props6.pixelSize;
 
       return _react2.default.createElement('canvas', {
         ref: function ref(node) {
@@ -426,6 +450,14 @@ var PixelCanvas = function (_React$Component) {
   return PixelCanvas;
 }(_react2.default.Component);
 
+PixelCanvas.propTypes = {
+  width: _react.PropTypes.number.isRequired,
+  height: _react.PropTypes.number.isRequired,
+  pixelSize: _react.PropTypes.number.isRequired,
+  color: _react.PropTypes.string.isRequired,
+  background: _react.PropTypes.string.isRequired,
+  mode: _react.PropTypes.string.isRequired
+};
 exports.default = PixelCanvas;
 
 
@@ -465,6 +497,98 @@ var _PixelArt2 = _interopRequireDefault(_PixelArt);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 (0, _reactDom.render)(_react2.default.createElement(_PixelArt2.default, null), document.getElementById('root'));
+
+/***/ },
+
+/***/ 421:
+/***/ function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(1);
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var ModePicker = function (_React$Component) {
+  _inherits(ModePicker, _React$Component);
+
+  function ModePicker(props) {
+    _classCallCheck(this, ModePicker);
+
+    var _this = _possibleConstructorReturn(this, (ModePicker.__proto__ || Object.getPrototypeOf(ModePicker)).call(this, props));
+
+    _this.state = {
+      mode: 'DRAW'
+    };
+
+    _this.setMode = _this.setMode.bind(_this);
+    return _this;
+  }
+
+  _createClass(ModePicker, [{
+    key: 'setMode',
+    value: function setMode(event) {
+      this.props.setMode(event.target.value);
+      this.setState({ mode: event.target.value });
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var mode = this.state.mode;
+
+      return _react2.default.createElement(
+        'div',
+        null,
+        _react2.default.createElement(
+          'p',
+          null,
+          'Mode'
+        ),
+        _react2.default.createElement(
+          'label',
+          null,
+          'Draw ',
+          _react2.default.createElement('input', {
+            type: 'radio',
+            name: 'mode',
+            value: 'DRAW',
+            checked: mode === 'DRAW',
+            onChange: this.setMode })
+        ),
+        _react2.default.createElement(
+          'label',
+          null,
+          'Erase ',
+          _react2.default.createElement('input', {
+            type: 'radio',
+            name: 'mode',
+            value: 'ERASE',
+            checked: mode === 'ERASE',
+            onChange: this.setMode })
+        )
+      );
+    }
+  }]);
+
+  return ModePicker;
+}(_react2.default.Component);
+
+exports.default = ModePicker;
 
 /***/ }
 

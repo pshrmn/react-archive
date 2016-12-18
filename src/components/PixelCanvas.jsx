@@ -1,6 +1,15 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 
 export default class PixelCanvas extends React.Component {
+
+  static propTypes = {
+    width: PropTypes.number.isRequired,
+    height: PropTypes.number.isRequired,
+    pixelSize: PropTypes.number.isRequired,
+    color: PropTypes.string.isRequired,
+    background: PropTypes.string.isRequired,
+    mode: PropTypes.string.isRequired
+  }
 
   constructor(props) {
     super(props)
@@ -91,19 +100,21 @@ export default class PixelCanvas extends React.Component {
     if (!drawing) {
       return;
     }
+    const { color, background, mode } = this.props;
+
     const [minX, maxX] = startX < x ? [startX, x] : [x, startX];
     const [minY, maxY] = startY < y ? [startY, y] : [y, startY];
     const width = maxX - minX;
     const height = maxY - minY;
     this.refresh();
     this.context.strokeStyle = '#666';
-    this.context.fillStyle = this.props.color;
+    this.context.fillStyle = mode === 'DRAW' ? color : background;
     this.context.fillRect(minX, minY, width, height);
   }
 
   endPaint(event) {
     const { x, y} = coordinates(this.canvas, event);
-    const { pixelSize, color } = this.props;
+    const { mode, pixelSize, color } = this.props;
 
     // determine which "pixel" we are in
     const row = Math.floor(y/pixelSize);
@@ -113,10 +124,11 @@ export default class PixelCanvas extends React.Component {
     const [minRow, maxRow] = startRow < row ? [startRow, row] : [row, startRow];
     const [minCol, maxCol] = startColumn < column ? [startColumn, column] : [column, startColumn];
 
+    const pixelValue = mode === 'DRAW' ? color : undefined;
     const copy = copy2dArray(pixels);
     for (let r=minRow; r<=maxRow; r++) {
       for (let c=minCol; c<=maxCol; c++) {
-        copy[r][c] = color;
+        copy[r][c] = pixelValue;
       }
     }
     this.setState({

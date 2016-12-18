@@ -1,6 +1,7 @@
 import React from 'react';
 import PixelCanvas from './PixelCanvas';
 import ColorPicker from './ColorPicker';
+import ModePicker from './ModePicker';
 
 export default class PixelArt extends React.Component {
 
@@ -17,28 +18,38 @@ export default class PixelArt extends React.Component {
 
     this.state = {
       color: props.color,
-      background: props.background
+      background: props.background,
+      mode: 'DRAW'
     };
 
     this.setColor = this.setColor.bind(this);
+    this.setMode = this.setMode.bind(this);
   }
 
   setColor(color) {
-    this.setState({ color: color });
+    this.setState({ color });
+  }
+
+  setMode(mode) {
+    this.setState({ mode });
   }
 
   render() {
     const { width, height, pixelSize } = this.props;
-    const { color, background } = this.state;
+    const { color, background, mode } = this.state;
     return (
       <div>
         <PixelCanvas
           width={width}
           height={height}
           pixelSize={pixelSize}
+          mode={mode}
           color={color}
           background={background} />
-        <ColorPicker color={color} setColor={this.setColor} />
+        <div className='controls'>
+          <ColorPicker color={color} setColor={this.setColor} />
+          <ModePicker setMode={this.setMode} />
+        </div>
       </div>
     )
   }
