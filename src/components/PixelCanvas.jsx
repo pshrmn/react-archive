@@ -38,11 +38,11 @@ export default class PixelCanvas extends React.Component {
 
   draw() {
     const { pixels } = this.state;
-    const { pixelSize } = this.props;
+    const { pixelSize, background } = this.props;
     for (let r=0; r<pixels.length; r++) {
       const row = pixels[r];
       for (let c=0; c<row.length; c++) {
-        const color = row[c] || 'transparent';
+        const color = row[c] || background;
         this.context.fillStyle = color;
         this.context.fillRect(c*pixelSize, r*pixelSize, pixelSize, pixelSize);
       }
@@ -72,7 +72,6 @@ export default class PixelCanvas extends React.Component {
   startPaint(event) {
     const { x, y} = coordinates(this.canvas, event);
     const { pixelSize } = this.props;
-
     // determine which "pixel" we are in
     const row = Math.floor(y/pixelSize);
     const column = Math.floor(x/pixelSize);
@@ -98,13 +97,13 @@ export default class PixelCanvas extends React.Component {
     const height = maxY - minY;
     this.refresh();
     this.context.strokeStyle = '#666';
-    this.context.fillStyle = '#abcdef';
+    this.context.fillStyle = this.props.color;
     this.context.fillRect(minX, minY, width, height);
   }
 
   endPaint(event) {
     const { x, y} = coordinates(this.canvas, event);
-    const { pixelSize } = this.props;
+    const { pixelSize, color } = this.props;
 
     // determine which "pixel" we are in
     const row = Math.floor(y/pixelSize);
@@ -117,7 +116,7 @@ export default class PixelCanvas extends React.Component {
     const copy = copy2dArray(pixels);
     for (let r=minRow; r<=maxRow; r++) {
       for (let c=minCol; c<=maxCol; c++) {
-        copy[r][c] = '#abcdef';
+        copy[r][c] = color;
       }
     }
     this.setState({
