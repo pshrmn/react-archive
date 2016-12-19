@@ -1,11 +1,3 @@
-export function copy2dArray(array) {
-  const copy = []
-  for (let r=0; r<array.length; r++) {
-    copy.push(array[r].slice());
-  }
-  return copy;
-}
-
 export function coordinates(canvas, event) {
   const rect = canvas.getBoundingClientRect();
   const x = event.clientX - rect.left;
@@ -25,6 +17,23 @@ export function createPixels(width, height) {
       row.push(undefined);
     }
     pixels.push(row);
+  }
+  return pixels;
+}
+
+/*
+ * create a new 2d array and "paint" each pixel based on the moves.
+ * later moves will override earlier moves
+ */
+export function paintArray(width, height, moves) {
+  const pixels = createPixels(width, height);
+  for (let m=0; m<moves.length; m++) {
+    const { color, x, y, width, height } = moves[m];
+    for (let r=0; r<=height; r++) {
+      for (let c=0; c<=width; c++) {
+        pixels[r+y][c+x] = color;
+      }
+    }
   }
   return pixels;
 }

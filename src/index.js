@@ -5,17 +5,15 @@ import { Provider } from 'react-redux';
 
 import PixelArt from './components/PixelArt';
 import reducers from './reducers';
-import { createPixels } from './helpers';
 
 const width = 25;
 const height = 25;
 const store = createStore(reducers, {
   mode: 'DRAW',
   color: '#000',
-  pixels: {
-    before: [],
-    current: createPixels(width, height),
-    after: []
+  moves: {
+    past: [],
+    future: []
   }
 });
 

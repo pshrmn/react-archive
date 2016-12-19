@@ -1,16 +1,16 @@
 import * as types from '../constants/ActionTypes';
 
-export const setPixels = pixels => ({
-  type: types.SET_PIXELS,
-  pixels
-});
+export const addMove = move => ({
+  type: types.ADD_MOVE,
+  move
+})
 
 export const undo = () => ({
-  type: types.UNDO
+  type: types.UNDO_MOVE
 });
 
 export const redo = () => ({
-  type: types.REDO
+  type: types.REDO_MOVE
 });
 
 export const setMode = mode => ({

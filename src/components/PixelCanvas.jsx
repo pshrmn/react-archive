@@ -1,8 +1,8 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { copy2dArray, coordinates, minMax } from '../helpers';
-import { setPixels, setColor } from '../actions';
+import { coordinates, minMax, paintArray } from '../helpers';
+import { addMove, setColor } from '../actions';
 import { PICK } from '../constants/modes';
 
 class PixelCanvas extends React.Component {
@@ -13,7 +13,8 @@ class PixelCanvas extends React.Component {
     pixelSize: PropTypes.number.isRequired,
     color: PropTypes.string.isRequired,
     background: PropTypes.string.isRequired,
-    mode: PropTypes.string.isRequired
+    mode: PropTypes.string.isRequired,
+    pixels: PropTypes.array
   }
 
   constructor(props) {
@@ -40,7 +41,7 @@ class PixelCanvas extends React.Component {
   }
 
   draw() {
-    const { pixels, pixelSize, background } = this.props;
+    const { pixels, pixelSize, background, width, height } = this.props;
     if (!pixels.length) {
       return;
     }
@@ -131,13 +132,16 @@ class PixelCanvas extends React.Component {
     const [minCol, maxCol] = minMax(startColumn, column);
 
     const pixelValue = mode === 'DRAW' ? color : undefined;
-    const copy = copy2dArray(pixels);
-    for (let r=minRow; r<=maxRow; r++) {
-      for (let c=minCol; c<=maxCol; c++) {
-        copy[r][c] = pixelValue;
-      }
-    }
-    this.props.setPixels(copy)
+    // setMove
+    this.props.addMove({
+      type: mode,
+      color: pixelValue,
+      x: minCol,
+      y: minRow,
+      width: maxCol - minCol,
+      height: maxRow - minRow
+    })
+
     this.setState({
       drawing: false
     })
@@ -169,13 +173,14 @@ class PixelCanvas extends React.Component {
 }
 
 export default connect(
-  state => ({
+  (state, ownProps) => ({
     mode: state.mode,
     color: state.color,
-    pixels: state.pixels.current
+    // generate the pixels array using the past moves
+    pixels: paintArray(ownProps.width, ownProps.height, state.moves.past)
   }),
   {
-    setPixels,
+    addMove,
     setColor
   }
 )(PixelCanvas);

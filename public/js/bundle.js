@@ -874,63 +874,39 @@ var colorReducer = function colorReducer() {
   }
 };
 
-var initialPixelsState = {
-  before: [],
-  current: undefined,
-  after: []
+var initialMovesState = {
+  past: [],
+  future: []
 };
 
-/*
- * the pixelsReducer allows for "time travel" by maintaining an array
- * of past and future states.
- */
-var pixelsReducer = function pixelsReducer() {
-  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : initialPixelsState;
+var movesReducer = function movesReducer() {
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : initialMovesState;
   var action = arguments[1];
 
   switch (action.type) {
-    case types.SET_PIXELS:
-      // move current to before, set current, erase any after
-      var before = state.before.concat([state.current]);
-      var current = action.pixels;
-      var after = [];
-      return Object.assign({}, state, {
-        before: before,
-        current: current,
-        after: after
-      });
-
-    case types.UNDO:
-      if (!state.before.length) {
+    case types.ADD_MOVE:
+      return {
+        past: state.past.concat(action.move),
+        future: []
+      };
+    case types.UNDO_MOVE:
+      if (!state.past.length) {
         return state;
       }
-
-      // move the last item in before to current, move current to after
-      var current = state.before.pop();
-      var before = state.before;
-      var after = [state.current].concat(state.after);
-      return Object.assign({}, state, {
-        before: before,
-        current: current,
-        after: after
-      });
-
-    case types.REDO:
-      // cannot redo if there are no forward states
-      if (!state.after.length) {
+      var last = state.past.pop();
+      return {
+        past: state.past,
+        future: [last].concat(state.future)
+      };
+    case types.REDO_MOVE:
+      if (!state.future.length) {
         return state;
       }
-      // move the first item in after to current, move current to before
-      var current = state.after.shift();
-      var before = state.before.concat([state.current]);
-      var after = state.after;
-
-      return Object.assign({}, state, {
-        before: before,
-        current: current,
-        after: after
-      });
-
+      var first = state.future.shift();
+      return {
+        past: state.past.concat(first),
+        future: state.future
+      };
     default:
       return state;
   }
@@ -939,7 +915,7 @@ var pixelsReducer = function pixelsReducer() {
 exports.default = (0, _redux.combineReducers)({
   mode: modeReducer,
   color: colorReducer,
-  pixels: pixelsReducer
+  moves: movesReducer
 });
 
 /***/ },
@@ -1172,7 +1148,9 @@ var PixelCanvas = function (_React$Component) {
       var _props2 = this.props,
           pixels = _props2.pixels,
           pixelSize = _props2.pixelSize,
-          background = _props2.background;
+          background = _props2.background,
+          width = _props2.width,
+          height = _props2.height;
 
       if (!pixels.length) {
         return;
@@ -1318,13 +1296,16 @@ var PixelCanvas = function (_React$Component) {
           maxCol = _minMax8[1];
 
       var pixelValue = mode === 'DRAW' ? color : undefined;
-      var copy = (0, _helpers.copy2dArray)(pixels);
-      for (var r = minRow; r <= maxRow; r++) {
-        for (var c = minCol; c <= maxCol; c++) {
-          copy[r][c] = pixelValue;
-        }
-      }
-      this.props.setPixels(copy);
+      // setMove
+      this.props.addMove({
+        type: mode,
+        color: pixelValue,
+        x: minCol,
+        y: minRow,
+        width: maxCol - minCol,
+        height: maxRow - minRow
+      });
+
       this.setState({
         drawing: false
       });
@@ -1372,16 +1353,18 @@ PixelCanvas.propTypes = {
   pixelSize: _react.PropTypes.number.isRequired,
   color: _react.PropTypes.string.isRequired,
   background: _react.PropTypes.string.isRequired,
-  mode: _react.PropTypes.string.isRequired
+  mode: _react.PropTypes.string.isRequired,
+  pixels: _react.PropTypes.array
 };
-exports.default = (0, _reactRedux.connect)(function (state) {
+exports.default = (0, _reactRedux.connect)(function (state, ownProps) {
   return {
     mode: state.mode,
     color: state.color,
-    pixels: state.pixels.current
+    // generate the pixels array using the past moves
+    pixels: (0, _helpers.paintArray)(ownProps.width, ownProps.height, state.moves.past)
   };
 }, {
-  setPixels: _actions.setPixels,
+  addMove: _actions.addMove,
   setColor: _actions.setColor
 })(PixelCanvas);
 
@@ -1430,8 +1413,8 @@ var TimeTravel = function TimeTravel(_ref) {
 
 exports.default = (0, _reactRedux.connect)(function (state) {
   return {
-    canUndo: state.pixels.before.length !== 0,
-    canRedo: state.pixels.after.length !== 0
+    canUndo: state.moves.past.length !== 0,
+    canRedo: state.moves.future.length !== 0
   };
 }, {
   undo: _actions.undo,
@@ -1817,7 +1800,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.setColor = exports.setMode = exports.redo = exports.undo = exports.setPixels = undefined;
+exports.setColor = exports.setMode = exports.redo = exports.undo = exports.addMove = undefined;
 
 var _ActionTypes = __webpack_require__(97);
 
@@ -1825,22 +1808,22 @@ var types = _interopRequireWildcard(_ActionTypes);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
-var setPixels = exports.setPixels = function setPixels(pixels) {
+var addMove = exports.addMove = function addMove(move) {
   return {
-    type: types.SET_PIXELS,
-    pixels: pixels
+    type: types.ADD_MOVE,
+    move: move
   };
 };
 
 var undo = exports.undo = function undo() {
   return {
-    type: types.UNDO
+    type: types.UNDO_MOVE
   };
 };
 
 var redo = exports.redo = function redo() {
   return {
-    type: types.REDO
+    type: types.REDO_MOVE
   };
 };
 
@@ -2785,8 +2768,6 @@ var _reducers = __webpack_require__(170);
 
 var _reducers2 = _interopRequireDefault(_reducers);
 
-var _helpers = __webpack_require__(95);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var width = 25;
@@ -2794,10 +2775,9 @@ var height = 25;
 var store = (0, _redux.createStore)(_reducers2.default, {
   mode: 'DRAW',
   color: '#000',
-  pixels: {
-    before: [],
-    current: (0, _helpers.createPixels)(width, height),
-    after: []
+  moves: {
+    past: [],
+    future: []
   }
 });
 
@@ -2958,18 +2938,10 @@ function warning(message) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.copy2dArray = copy2dArray;
 exports.coordinates = coordinates;
 exports.minMax = minMax;
 exports.createPixels = createPixels;
-function copy2dArray(array) {
-  var copy = [];
-  for (var r = 0; r < array.length; r++) {
-    copy.push(array[r].slice());
-  }
-  return copy;
-}
-
+exports.paintArray = paintArray;
 function coordinates(canvas, event) {
   var rect = canvas.getBoundingClientRect();
   var x = event.clientX - rect.left;
@@ -2993,6 +2965,29 @@ function createPixels(width, height) {
   return pixels;
 }
 
+/*
+ * create a new 2d array and "paint" each pixel based on the moves.
+ * later moves will override earlier moves
+ */
+function paintArray(width, height, moves) {
+  var pixels = createPixels(width, height);
+  for (var m = 0; m < moves.length; m++) {
+    var _moves$m = moves[m],
+        color = _moves$m.color,
+        x = _moves$m.x,
+        y = _moves$m.y,
+        _width = _moves$m.width,
+        _height = _moves$m.height;
+
+    for (var r = 0; r <= _height; r++) {
+      for (var c = 0; c <= _width; c++) {
+        pixels[r + y][c + x] = color;
+      }
+    }
+  }
+  return pixels;
+}
+
 /***/ },
 
 /***/ 97:
@@ -3004,9 +2999,9 @@ function createPixels(width, height) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-var SET_PIXELS = exports.SET_PIXELS = 'SET_PIXELS';
-var UNDO = exports.UNDO = 'UNDO';
-var REDO = exports.REDO = 'REDO';
+var ADD_MOVE = exports.ADD_MOVE = 'ADD_MOVE';
+var UNDO_MOVE = exports.UNDO_MOVE = 'UNDO_MOVE';
+var REDO_MOVE = exports.REDO_MOVE = 'REDO_MOVE';
 
 var SET_MODE = exports.SET_MODE = 'SET_MODE';
 var SET_COLOR = exports.SET_COLOR = 'SET_COLOR';

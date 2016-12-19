@@ -17,8 +17,8 @@ const TimeTravel = ({ undo, redo, canUndo, canRedo }) => (
 
 export default connect(
   state => ({
-    canUndo: state.pixels.before.length !== 0,
-    canRedo: state.pixels.after.length !== 0
+    canUndo: state.moves.past.length !== 0,
+    canRedo: state.moves.future.length !== 0
   }),
   {
     undo,
