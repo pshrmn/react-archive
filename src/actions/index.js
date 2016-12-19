@@ -5,6 +5,14 @@ export const setPixels = pixels => ({
   pixels
 });
 
+export const undo = () => ({
+  type: types.UNDO
+});
+
+export const redo = () => ({
+  type: types.REDO
+});
+
 export const setMode = mode => ({
   type: types.SET_MODE,
   mode

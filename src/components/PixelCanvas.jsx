@@ -41,6 +41,9 @@ class PixelCanvas extends React.Component {
 
   draw() {
     const { pixels, pixelSize, background } = this.props;
+    if (!pixels.length) {
+      return;
+    }
     for (let r=0; r<pixels.length; r++) {
       const row = pixels[r];
       for (let c=0; c<row.length; c++) {
@@ -169,7 +172,7 @@ export default connect(
   state => ({
     mode: state.mode,
     color: state.color,
-    pixels: state.pixels
+    pixels: state.pixels.current
   }),
   {
     setPixels,

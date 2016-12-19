@@ -12,7 +12,11 @@ const height = 25;
 const store = createStore(reducers, {
   mode: 'DRAW',
   color: '#000',
-  pixels: createPixels(width, height)
+  pixels: {
+    before: [],
+    current: createPixels(width, height),
+    after: []
+  }
 });
 
 render((

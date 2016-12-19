@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import { setMode } from '../actions';
 import modes from '../constants/modes';
-console.log(modes);
+
 const ModePicker = ({ mode, setMode }) => {
   const modeHandler = (e) => {
     setMode(e.target.value);
