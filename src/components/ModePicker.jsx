@@ -2,20 +2,21 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { setMode } from '../actions';
-
+import modes from '../constants/modes';
+console.log(modes);
 const ModePicker = ({ mode, setMode }) => {
   const modeHandler = (e) => {
     setMode(e.target.value);
   };
 
-  const modes = ['DRAW', 'ERASE'].map((name, index) => {
+  const modeChoices = modes.map((m, index) => {
     return (
       <label key={index}>
-        {name} <input
+        {m.text} <input
           type='radio'
           name='mode'
-          value={name}
-          checked={mode === name}
+          value={m.type}
+          checked={mode === m.type}
           onChange={modeHandler} />
       </label>
     )
@@ -24,7 +25,7 @@ const ModePicker = ({ mode, setMode }) => {
   return (
     <div>
       <p>Mode</p>
-      {modes}
+      {modeChoices}
     </div>
   );
 }

@@ -2,7 +2,8 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import { copy2dArray, coordinates, minMax } from '../helpers';
-import { setPixels } from '../actions';
+import { setPixels, setColor } from '../actions';
+import { PICK } from '../constants/modes';
 
 class PixelCanvas extends React.Component {
 
@@ -72,10 +73,17 @@ class PixelCanvas extends React.Component {
 
   startPaint(event) {
     const { x, y} = coordinates(this.canvas, event);
-    const { pixelSize } = this.props;
+    const { pixelSize, mode } = this.props;
     // determine which "pixel" we are in
     const row = Math.floor(y/pixelSize);
     const column = Math.floor(x/pixelSize);
+
+    if ( mode === 'PICK' ) {
+      const { pixels, setColor, background } = this.props;
+      // default to background color if pixel is undefined
+      setColor(pixels[row][column] || background);
+      return;
+    }
 
     this.setState({
       drawing: true,
@@ -107,12 +115,15 @@ class PixelCanvas extends React.Component {
   endPaint(event) {
     const { x, y} = coordinates(this.canvas, event);
     const { mode, pixelSize, color, pixels } = this.props;
+    const { drawing, startRow, startColumn } = this.state;
+    if (!drawing) {
+      return;
+    }
 
     // determine which "pixel" we are in
     const row = Math.floor(y/pixelSize);
     const column = Math.floor(x/pixelSize);
 
-    const { startRow, startColumn } = this.state;
     const [minRow, maxRow] = minMax(startRow, row);
     const [minCol, maxCol] = minMax(startColumn, column);
 
@@ -161,6 +172,7 @@ export default connect(
     pixels: state.pixels
   }),
   {
-    setPixels
+    setPixels,
+    setColor
   }
 )(PixelCanvas);

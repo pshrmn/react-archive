@@ -996,8 +996,13 @@ var _reactRedux = __webpack_require__(94);
 
 var _actions = __webpack_require__(95);
 
+var _modes = __webpack_require__(463);
+
+var _modes2 = _interopRequireDefault(_modes);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+console.log(_modes2.default);
 var ModePicker = function ModePicker(_ref) {
   var mode = _ref.mode,
       setMode = _ref.setMode;
@@ -1006,17 +1011,17 @@ var ModePicker = function ModePicker(_ref) {
     setMode(e.target.value);
   };
 
-  var modes = ['DRAW', 'ERASE'].map(function (name, index) {
+  var modeChoices = _modes2.default.map(function (m, index) {
     return _react2.default.createElement(
       'label',
       { key: index },
-      name,
+      m.text,
       ' ',
       _react2.default.createElement('input', {
         type: 'radio',
         name: 'mode',
-        value: name,
-        checked: mode === name,
+        value: m.type,
+        checked: mode === m.type,
         onChange: modeHandler })
     );
   });
@@ -1029,7 +1034,7 @@ var ModePicker = function ModePicker(_ref) {
       null,
       'Mode'
     ),
-    modes
+    modeChoices
   );
 };
 
@@ -1066,6 +1071,8 @@ var _reactRedux = __webpack_require__(94);
 var _helpers = __webpack_require__(172);
 
 var _actions = __webpack_require__(95);
+
+var _modes = __webpack_require__(463);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1159,11 +1166,24 @@ var PixelCanvas = function (_React$Component) {
           x = _coordinates.x,
           y = _coordinates.y;
 
-      var pixelSize = this.props.pixelSize;
+      var _props4 = this.props,
+          pixelSize = _props4.pixelSize,
+          mode = _props4.mode;
       // determine which "pixel" we are in
 
       var row = Math.floor(y / pixelSize);
       var column = Math.floor(x / pixelSize);
+
+      if (mode === 'PICK') {
+        var _props5 = this.props,
+            pixels = _props5.pixels,
+            _setColor = _props5.setColor,
+            background = _props5.background;
+        // default to background color if pixel is undefined
+
+        _setColor(pixels[row][column] || background);
+        return;
+      }
 
       this.setState({
         drawing: true,
@@ -1188,10 +1208,10 @@ var PixelCanvas = function (_React$Component) {
       if (!drawing) {
         return;
       }
-      var _props4 = this.props,
-          color = _props4.color,
-          background = _props4.background,
-          mode = _props4.mode;
+      var _props6 = this.props,
+          color = _props6.color,
+          background = _props6.background,
+          mode = _props6.mode;
 
       var _minMax = (0, _helpers.minMax)(startX, x),
           _minMax2 = _slicedToArray(_minMax, 2),
@@ -1217,20 +1237,23 @@ var PixelCanvas = function (_React$Component) {
           x = _coordinates3.x,
           y = _coordinates3.y;
 
-      var _props5 = this.props,
-          mode = _props5.mode,
-          pixelSize = _props5.pixelSize,
-          color = _props5.color,
-          pixels = _props5.pixels;
-
-      // determine which "pixel" we are in
-
-      var row = Math.floor(y / pixelSize);
-      var column = Math.floor(x / pixelSize);
-
+      var _props7 = this.props,
+          mode = _props7.mode,
+          pixelSize = _props7.pixelSize,
+          color = _props7.color,
+          pixels = _props7.pixels;
       var _state2 = this.state,
+          drawing = _state2.drawing,
           startRow = _state2.startRow,
           startColumn = _state2.startColumn;
+
+      if (!drawing) {
+        return;
+      }
+
+      // determine which "pixel" we are in
+      var row = Math.floor(y / pixelSize);
+      var column = Math.floor(x / pixelSize);
 
       var _minMax5 = (0, _helpers.minMax)(startRow, row),
           _minMax6 = _slicedToArray(_minMax5, 2),
@@ -1259,10 +1282,10 @@ var PixelCanvas = function (_React$Component) {
     value: function render() {
       var _this2 = this;
 
-      var _props6 = this.props,
-          width = _props6.width,
-          height = _props6.height,
-          pixelSize = _props6.pixelSize;
+      var _props8 = this.props,
+          width = _props8.width,
+          height = _props8.height,
+          pixelSize = _props8.pixelSize;
 
       return _react2.default.createElement('canvas', {
         ref: function ref(node) {
@@ -1306,7 +1329,8 @@ exports.default = (0, _reactRedux.connect)(function (state) {
     pixels: state.pixels
   };
 }, {
-  setPixels: _actions.setPixels
+  setPixels: _actions.setPixels,
+  setColor: _actions.setColor
 })(PixelCanvas);
 
 /***/ },
@@ -2648,6 +2672,34 @@ var store = (0, _redux.createStore)(_reducers2.default, {
   { store: store },
   _react2.default.createElement(_PixelArt2.default, null)
 ), document.getElementById('root'));
+
+/***/ },
+
+/***/ 463:
+/***/ function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var DRAW = exports.DRAW = 'DRAW';
+var ERASE = exports.ERASE = 'ERASE';
+var PICK = exports.PICK = 'PICK';
+
+var modes = [{
+  type: DRAW,
+  text: 'Draw'
+}, {
+  type: ERASE,
+  text: 'Erase'
+}, {
+  type: PICK,
+  text: 'Color Picker'
+}];
+
+exports.default = modes;
 
 /***/ },
 
