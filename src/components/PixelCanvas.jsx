@@ -1,8 +1,10 @@
 import React, { PropTypes } from 'react';
+import { connect } from 'react-redux';
 
 import { copy2dArray, coordinates, minMax } from '../helpers';
+import { setPixels } from '../actions';
 
-export default class PixelCanvas extends React.Component {
+class PixelCanvas extends React.Component {
 
   static propTypes = {
     width: PropTypes.number.isRequired,
@@ -15,19 +17,8 @@ export default class PixelCanvas extends React.Component {
 
   constructor(props) {
     super(props)
-    const { width, height } = props
-
-    const pixels = []
-    for (let h=0; h<height; h++) {
-      const row = [];
-      for (let w=0; w<width; w++) {
-        row.push(undefined);
-      }
-      pixels.push(row);
-    }
 
     this.state = {
-      pixels,
       drawing: false
     };
 
@@ -48,8 +39,7 @@ export default class PixelCanvas extends React.Component {
   }
 
   draw() {
-    const { pixels } = this.state;
-    const { pixelSize, background } = this.props;
+    const { pixels, pixelSize, background } = this.props;
     for (let r=0; r<pixels.length; r++) {
       const row = pixels[r];
       for (let c=0; c<row.length; c++) {
@@ -116,13 +106,13 @@ export default class PixelCanvas extends React.Component {
 
   endPaint(event) {
     const { x, y} = coordinates(this.canvas, event);
-    const { mode, pixelSize, color } = this.props;
+    const { mode, pixelSize, color, pixels } = this.props;
 
     // determine which "pixel" we are in
     const row = Math.floor(y/pixelSize);
     const column = Math.floor(x/pixelSize);
 
-    const { pixels, startRow, startColumn } = this.state;
+    const { startRow, startColumn } = this.state;
     const [minRow, maxRow] = minMax(startRow, row);
     const [minCol, maxCol] = minMax(startColumn, column);
 
@@ -133,14 +123,10 @@ export default class PixelCanvas extends React.Component {
         copy[r][c] = pixelValue;
       }
     }
+    this.props.setPixels(copy)
     this.setState({
-      drawing: false,
-      pixels: copy
+      drawing: false
     })
-  }
-
-  componentDidUpdate() {
-    this.refresh()
   }
 
   render() {
@@ -163,6 +149,18 @@ export default class PixelCanvas extends React.Component {
   }
 
   componentDidUpdate() {
+    this.context = this.canvas.getContext('2d')
     this.refresh()
   }
 }
+
+export default connect(
+  state => ({
+    mode: state.mode,
+    color: state.color,
+    pixels: state.pixels
+  }),
+  {
+    setPixels
+  }
+)(PixelCanvas);

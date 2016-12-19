@@ -1,44 +1,39 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
-export default class ModePicker extends React.Component {
+import { setMode } from '../actions';
 
-  constructor(props) {
-    super(props);
+const ModePicker = ({ mode, setMode }) => {
+  const modeHandler = (e) => {
+    setMode(e.target.value);
+  };
 
-    this.state = {
-      mode: 'DRAW'
-    };
-
-    this.setMode = this.setMode.bind(this);
-  }
-
-  setMode(event) {
-    this.props.setMode(event.target.value);
-    this.setState({ mode: event.target.value });
-  }
-
-  render() {
-    const { mode } = this.state
+  const modes = ['DRAW', 'ERASE'].map((name, index) => {
     return (
-      <div>
-        <p>Mode</p>
-        <label>
-          Draw <input
-            type='radio'
-            name='mode'
-            value='DRAW'
-            checked={mode === 'DRAW'}
-            onChange={this.setMode} />
-        </label>
-        <label>
-          Erase <input
-            type='radio'
-            name='mode'
-            value='ERASE'
-            checked={mode === 'ERASE' }
-            onChange={this.setMode} />
-        </label>
-      </div>
-    );
-  }
+      <label key={index}>
+        {name} <input
+          type='radio'
+          name='mode'
+          value={name}
+          checked={mode === name}
+          onChange={modeHandler} />
+      </label>
+    )
+  });
+
+  return (
+    <div>
+      <p>Mode</p>
+      {modes}
+    </div>
+  );
 }
+
+export default connect(
+  state => ({
+    mode: state.mode
+  }),
+  {
+    setMode
+  }
+)(ModePicker);

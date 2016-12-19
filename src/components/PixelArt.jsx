@@ -21,17 +21,6 @@ export default class PixelArt extends React.Component {
       background: props.background,
       mode: 'DRAW'
     };
-
-    this.setColor = this.setColor.bind(this);
-    this.setMode = this.setMode.bind(this);
-  }
-
-  setColor(color) {
-    this.setState({ color });
-  }
-
-  setMode(mode) {
-    this.setState({ mode });
   }
 
   render() {
@@ -43,12 +32,10 @@ export default class PixelArt extends React.Component {
           width={width}
           height={height}
           pixelSize={pixelSize}
-          mode={mode}
-          color={color}
           background={background} />
         <div className='controls'>
-          <ColorPicker color={color} setColor={this.setColor} />
-          <ModePicker setMode={this.setMode} />
+          <ColorPicker />
+          <ModePicker />
         </div>
       </div>
     )

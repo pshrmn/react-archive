@@ -1,7 +1,10 @@
 import React from 'react'
+import { connect } from 'react-redux';
 import { ChromePicker } from 'react-color';
 
-export default class ColorPicker extends React.Component {
+import { setColor } from '../actions';
+
+class ColorPicker extends React.Component {
 
   constructor(props) {
     super(props);
@@ -40,3 +43,12 @@ export default class ColorPicker extends React.Component {
     )
   }
 }
+
+export default connect(
+  state => ({
+    color: state.color
+  }),
+  {
+    setColor
+  }
+)(ColorPicker);

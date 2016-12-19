@@ -1,8 +1,22 @@
 import React from 'react';
 import { render } from 'react-dom';
+import { createStore } from 'redux';
+import { Provider } from 'react-redux';
 
 import PixelArt from './components/PixelArt';
+import reducers from './reducers';
+import { createPixels } from './helpers';
+
+const width = 25;
+const height = 25;
+const store = createStore(reducers, {
+  mode: 'DRAW',
+  color: '#000',
+  pixels: createPixels(width, height)
+});
 
 render((
-  <PixelArt />
+  <Provider store={store}>
+    <PixelArt />
+  </Provider>
 ), document.getElementById('root'));

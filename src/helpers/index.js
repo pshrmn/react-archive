@@ -16,3 +16,15 @@ export function coordinates(canvas, event) {
 export function minMax(one, two) {
   return one < two ? [one, two] : [two, one];
 }
+
+export function createPixels(width, height) {
+  const pixels = []
+  for (let h=0; h<height; h++) {
+    const row = [];
+    for (let w=0; w<width; w++) {
+      row.push(undefined);
+    }
+    pixels.push(row);
+  }
+  return pixels;
+}
