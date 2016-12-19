@@ -11,8 +11,9 @@ const ModePicker = ({ mode, setMode }) => {
 
   const modeChoices = modes.map((m, index) => {
     return (
-      <label key={index}>
-        {m.text} <input
+      <label key={index} title={m.text}>
+        <i className={`fa ${m.icon}`} aria-hidden="true"></i>
+        <input
           type='radio'
           name='mode'
           value={m.type}
@@ -24,8 +25,7 @@ const ModePicker = ({ mode, setMode }) => {
 
   return (
     <div>
-      <p>Mode</p>
-      {modeChoices}
+      Mode: {modeChoices}
     </div>
   );
 }

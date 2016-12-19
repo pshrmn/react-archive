@@ -5,15 +5,18 @@ export const PICK = 'PICK';
 const modes = [
   {
     type: DRAW,
-    text: 'Draw'
+    text: 'Draw',
+    icon: 'fa-paint-brush'
   },
   {
     type: ERASE,
-    text: 'Erase'
+    text: 'Erase',
+    icon: 'fa-eraser'
   },
   {
     type: PICK,
-    text: 'Color Picker'
+    text: 'Color Picker',
+    icon: 'fa-tint'
   }
 ];
 

@@ -5,8 +5,12 @@ import { undo, redo } from '../actions';
 
 const TimeTravel = ({ undo, redo, canUndo, canRedo }) => (
   <div>
-    <button type='button' disabled={!canUndo} onClick={undo}>Undo</button>
-    <button type='button' disabled={!canRedo} onClick={redo}>Redo</button>
+    <button type='button' disabled={!canUndo} onClick={undo} title='Undo'>
+      <i className='fa fa-undo' aria-hidden="true"></i>
+    </button>
+    <button type='button' disabled={!canRedo} onClick={redo} title='Redo'>
+      <i className='fa fa-repeat' aria-hidden="true"></i>
+    </button>
   </div>
 )
 
