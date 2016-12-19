@@ -76,6 +76,10 @@ class PixelCanvas extends React.Component {
   }
 
   startPaint(event) {
+    // don't draw on right clicks
+    if (event.button == 2) {
+      return;
+    }
     const { x, y} = coordinates(this.canvas, event);
     const { pixelSize, mode } = this.props;
     // determine which "pixel" we are in

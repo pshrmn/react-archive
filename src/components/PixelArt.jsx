@@ -35,9 +35,9 @@ export default class PixelArt extends React.Component {
           pixelSize={pixelSize}
           background={background} />
         <div className='controls'>
-          <ColorPicker />
           <ModePicker />
           <TimeTravel />
+          <ColorPicker />
         </div>
       </div>
     )

@@ -810,9 +810,9 @@ var PixelArt = function (_React$Component) {
         _react2.default.createElement(
           'div',
           { className: 'controls' },
-          _react2.default.createElement(_ColorPicker2.default, null),
           _react2.default.createElement(_ModePicker2.default, null),
-          _react2.default.createElement(_TimeTravel2.default, null)
+          _react2.default.createElement(_TimeTravel2.default, null),
+          _react2.default.createElement(_ColorPicker2.default, null)
         )
       );
     }
@@ -1192,6 +1192,11 @@ var PixelCanvas = function (_React$Component) {
   }, {
     key: 'startPaint',
     value: function startPaint(event) {
+      // don't draw on right clicks
+      if (event.button == 2) {
+        return;
+      }
+
       var _coordinates = (0, _helpers.coordinates)(this.canvas, event),
           x = _coordinates.x,
           y = _coordinates.y;
