@@ -30,6 +30,7 @@ class PixelCanvas extends React.Component {
   }
 
   refresh() {
+    const { width, height } = this.props;
     this.clear();
     this.draw();
     this.drawGrid();
@@ -179,12 +180,17 @@ class PixelCanvas extends React.Component {
 }
 
 export default connect(
-  (state, ownProps) => ({
-    mode: state.mode,
-    color: state.color,
-    // generate the pixels array using the past moves
-    pixels: paintArray(ownProps.width, ownProps.height, state.moves.past)
-  }),
+  state => {
+    const { width, height } = state.size;
+    return {
+      mode: state.mode,
+      color: state.color,
+      width: width !== '' && !isNaN(width) ? width : 0,
+      height: height !== '' && !isNaN(height) ? height : 0,
+      // generate the pixels array using the past moves
+      pixels: paintArray(width, height, state.moves.past),
+    };
+  },
   {
     addMove,
     setColor

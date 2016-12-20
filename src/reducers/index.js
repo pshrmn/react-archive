@@ -1,6 +1,23 @@
 import * as types from '../constants/ActionTypes';
 import { combineReducers } from 'redux';
 
+const sizeReducer = (state = { width: 50, height: 50 }, action) => {
+  switch (action.type) {
+  case types.SET_WIDTH:
+    return {
+      width: action.width,
+      height: state.height
+    };
+  case types.SET_HEIGHT:
+    return {
+      width: state.width,
+      height: action.height
+    };
+  default:
+    return state;
+  }
+}
+
 const modeReducer = (state = 'DRAW' , action) => {
   switch (action.type) {
   case types.SET_MODE:
@@ -61,6 +78,7 @@ const movesReducer = (state = initialMovesState, action) => {
 }
 
 export default combineReducers({
+  size: sizeReducer,
   mode: modeReducer,
   color: colorReducer,
   moves: movesReducer

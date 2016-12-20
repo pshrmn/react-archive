@@ -27,13 +27,23 @@ export function createPixels(width, height) {
  */
 export function paintArray(width, height, moves) {
   const pixels = createPixels(width, height);
+  const isOutOfBounds = boundCheck(width, height);
+
   for (let m=0; m<moves.length; m++) {
     const { color, x, y, width, height } = moves[m];
     for (let r=0; r<=height; r++) {
       for (let c=0; c<=width; c++) {
-        pixels[r+y][c+x] = color;
+        if (!isOutOfBounds(c+x, r+y)) {
+          pixels[r+y][c+x] = color;
+        }
       }
     }
   }
   return pixels;
+}
+
+function boundCheck(width, height) {
+  return function(x, y) {
+    return x >= width || y >= height;
+  };
 }

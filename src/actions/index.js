@@ -13,6 +13,10 @@ export const redo = () => ({
   type: types.REDO_MOVE
 });
 
+export const clear = () => ({
+  type: types.CLEAR
+});
+
 export const setMode = mode => ({
   type: types.SET_MODE,
   mode
@@ -23,6 +27,12 @@ export const setColor = color => ({
   color
 });
 
-export const clear = () => ({
-  type: types.CLEAR
+export const setWidth = width => ({
+  type: types.SET_WIDTH,
+  width
+});
+
+export const setHeight = height => ({
+  type: types.SET_HEIGHT,
+  height
 });

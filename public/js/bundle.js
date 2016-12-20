@@ -741,8 +741,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 var _react = __webpack_require__(1);
 
 var _react2 = _interopRequireDefault(_react);
@@ -757,63 +755,24 @@ var _Controls2 = _interopRequireDefault(_Controls);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var PixelArt = function (_React$Component) {
-  _inherits(PixelArt, _React$Component);
-
-  function PixelArt(props) {
-    _classCallCheck(this, PixelArt);
-
-    var _this = _possibleConstructorReturn(this, (PixelArt.__proto__ || Object.getPrototypeOf(PixelArt)).call(this, props));
-
-    _this.state = {
-      color: props.color,
-      background: props.background,
-      mode: 'DRAW'
-    };
-    return _this;
-  }
-
-  _createClass(PixelArt, [{
-    key: 'render',
-    value: function render() {
-      var _props = this.props,
-          width = _props.width,
-          height = _props.height,
-          pixelSize = _props.pixelSize;
-      var _state = this.state,
-          color = _state.color,
-          background = _state.background,
-          mode = _state.mode;
-
-      return _react2.default.createElement(
-        'div',
-        null,
-        _react2.default.createElement(_PixelCanvas2.default, {
-          width: width,
-          height: height,
-          pixelSize: pixelSize,
-          background: background }),
-        _react2.default.createElement(_Controls2.default, null)
-      );
-    }
-  }]);
-
-  return PixelArt;
-}(_react2.default.Component);
+var PixelArt = function PixelArt(_ref) {
+  var pixelSize = _ref.pixelSize,
+      background = _ref.background;
+  return _react2.default.createElement(
+    'div',
+    null,
+    _react2.default.createElement(_PixelCanvas2.default, {
+      pixelSize: pixelSize,
+      background: background }),
+    _react2.default.createElement(_Controls2.default, null)
+  );
+};
 
 PixelArt.defaultProps = {
-  width: 25,
-  height: 25,
   pixelSize: 20,
-  color: '#000000',
   background: '#ffffff'
 };
+
 exports.default = PixelArt;
 
 /***/ },
@@ -835,6 +794,26 @@ var types = _interopRequireWildcard(_ActionTypes);
 var _redux = __webpack_require__(55);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+var sizeReducer = function sizeReducer() {
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : { width: 50, height: 50 };
+  var action = arguments[1];
+
+  switch (action.type) {
+    case types.SET_WIDTH:
+      return {
+        width: action.width,
+        height: state.height
+      };
+    case types.SET_HEIGHT:
+      return {
+        width: state.width,
+        height: action.height
+      };
+    default:
+      return state;
+  }
+};
 
 var modeReducer = function modeReducer() {
   var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'DRAW';
@@ -904,6 +883,7 @@ var movesReducer = function movesReducer() {
 };
 
 exports.default = (0, _redux.combineReducers)({
+  size: sizeReducer,
   mode: modeReducer,
   color: colorReducer,
   moves: movesReducer
@@ -1127,6 +1107,10 @@ var PixelCanvas = function (_React$Component) {
   _createClass(PixelCanvas, [{
     key: 'refresh',
     value: function refresh() {
+      var _props = this.props,
+          width = _props.width,
+          height = _props.height;
+
       this.clear();
       this.draw();
       this.drawGrid();
@@ -1134,22 +1118,22 @@ var PixelCanvas = function (_React$Component) {
   }, {
     key: 'clear',
     value: function clear() {
-      var _props = this.props,
-          width = _props.width,
-          height = _props.height,
-          pixelSize = _props.pixelSize;
+      var _props2 = this.props,
+          width = _props2.width,
+          height = _props2.height,
+          pixelSize = _props2.pixelSize;
 
       this.context.clearRect(0, 0, width * pixelSize, height * pixelSize);
     }
   }, {
     key: 'draw',
     value: function draw() {
-      var _props2 = this.props,
-          pixels = _props2.pixels,
-          pixelSize = _props2.pixelSize,
-          background = _props2.background,
-          width = _props2.width,
-          height = _props2.height;
+      var _props3 = this.props,
+          pixels = _props3.pixels,
+          pixelSize = _props3.pixelSize,
+          background = _props3.background,
+          width = _props3.width,
+          height = _props3.height;
 
       if (!pixels.length) {
         return;
@@ -1166,10 +1150,10 @@ var PixelCanvas = function (_React$Component) {
   }, {
     key: 'drawGrid',
     value: function drawGrid() {
-      var _props3 = this.props,
-          width = _props3.width,
-          height = _props3.height,
-          pixelSize = _props3.pixelSize;
+      var _props4 = this.props,
+          width = _props4.width,
+          height = _props4.height,
+          pixelSize = _props4.pixelSize;
 
       this.context.strokeStyle = '#efefef';
       this.context.lineWidth = 1;
@@ -1202,19 +1186,19 @@ var PixelCanvas = function (_React$Component) {
           x = _coordinates.x,
           y = _coordinates.y;
 
-      var _props4 = this.props,
-          pixelSize = _props4.pixelSize,
-          mode = _props4.mode;
+      var _props5 = this.props,
+          pixelSize = _props5.pixelSize,
+          mode = _props5.mode;
       // determine which "pixel" we are in
 
       var row = Math.floor(y / pixelSize);
       var column = Math.floor(x / pixelSize);
 
       if (mode === 'PICK') {
-        var _props5 = this.props,
-            pixels = _props5.pixels,
-            _setColor = _props5.setColor,
-            background = _props5.background;
+        var _props6 = this.props,
+            pixels = _props6.pixels,
+            _setColor = _props6.setColor,
+            background = _props6.background;
         // default to background color if pixel is undefined
 
         _setColor(pixels[row][column] || background);
@@ -1244,10 +1228,10 @@ var PixelCanvas = function (_React$Component) {
       if (!drawing) {
         return;
       }
-      var _props6 = this.props,
-          color = _props6.color,
-          background = _props6.background,
-          mode = _props6.mode;
+      var _props7 = this.props,
+          color = _props7.color,
+          background = _props7.background,
+          mode = _props7.mode;
 
       var _minMax = (0, _helpers.minMax)(startX, x),
           _minMax2 = _slicedToArray(_minMax, 2),
@@ -1273,11 +1257,11 @@ var PixelCanvas = function (_React$Component) {
           x = _coordinates3.x,
           y = _coordinates3.y;
 
-      var _props7 = this.props,
-          mode = _props7.mode,
-          pixelSize = _props7.pixelSize,
-          color = _props7.color,
-          pixels = _props7.pixels;
+      var _props8 = this.props,
+          mode = _props8.mode,
+          pixelSize = _props8.pixelSize,
+          color = _props8.color,
+          pixels = _props8.pixels;
       var _state2 = this.state,
           drawing = _state2.drawing,
           startRow = _state2.startRow,
@@ -1321,10 +1305,10 @@ var PixelCanvas = function (_React$Component) {
     value: function render() {
       var _this2 = this;
 
-      var _props8 = this.props,
-          width = _props8.width,
-          height = _props8.height,
-          pixelSize = _props8.pixelSize;
+      var _props9 = this.props,
+          width = _props9.width,
+          height = _props9.height,
+          pixelSize = _props9.pixelSize;
 
       return _react2.default.createElement('canvas', {
         ref: function ref(node) {
@@ -1362,12 +1346,18 @@ PixelCanvas.propTypes = {
   mode: _react.PropTypes.string.isRequired,
   pixels: _react.PropTypes.array
 };
-exports.default = (0, _reactRedux.connect)(function (state, ownProps) {
+exports.default = (0, _reactRedux.connect)(function (state) {
+  var _state$size = state.size,
+      width = _state$size.width,
+      height = _state$size.height;
+
   return {
     mode: state.mode,
     color: state.color,
+    width: width !== '' && !isNaN(width) ? width : 0,
+    height: height !== '' && !isNaN(height) ? height : 0,
     // generate the pixels array using the past moves
-    pixels: (0, _helpers.paintArray)(ownProps.width, ownProps.height, state.moves.past)
+    pixels: (0, _helpers.paintArray)(width, height, state.moves.past)
   };
 }, {
   addMove: _actions.addMove,
@@ -1471,6 +1461,8 @@ function createPixels(width, height) {
  */
 function paintArray(width, height, moves) {
   var pixels = createPixels(width, height);
+  var isOutOfBounds = boundCheck(width, height);
+
   for (var m = 0; m < moves.length; m++) {
     var _moves$m = moves[m],
         color = _moves$m.color,
@@ -1481,11 +1473,19 @@ function paintArray(width, height, moves) {
 
     for (var r = 0; r <= _height; r++) {
       for (var c = 0; c <= _width; c++) {
-        pixels[r + y][c + x] = color;
+        if (!isOutOfBounds(c + x, r + y)) {
+          pixels[r + y][c + x] = color;
+        }
       }
     }
   }
   return pixels;
+}
+
+function boundCheck(width, height) {
+  return function (x, y) {
+    return x >= width || y >= height;
+  };
 }
 
 /***/ },
@@ -1867,7 +1867,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.clear = exports.setColor = exports.setMode = exports.redo = exports.undo = exports.addMove = undefined;
+exports.setHeight = exports.setWidth = exports.setColor = exports.setMode = exports.clear = exports.redo = exports.undo = exports.addMove = undefined;
 
 var _ActionTypes = __webpack_require__(96);
 
@@ -1894,6 +1894,12 @@ var redo = exports.redo = function redo() {
   };
 };
 
+var clear = exports.clear = function clear() {
+  return {
+    type: types.CLEAR
+  };
+};
+
 var setMode = exports.setMode = function setMode(mode) {
   return {
     type: types.SET_MODE,
@@ -1908,9 +1914,17 @@ var setColor = exports.setColor = function setColor(color) {
   };
 };
 
-var clear = exports.clear = function clear() {
+var setWidth = exports.setWidth = function setWidth(width) {
   return {
-    type: types.CLEAR
+    type: types.SET_WIDTH,
+    width: width
+  };
+};
+
+var setHeight = exports.setHeight = function setHeight(height) {
+  return {
+    type: types.SET_HEIGHT,
+    height: height
   };
 };
 
@@ -2843,9 +2857,11 @@ var _reducers2 = _interopRequireDefault(_reducers);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var width = 25;
-var height = 25;
 var store = (0, _redux.createStore)(_reducers2.default, {
+  size: {
+    width: 25,
+    height: 25
+  },
   mode: 'DRAW',
   color: '#000',
   moves: {
@@ -2927,6 +2943,10 @@ var _ClearButton = __webpack_require__(465);
 
 var _ClearButton2 = _interopRequireDefault(_ClearButton);
 
+var _SizePicker = __webpack_require__(467);
+
+var _SizePicker2 = _interopRequireDefault(_SizePicker);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = function () {
@@ -2934,11 +2954,107 @@ exports.default = function () {
     'div',
     { className: 'controls' },
     _react2.default.createElement(_ColorPicker2.default, null),
+    _react2.default.createElement(_SizePicker2.default, null),
     _react2.default.createElement(_ModePicker2.default, null),
     _react2.default.createElement(_TimeTravel2.default, null),
     _react2.default.createElement(_ClearButton2.default, null)
   );
 };
+
+/***/ },
+
+/***/ 467:
+/***/ function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(1);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactRedux = __webpack_require__(32);
+
+var _actions = __webpack_require__(40);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var SizePicker = function (_React$Component) {
+  _inherits(SizePicker, _React$Component);
+
+  function SizePicker() {
+    _classCallCheck(this, SizePicker);
+
+    return _possibleConstructorReturn(this, (SizePicker.__proto__ || Object.getPrototypeOf(SizePicker)).apply(this, arguments));
+  }
+
+  _createClass(SizePicker, [{
+    key: 'setWidth',
+    value: function setWidth(event) {
+      var width = parseInt(event.target.value, 10);
+      if (isNaN(width)) {
+        width = '';
+      }
+      this.props.setWidth(width);
+    }
+  }, {
+    key: 'setHeight',
+    value: function setHeight(event) {
+      var height = parseInt(event.target.value, 10);
+      if (isNaN(height)) {
+        height = '';
+      }
+      this.props.setHeight(height);
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var _props = this.props,
+          width = _props.width,
+          height = _props.height;
+
+      return _react2.default.createElement(
+        'div',
+        null,
+        _react2.default.createElement('input', {
+          type: 'text',
+          title: 'set width (default 25)',
+          value: width,
+          onChange: this.setWidth.bind(this) }),
+        ' by ',
+        _react2.default.createElement('input', {
+          type: 'text',
+          title: 'set height (default 25)',
+          value: height,
+          onChange: this.setHeight.bind(this) })
+      );
+    }
+  }]);
+
+  return SizePicker;
+}(_react2.default.Component);
+
+exports.default = (0, _reactRedux.connect)(function (state) {
+  return {
+    width: state.size.width,
+    height: state.size.height
+  };
+}, {
+  setWidth: _actions.setWidth,
+  setHeight: _actions.setHeight
+})(SizePicker);
 
 /***/ },
 
@@ -3094,9 +3210,13 @@ Object.defineProperty(exports, "__esModule", {
 var ADD_MOVE = exports.ADD_MOVE = 'ADD_MOVE';
 var UNDO_MOVE = exports.UNDO_MOVE = 'UNDO_MOVE';
 var REDO_MOVE = exports.REDO_MOVE = 'REDO_MOVE';
+
 var CLEAR = exports.CLEAR = 'CLEAR';
+
 var SET_MODE = exports.SET_MODE = 'SET_MODE';
 var SET_COLOR = exports.SET_COLOR = 'SET_COLOR';
+var SET_WIDTH = exports.SET_WIDTH = 'SET_WIDTH';
+var SET_HEIGHT = exports.SET_HEIGHT = 'SET_HEIGHT';
 
 /***/ },
 

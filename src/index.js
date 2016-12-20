@@ -6,9 +6,11 @@ import { Provider } from 'react-redux';
 import PixelArt from './components/PixelArt';
 import reducers from './reducers';
 
-const width = 25;
-const height = 25;
 const store = createStore(reducers, {
+  size: {
+    width: 25,
+    height: 25
+  },
   mode: 'DRAW',
   color: '#000',
   moves: {
