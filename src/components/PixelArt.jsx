@@ -1,9 +1,6 @@
 import React from 'react';
 import PixelCanvas from './PixelCanvas';
-import ColorPicker from './ColorPicker';
-import ModePicker from './ModePicker';
-import TimeTravel from './TimeTravel';
-import ClearButton from './ClearButton';
+import Controls from './Controls';
 
 export default class PixelArt extends React.Component {
 
@@ -35,12 +32,7 @@ export default class PixelArt extends React.Component {
           height={height}
           pixelSize={pixelSize}
           background={background} />
-        <div className='controls'>
-          <ModePicker />
-          <TimeTravel />
-          <ClearButton />
-          <ColorPicker />
-        </div>
+        <Controls />
       </div>
     )
   }

@@ -751,21 +751,9 @@ var _PixelCanvas = __webpack_require__(172);
 
 var _PixelCanvas2 = _interopRequireDefault(_PixelCanvas);
 
-var _ColorPicker = __webpack_require__(170);
+var _Controls = __webpack_require__(466);
 
-var _ColorPicker2 = _interopRequireDefault(_ColorPicker);
-
-var _ModePicker = __webpack_require__(171);
-
-var _ModePicker2 = _interopRequireDefault(_ModePicker);
-
-var _TimeTravel = __webpack_require__(173);
-
-var _TimeTravel2 = _interopRequireDefault(_TimeTravel);
-
-var _ClearButton = __webpack_require__(465);
-
-var _ClearButton2 = _interopRequireDefault(_ClearButton);
+var _Controls2 = _interopRequireDefault(_Controls);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -811,14 +799,7 @@ var PixelArt = function (_React$Component) {
           height: height,
           pixelSize: pixelSize,
           background: background }),
-        _react2.default.createElement(
-          'div',
-          { className: 'controls' },
-          _react2.default.createElement(_ModePicker2.default, null),
-          _react2.default.createElement(_TimeTravel2.default, null),
-          _react2.default.createElement(_ClearButton2.default, null),
-          _react2.default.createElement(_ColorPicker2.default, null)
-        )
+        _react2.default.createElement(_Controls2.default, null)
       );
     }
   }]);
@@ -995,13 +976,22 @@ var ColorPicker = function (_React$Component) {
 
       return _react2.default.createElement(
         'div',
-        null,
-        'Color: ',
+        { style: { position: 'relative' } },
         _react2.default.createElement('div', {
-          style: { width: 25, height: 25, background: color, border: '1px solid #ccc' },
+          style: {
+            width: 25,
+            height: 25,
+            background: color,
+            border: '1px solid #ccc',
+            marginRight: 5
+          },
           onClick: this.togglePicking,
           title: 'Click to change colors' }),
-        picking ? _react2.default.createElement(_reactColor.ChromePicker, { color: color, onChangeComplete: this.setColor }) : null
+        picking ? _react2.default.createElement(
+          'div',
+          { style: { position: 'absolute' } },
+          _react2.default.createElement(_reactColor.ChromePicker, { color: color, onChangeComplete: this.setColor })
+        ) : null
       );
     }
   }]);
@@ -1068,7 +1058,6 @@ var ModePicker = function ModePicker(_ref) {
   return _react2.default.createElement(
     'div',
     null,
-    'Mode: ',
     modeChoices
   );
 };
@@ -2903,6 +2892,51 @@ var ClearButton = function ClearButton(_ref) {
 exports.default = (0, _reactRedux.connect)(null, {
   clear: _actions.clear
 })(ClearButton);
+
+/***/ },
+
+/***/ 466:
+/***/ function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _react = __webpack_require__(1);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _ColorPicker = __webpack_require__(170);
+
+var _ColorPicker2 = _interopRequireDefault(_ColorPicker);
+
+var _ModePicker = __webpack_require__(171);
+
+var _ModePicker2 = _interopRequireDefault(_ModePicker);
+
+var _TimeTravel = __webpack_require__(173);
+
+var _TimeTravel2 = _interopRequireDefault(_TimeTravel);
+
+var _ClearButton = __webpack_require__(465);
+
+var _ClearButton2 = _interopRequireDefault(_ClearButton);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = function () {
+  return _react2.default.createElement(
+    'div',
+    { className: 'controls' },
+    _react2.default.createElement(_ColorPicker2.default, null),
+    _react2.default.createElement(_ModePicker2.default, null),
+    _react2.default.createElement(_TimeTravel2.default, null),
+    _react2.default.createElement(_ClearButton2.default, null)
+  );
+};
 
 /***/ },
 

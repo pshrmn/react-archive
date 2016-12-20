@@ -29,14 +29,22 @@ class ColorPicker extends React.Component {
     const { color } = this.props;
     const { picking } = this.state;
     return (
-      <div>
-        Color: <div
-          style={{ width: 25, height: 25, background: color, border: '1px solid #ccc'}}
+      <div style={{ position: 'relative' }}>
+        <div
+          style={{
+            width: 25,
+            height: 25,
+            background: color,
+            border: '1px solid #ccc',
+            marginRight: 5
+          }}
           onClick={this.togglePicking}
           title='Click to change colors' ></div>
         {
           picking ? (
-            <ChromePicker color={color} onChangeComplete={this.setColor} />
+            <div style={{ position: 'absolute' }}>
+              <ChromePicker color={color} onChangeComplete={this.setColor} />
+            </div>
           ) : null
         }
       </div>

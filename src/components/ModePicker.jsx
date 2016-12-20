@@ -25,7 +25,7 @@ const ModePicker = ({ mode, setMode }) => {
 
   return (
     <div>
-      Mode: {modeChoices}
+      {modeChoices}
     </div>
   );
 }
