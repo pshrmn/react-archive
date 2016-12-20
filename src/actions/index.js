@@ -22,3 +22,7 @@ export const setColor = color => ({
   type: types.SET_COLOR,
   color
 });
+
+export const clear = () => ({
+  type: types.CLEAR
+});

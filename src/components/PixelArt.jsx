@@ -3,6 +3,7 @@ import PixelCanvas from './PixelCanvas';
 import ColorPicker from './ColorPicker';
 import ModePicker from './ModePicker';
 import TimeTravel from './TimeTravel';
+import ClearButton from './ClearButton';
 
 export default class PixelArt extends React.Component {
 
@@ -37,6 +38,7 @@ export default class PixelArt extends React.Component {
         <div className='controls'>
           <ModePicker />
           <TimeTravel />
+          <ClearButton />
           <ColorPicker />
         </div>
       </div>

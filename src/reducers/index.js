@@ -50,6 +50,11 @@ const movesReducer = (state = initialMovesState, action) => {
       past: state.past.concat(first),
       future: state.future
     };
+  case types.CLEAR:
+    return {
+      past: [],
+      future: []
+    };
   default:
     return state;
   }
