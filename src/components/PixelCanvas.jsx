@@ -61,16 +61,18 @@ class PixelCanvas extends React.Component {
     this.context.lineWidth = 1;
     // vertical
     for (let w=1; w<width; w++) {
+      const x = w*pixelSize - 0.5;
       this.context.beginPath();
-      this.context.moveTo(w*pixelSize, 0);
-      this.context.lineTo(w*pixelSize, height*pixelSize);
+      this.context.moveTo(x, 0);
+      this.context.lineTo(x, height*pixelSize);
       this.context.stroke()
     }
     // horizontal
     for (let h=1; h<height; h++) {
+      const y = h*pixelSize - 0.5;
       this.context.beginPath();
-      this.context.moveTo(0, h*pixelSize);
-      this.context.lineTo(width*pixelSize, h*pixelSize);
+      this.context.moveTo(0, y);
+      this.context.lineTo(width*pixelSize, y);
       this.context.stroke()
     }
   }
