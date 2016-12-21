@@ -1,10 +1,11 @@
 {
   "name": "pixelart",
-  "version": "0.13.0",
+  "version": "0.14.0",
   "description": "make pixel art",
   "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --p"
   },
   "repository": {
     "type": "git",

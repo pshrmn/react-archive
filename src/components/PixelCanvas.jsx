@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 
+import Preview from './Preview';
 import { coordinates, minMax, paintArray } from '../helpers';
 import { addMove, setColor } from '../actions';
 import { PICK } from '../constants/modes';
@@ -12,7 +13,6 @@ class PixelCanvas extends React.Component {
     height: PropTypes.number.isRequired,
     pixelSize: PropTypes.number.isRequired,
     color: PropTypes.string.isRequired,
-    background: PropTypes.string.isRequired,
     mode: PropTypes.string.isRequired,
     pixels: PropTypes.array
   }
@@ -30,7 +30,6 @@ class PixelCanvas extends React.Component {
   }
 
   refresh() {
-    const { width, height } = this.props;
     this.clear();
     this.draw();
     this.drawGrid();
@@ -42,14 +41,14 @@ class PixelCanvas extends React.Component {
   }
 
   draw() {
-    const { pixels, pixelSize, background, width, height } = this.props;
+    const { pixels, pixelSize, width, height } = this.props;
     if (!pixels.length) {
       return;
     }
     for (let r=0; r<pixels.length; r++) {
       const row = pixels[r];
       for (let c=0; c<row.length; c++) {
-        const color = row[c] || background;
+        const color = row[c] || 'rgba(0, 0, 0, 0)';
         this.context.fillStyle = color;
         this.context.fillRect(c*pixelSize, r*pixelSize, pixelSize, pixelSize);
       }
@@ -155,27 +154,30 @@ class PixelCanvas extends React.Component {
   }
 
   render() {
-    const { width, height, pixelSize } = this.props;
+    const { width, height, pixelSize, pixels } = this.props;
     return (
-      <canvas
-        ref={node => this.canvas = node}
-        width={width*pixelSize}
-        height={height*pixelSize}
-        onMouseDown={this.startPaint}
-        onMouseMove={this.midPaint}
-        onMouseUp={this.endPaint} >
-      </canvas>
+      <div>
+        <canvas
+          ref={node => this.canvas = node}
+          width={width*pixelSize}
+          height={height*pixelSize}
+          onMouseDown={this.startPaint}
+          onMouseMove={this.midPaint}
+          onMouseUp={this.endPaint} >
+        </canvas>
+        <Preview width={width} height={height} pixels={pixels} />
+      </div>
     )
   }
 
   componentDidMount() {
-    this.context = this.canvas.getContext('2d')
-    this.refresh()
+    this.context = this.canvas.getContext('2d');
+    this.refresh();
   }
 
   componentDidUpdate() {
-    this.context = this.canvas.getContext('2d')
-    this.refresh()
+    this.context = this.canvas.getContext('2d');
+    this.refresh();
   }
 }
 
