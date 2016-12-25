@@ -30,11 +30,12 @@ export function paintArray(width, height, moves) {
   const isOutOfBounds = boundCheck(width, height);
 
   for (let m=0; m<moves.length; m++) {
-    const { color, x, y, width, height } = moves[m];
+    const { color, x, y, width, height, type } = moves[m];
+    const setMoveColor = type === 'DRAW' ? color : undefined;
     for (let r=0; r<=height; r++) {
       for (let c=0; c<=width; c++) {
         if (!isOutOfBounds(c+x, r+y)) {
-          pixels[r+y][c+x] = color;
+          pixels[r+y][c+x] = setMoveColor;
         }
       }
     }

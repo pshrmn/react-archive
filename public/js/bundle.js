@@ -3403,12 +3403,14 @@ function paintArray(width, height, moves) {
         x = _moves$m.x,
         y = _moves$m.y,
         _width = _moves$m.width,
-        _height = _moves$m.height;
+        _height = _moves$m.height,
+        type = _moves$m.type;
 
+    var setMoveColor = type === 'DRAW' ? color : undefined;
     for (var r = 0; r <= _height; r++) {
       for (var c = 0; c <= _width; c++) {
         if (!isOutOfBounds(c + x, r + y)) {
-          pixels[r + y][c + x] = color;
+          pixels[r + y][c + x] = setMoveColor;
         }
       }
     }
