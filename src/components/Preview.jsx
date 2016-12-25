@@ -2,8 +2,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { paintArray } from '../helpers';
+import { setZoom } from '../actions';
 
-export default class Preview extends React.Component {
+const zoomValues = [1, 2, 4, 8];
+
+class Preview extends React.Component {
 
   refresh() {
     this.clear();
@@ -16,7 +19,7 @@ export default class Preview extends React.Component {
   }
 
   draw() {
-    const { pixels, width, height } = this.props;
+    const { pixels, width, height, zoom } = this.props;
     if (!pixels.length) {
       return;
     }
@@ -25,7 +28,7 @@ export default class Preview extends React.Component {
       for (let c=0; c<row.length; c++) {
         const color = row[c] || 'rgba(0, 0, 0, 0)';
         this.context.fillStyle = color;
-        this.context.fillRect(c, r, 1, 1);
+        this.context.fillRect(c*zoom, r*zoom, zoom, zoom);
       }
     }
   }
@@ -34,15 +37,23 @@ export default class Preview extends React.Component {
     this.canvas = node;
   }
 
+  setZoom(event) {
+    this.props.setZoom(parseInt(event.target.value, 10));
+  }
+
   render() {
-    const { width, height } = this.props;
+    const { width, height, zoom } = this.props;
     return (
       <div>
-        <p>Preview:</p>
+        <select onChange={this.setZoom.bind(this)} style={{ display: 'block' }}>
+          {zoomValues.map(z => (
+            <option key={z} value={z}>{z}x</option>
+          ))}
+        </select>
         <canvas
           ref={node => this.canvas = node}
-          width={width}
-          height={height} ></canvas>
+          width={width*zoom}
+          height={height*zoom} ></canvas>
       </div>
     );
   }
@@ -57,3 +68,12 @@ export default class Preview extends React.Component {
     this.refresh();
   }
 }
+
+export default connect(
+  state => ({
+    zoom: state.zoom
+  }),
+  {
+    setZoom
+  }
+)(Preview);

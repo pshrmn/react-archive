@@ -36,3 +36,8 @@ export const setHeight = height => ({
   type: types.SET_HEIGHT,
   height
 });
+
+export const setZoom = zoom => ({
+  type: types.SET_ZOOM,
+  zoom
+});

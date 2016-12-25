@@ -77,9 +77,19 @@ const movesReducer = (state = initialMovesState, action) => {
   }
 }
 
+const zoomReducer = (state = 1, action) => {
+  switch (action.type) {
+  case types.SET_ZOOM:
+    return action.zoom;
+  default:
+    return state;
+  }
+}
+
 export default combineReducers({
   size: sizeReducer,
   mode: modeReducer,
   color: colorReducer,
-  moves: movesReducer
+  moves: movesReducer,
+  zoom: zoomReducer
 });

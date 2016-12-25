@@ -16,7 +16,8 @@ const store = createStore(reducers, {
   moves: {
     past: [],
     future: []
-  }
+  },
+  zoom: 1
 });
 
 render((

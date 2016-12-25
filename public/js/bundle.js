@@ -882,11 +882,24 @@ var movesReducer = function movesReducer() {
   }
 };
 
+var zoomReducer = function zoomReducer() {
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
+  var action = arguments[1];
+
+  switch (action.type) {
+    case types.SET_ZOOM:
+      return action.zoom;
+    default:
+      return state;
+  }
+};
+
 exports.default = (0, _redux.combineReducers)({
   size: sizeReducer,
   mode: modeReducer,
   color: colorReducer,
-  moves: movesReducer
+  moves: movesReducer,
+  zoom: zoomReducer
 });
 
 /***/ },
@@ -1475,6 +1488,8 @@ var _reactRedux = __webpack_require__(21);
 
 var _helpers = __webpack_require__(98);
 
+var _actions = __webpack_require__(29);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -1482,6 +1497,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var zoomValues = [1, 2, 4, 8];
 
 var Preview = function (_React$Component) {
   _inherits(Preview, _React$Component);
@@ -1513,7 +1530,8 @@ var Preview = function (_React$Component) {
       var _props2 = this.props,
           pixels = _props2.pixels,
           width = _props2.width,
-          height = _props2.height;
+          height = _props2.height,
+          zoom = _props2.zoom;
 
       if (!pixels.length) {
         return;
@@ -1523,7 +1541,7 @@ var Preview = function (_React$Component) {
         for (var c = 0; c < row.length; c++) {
           var color = row[c] || 'rgba(0, 0, 0, 0)';
           this.context.fillStyle = color;
-          this.context.fillRect(c, r, 1, 1);
+          this.context.fillRect(c * zoom, r * zoom, zoom, zoom);
         }
       }
     }
@@ -1533,28 +1551,41 @@ var Preview = function (_React$Component) {
       this.canvas = node;
     }
   }, {
+    key: 'setZoom',
+    value: function setZoom(event) {
+      this.props.setZoom(parseInt(event.target.value, 10));
+    }
+  }, {
     key: 'render',
     value: function render() {
       var _this2 = this;
 
       var _props3 = this.props,
           width = _props3.width,
-          height = _props3.height;
+          height = _props3.height,
+          zoom = _props3.zoom;
 
       return _react2.default.createElement(
         'div',
         null,
         _react2.default.createElement(
-          'p',
-          null,
-          'Preview:'
+          'select',
+          { onChange: this.setZoom.bind(this), style: { display: 'block' } },
+          zoomValues.map(function (z) {
+            return _react2.default.createElement(
+              'option',
+              { key: z, value: z },
+              z,
+              'x'
+            );
+          })
         ),
         _react2.default.createElement('canvas', {
           ref: function ref(node) {
             return _this2.canvas = node;
           },
-          width: width,
-          height: height })
+          width: width * zoom,
+          height: height * zoom })
       );
     }
   }, {
@@ -1574,7 +1605,13 @@ var Preview = function (_React$Component) {
   return Preview;
 }(_react2.default.Component);
 
-exports.default = Preview;
+exports.default = (0, _reactRedux.connect)(function (state) {
+  return {
+    zoom: state.zoom
+  };
+}, {
+  setZoom: _actions.setZoom
+})(Preview);
 
 /***/ },
 
@@ -2103,7 +2140,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.setHeight = exports.setWidth = exports.setColor = exports.setMode = exports.clear = exports.redo = exports.undo = exports.addMove = undefined;
+exports.setZoom = exports.setHeight = exports.setWidth = exports.setColor = exports.setMode = exports.clear = exports.redo = exports.undo = exports.addMove = undefined;
 
 var _ActionTypes = __webpack_require__(96);
 
@@ -2161,6 +2198,13 @@ var setHeight = exports.setHeight = function setHeight(height) {
   return {
     type: types.SET_HEIGHT,
     height: height
+  };
+};
+
+var setZoom = exports.setZoom = function setZoom(zoom) {
+  return {
+    type: types.SET_ZOOM,
+    zoom: zoom
   };
 };
 
@@ -3103,7 +3147,8 @@ var store = (0, _redux.createStore)(_reducers2.default, {
   moves: {
     past: [],
     future: []
-  }
+  },
+  zoom: 1
 });
 
 (0, _reactDom.render)(_react2.default.createElement(
@@ -3273,6 +3318,7 @@ var SET_MODE = exports.SET_MODE = 'SET_MODE';
 var SET_COLOR = exports.SET_COLOR = 'SET_COLOR';
 var SET_WIDTH = exports.SET_WIDTH = 'SET_WIDTH';
 var SET_HEIGHT = exports.SET_HEIGHT = 'SET_HEIGHT';
+var SET_ZOOM = exports.SET_ZOOM = 'SET_ZOOM';
 
 /***/ },
 
