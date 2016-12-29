@@ -48,3 +48,8 @@ function boundCheck(width, height) {
     return x >= width || y >= height;
   };
 }
+
+export function colorAsRgba(color) {
+  const { r, g, b, a } = color.rgb;
+  return `rgba(${r},${g},${b},${a})`;
+}

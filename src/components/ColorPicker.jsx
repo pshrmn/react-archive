@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { ChromePicker } from 'react-color';
 
 import { setColor } from '../actions';
+import { colorAsRgba } from '../helpers';
 
 class ColorPicker extends React.Component {
 
@@ -22,15 +23,14 @@ class ColorPicker extends React.Component {
   }
 
   setColor(color) {
-    const { r, g, b, a } = color.rgb;
-    this.props.setColor(`rgba(${r},${g},${b},${a})`);
+    this.props.setColor(colorAsRgba(color));
   }
 
   render() {
     const { color } = this.props;
     const { picking } = this.state;
     return (
-      <div style={{ position: 'relative' }}>
+      <div className='color-picker' style={{ position: 'relative' }}>
         <div
           style={{
             width: 25,
@@ -40,7 +40,7 @@ class ColorPicker extends React.Component {
             marginRight: 5
           }}
           onClick={this.togglePicking}
-          title='Click to change colors' ></div>
+          title={`Click to change colors (currently ${color})`} ></div>
         {
           picking ? (
             <div style={{ position: 'absolute' }}>

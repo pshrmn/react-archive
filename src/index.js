@@ -12,7 +12,7 @@ const store = createStore(reducers, {
     height: 25
   },
   mode: 'DRAW',
-  color: '#000',
+  color: 'rgba(0, 0, 0, 1)',
   background: 'rgba(0, 0, 0, 0)',
   moves: {
     past: [],

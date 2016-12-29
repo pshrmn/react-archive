@@ -756,21 +756,17 @@ var _Controls2 = _interopRequireDefault(_Controls);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var PixelArt = function PixelArt(_ref) {
-  var pixelSize = _ref.pixelSize,
-      background = _ref.background;
+  var pixelSize = _ref.pixelSize;
   return _react2.default.createElement(
     'div',
-    null,
-    _react2.default.createElement(_PixelCanvas2.default, {
-      pixelSize: pixelSize,
-      background: background }),
+    { className: 'pixel-art' },
+    _react2.default.createElement(_PixelCanvas2.default, { pixelSize: pixelSize }),
     _react2.default.createElement(_Controls2.default, null)
   );
 };
 
 PixelArt.defaultProps = {
-  pixelSize: 20,
-  background: '#ffffff'
+  pixelSize: 20
 };
 
 exports.default = PixelArt;
@@ -828,7 +824,7 @@ var modeReducer = function modeReducer() {
 };
 
 var colorReducer = function colorReducer() {
-  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '#000000';
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'rgba(0, 0, 0, 1)';
   var action = arguments[1];
 
   switch (action.type) {
@@ -974,6 +970,8 @@ var _reactColor = __webpack_require__(95);
 
 var _actions = __webpack_require__(23);
 
+var _helpers = __webpack_require__(98);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -1007,13 +1005,7 @@ var ColorPicker = function (_React$Component) {
   }, {
     key: 'setColor',
     value: function setColor(color) {
-      var _color$rgb = color.rgb,
-          r = _color$rgb.r,
-          g = _color$rgb.g,
-          b = _color$rgb.b,
-          a = _color$rgb.a;
-
-      this.props.setColor('rgba(' + r + ',' + g + ',' + b + ',' + a + ')');
+      this.props.setColor((0, _helpers.colorAsRgba)(color));
     }
   }, {
     key: 'render',
@@ -1023,7 +1015,7 @@ var ColorPicker = function (_React$Component) {
 
       return _react2.default.createElement(
         'div',
-        { style: { position: 'relative' } },
+        { className: 'color-picker', style: { position: 'relative' } },
         _react2.default.createElement('div', {
           style: {
             width: 25,
@@ -1033,7 +1025,7 @@ var ColorPicker = function (_React$Component) {
             marginRight: 5
           },
           onClick: this.togglePicking,
-          title: 'Click to change colors' }),
+          title: 'Click to change colors (currently ' + color + ')' }),
         picking ? _react2.default.createElement(
           'div',
           { style: { position: 'absolute' } },
@@ -1096,16 +1088,56 @@ var _SizePicker2 = _interopRequireDefault(_SizePicker);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var Label = function Label(_ref) {
+  var title = _ref.title,
+      children = _ref.children;
+  return _react2.default.createElement(
+    'div',
+    null,
+    _react2.default.createElement(
+      'h3',
+      null,
+      title
+    ),
+    children
+  );
+};
+
 exports.default = function () {
   return _react2.default.createElement(
     'div',
     { className: 'controls' },
-    _react2.default.createElement(_ColorPicker2.default, null),
-    _react2.default.createElement(_BackgroundPicker2.default, null),
-    _react2.default.createElement(_SizePicker2.default, null),
-    _react2.default.createElement(_ModePicker2.default, null),
-    _react2.default.createElement(_TimeTravel2.default, null),
-    _react2.default.createElement(_ClearButton2.default, null)
+    _react2.default.createElement(
+      'h2',
+      null,
+      'Controls'
+    ),
+    _react2.default.createElement(
+      Label,
+      { title: 'Colors' },
+      _react2.default.createElement(_ColorPicker2.default, null),
+      _react2.default.createElement(_BackgroundPicker2.default, null)
+    ),
+    _react2.default.createElement(
+      Label,
+      { title: 'Size' },
+      _react2.default.createElement(_SizePicker2.default, null)
+    ),
+    _react2.default.createElement(
+      Label,
+      { title: 'Mode' },
+      _react2.default.createElement(_ModePicker2.default, null)
+    ),
+    _react2.default.createElement(
+      Label,
+      { title: 'Undo/Redo' },
+      _react2.default.createElement(_TimeTravel2.default, null)
+    ),
+    _react2.default.createElement(
+      Label,
+      { title: 'Clear' },
+      _react2.default.createElement(_ClearButton2.default, null)
+    )
   );
 };
 
@@ -3173,7 +3205,7 @@ var store = (0, _redux.createStore)(_reducers2.default, {
     height: 25
   },
   mode: 'DRAW',
-  color: '#000',
+  color: 'rgba(0, 0, 0, 1)',
   background: 'rgba(0, 0, 0, 0)',
   moves: {
     past: [],
@@ -3212,6 +3244,8 @@ var _reactColor = __webpack_require__(95);
 
 var _actions = __webpack_require__(23);
 
+var _helpers = __webpack_require__(98);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -3245,13 +3279,7 @@ var BackgroundPicker = function (_React$Component) {
   }, {
     key: 'setBackground',
     value: function setBackground(color) {
-      var _color$rgb = color.rgb,
-          r = _color$rgb.r,
-          g = _color$rgb.g,
-          b = _color$rgb.b,
-          a = _color$rgb.a;
-
-      this.props.setBackground('rgba(' + r + ',' + g + ',' + b + ',' + a + ')');
+      this.props.setBackground((0, _helpers.colorAsRgba)(color));
     }
   }, {
     key: 'render',
@@ -3261,7 +3289,7 @@ var BackgroundPicker = function (_React$Component) {
 
       return _react2.default.createElement(
         'div',
-        { style: { position: 'relative' } },
+        { className: 'color-picker' },
         _react2.default.createElement('div', {
           style: {
             width: 25,
@@ -3271,7 +3299,7 @@ var BackgroundPicker = function (_React$Component) {
             marginRight: 5
           },
           onClick: this.togglePicking,
-          title: 'Click to change background color' }),
+          title: 'Click to change background color (currently ' + color + ')' }),
         picking ? _react2.default.createElement(
           'div',
           { style: { position: 'absolute' } },
@@ -3502,6 +3530,7 @@ exports.coordinates = coordinates;
 exports.minMax = minMax;
 exports.createPixels = createPixels;
 exports.paintArray = paintArray;
+exports.colorAsRgba = colorAsRgba;
 function coordinates(canvas, event) {
   var rect = canvas.getBoundingClientRect();
   var x = event.clientX - rect.left;
@@ -3558,6 +3587,16 @@ function boundCheck(width, height) {
   return function (x, y) {
     return x >= width || y >= height;
   };
+}
+
+function colorAsRgba(color) {
+  var _color$rgb = color.rgb,
+      r = _color$rgb.r,
+      g = _color$rgb.g,
+      b = _color$rgb.b,
+      a = _color$rgb.a;
+
+  return 'rgba(' + r + ',' + g + ',' + b + ',' + a + ')';
 }
 
 /***/ }

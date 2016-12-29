@@ -27,7 +27,7 @@ const modeReducer = (state = 'DRAW' , action) => {
   }
 }
 
-const colorReducer = (state = '#000000', action) => {
+const colorReducer = (state = 'rgba(0, 0, 0, 1)', action) => {
   switch (action.type) {
   case types.SET_COLOR:
     return action.color;
