@@ -13,6 +13,7 @@ const store = createStore(reducers, {
   },
   mode: 'DRAW',
   color: '#000',
+  background: 'rgba(0, 0, 0, 0)',
   moves: {
     past: [],
     future: []

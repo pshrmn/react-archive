@@ -27,6 +27,11 @@ export const setColor = color => ({
   color
 });
 
+export const setBackground = color => ({
+  type: types.SET_BACKGROUND,
+  color
+});
+
 export const setWidth = width => ({
   type: types.SET_WIDTH,
   width

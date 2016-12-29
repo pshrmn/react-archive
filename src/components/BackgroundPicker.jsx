@@ -2,9 +2,9 @@ import React from 'react'
 import { connect } from 'react-redux';
 import { ChromePicker } from 'react-color';
 
-import { setColor } from '../actions';
+import { setBackground } from '../actions';
 
-class ColorPicker extends React.Component {
+class BackgroundPicker extends React.Component {
 
   constructor(props) {
     super(props);
@@ -13,7 +13,7 @@ class ColorPicker extends React.Component {
       picking: false
     }
 
-    this.setColor = this.setColor.bind(this);
+    this.setBackground = this.setBackground.bind(this);
     this.togglePicking = this.togglePicking.bind(this);
   }
 
@@ -21,9 +21,9 @@ class ColorPicker extends React.Component {
     this.setState({ picking: !this.state.picking });
   }
 
-  setColor(color) {
+  setBackground(color) {
     const { r, g, b, a } = color.rgb;
-    this.props.setColor(`rgba(${r},${g},${b},${a})`);
+    this.props.setBackground(`rgba(${r},${g},${b},${a})`);
   }
 
   render() {
@@ -40,11 +40,11 @@ class ColorPicker extends React.Component {
             marginRight: 5
           }}
           onClick={this.togglePicking}
-          title='Click to change colors' ></div>
+          title='Click to change background color' ></div>
         {
           picking ? (
             <div style={{ position: 'absolute' }}>
-              <ChromePicker color={color} onChangeComplete={this.setColor} />
+              <ChromePicker color={color} onChangeComplete={this.setBackground} />
             </div>
           ) : null
         }
@@ -55,9 +55,9 @@ class ColorPicker extends React.Component {
 
 export default connect(
   state => ({
-    color: state.color
+    color: state.background
   }),
   {
-    setColor
+    setBackground
   }
-)(ColorPicker);
+)(BackgroundPicker);

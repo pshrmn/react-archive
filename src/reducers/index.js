@@ -36,6 +36,15 @@ const colorReducer = (state = '#000000', action) => {
   }
 }
 
+const backgroundReducer = (state = 'rgba(0, 0, 0, 0)', action) => {
+  switch (action.type) {
+  case types.SET_BACKGROUND:
+    return action.color;
+  default:
+    return state;
+  }
+}
+
 const initialMovesState = {
   past: [],
   future: []
@@ -90,6 +99,7 @@ export default combineReducers({
   size: sizeReducer,
   mode: modeReducer,
   color: colorReducer,
+  background: backgroundReducer,
   moves: movesReducer,
   zoom: zoomReducer
 });

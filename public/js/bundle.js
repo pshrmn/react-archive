@@ -839,6 +839,18 @@ var colorReducer = function colorReducer() {
   }
 };
 
+var backgroundReducer = function backgroundReducer() {
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'rgba(0, 0, 0, 0)';
+  var action = arguments[1];
+
+  switch (action.type) {
+    case types.SET_BACKGROUND:
+      return action.color;
+    default:
+      return state;
+  }
+};
+
 var initialMovesState = {
   past: [],
   future: []
@@ -898,6 +910,7 @@ exports.default = (0, _redux.combineReducers)({
   size: sizeReducer,
   mode: modeReducer,
   color: colorReducer,
+  background: backgroundReducer,
   moves: movesReducer,
   zoom: zoomReducer
 });
@@ -994,7 +1007,13 @@ var ColorPicker = function (_React$Component) {
   }, {
     key: 'setColor',
     value: function setColor(color) {
-      this.props.setColor(color.hex);
+      var _color$rgb = color.rgb,
+          r = _color$rgb.r,
+          g = _color$rgb.g,
+          b = _color$rgb.b,
+          a = _color$rgb.a;
+
+      this.props.setColor('rgba(' + r + ',' + g + ',' + b + ',' + a + ')');
     }
   }, {
     key: 'render',
@@ -1055,6 +1074,10 @@ var _ColorPicker = __webpack_require__(172);
 
 var _ColorPicker2 = _interopRequireDefault(_ColorPicker);
 
+var _BackgroundPicker = __webpack_require__(469);
+
+var _BackgroundPicker2 = _interopRequireDefault(_BackgroundPicker);
+
 var _ModePicker = __webpack_require__(174);
 
 var _ModePicker2 = _interopRequireDefault(_ModePicker);
@@ -1078,6 +1101,7 @@ exports.default = function () {
     'div',
     { className: 'controls' },
     _react2.default.createElement(_ColorPicker2.default, null),
+    _react2.default.createElement(_BackgroundPicker2.default, null),
     _react2.default.createElement(_SizePicker2.default, null),
     _react2.default.createElement(_ModePicker2.default, null),
     _react2.default.createElement(_TimeTravel2.default, null),
@@ -1406,7 +1430,8 @@ var PixelCanvas = function (_React$Component) {
           width = _props8.width,
           height = _props8.height,
           pixelSize = _props8.pixelSize,
-          pixels = _props8.pixels;
+          pixels = _props8.pixels,
+          background = _props8.background;
 
       return _react2.default.createElement(
         'div',
@@ -1417,6 +1442,7 @@ var PixelCanvas = function (_React$Component) {
           },
           width: width * pixelSize,
           height: height * pixelSize,
+          style: { background: background },
           onMouseDown: this.startPaint,
           onMouseMove: this.midPaint,
           onMouseUp: this.endPaint }),
@@ -1456,6 +1482,7 @@ exports.default = (0, _reactRedux.connect)(function (state) {
   return {
     mode: state.mode,
     color: state.color,
+    background: state.background,
     width: width !== '' && !isNaN(width) ? width : 0,
     height: height !== '' && !isNaN(height) ? height : 0,
     // generate the pixels array using the past moves
@@ -1530,7 +1557,8 @@ var Preview = function (_React$Component) {
     value: function draw() {
       var _props2 = this.props,
           pixels = _props2.pixels,
-          zoom = _props2.zoom;
+          zoom = _props2.zoom,
+          background = _props2.background;
 
       if (!pixels.length) {
         return;
@@ -1538,7 +1566,7 @@ var Preview = function (_React$Component) {
       for (var r = 0; r < pixels.length; r++) {
         var row = pixels[r];
         for (var c = 0; c < row.length; c++) {
-          var color = row[c] || 'rgba(0, 0, 0, 0)';
+          var color = row[c] || background;
           this.context.fillStyle = color;
           this.context.fillRect(c * zoom, r * zoom, zoom, zoom);
         }
@@ -1601,7 +1629,8 @@ var Preview = function (_React$Component) {
 
 exports.default = (0, _reactRedux.connect)(function (state) {
   return {
-    zoom: state.zoom
+    zoom: state.zoom,
+    background: state.background
   };
 }, {
   setZoom: _actions.setZoom
@@ -2134,7 +2163,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.setZoom = exports.setHeight = exports.setWidth = exports.setColor = exports.setMode = exports.clear = exports.redo = exports.undo = exports.addMove = undefined;
+exports.setZoom = exports.setHeight = exports.setWidth = exports.setBackground = exports.setColor = exports.setMode = exports.clear = exports.redo = exports.undo = exports.addMove = undefined;
 
 var _ActionTypes = __webpack_require__(96);
 
@@ -2177,6 +2206,13 @@ var setMode = exports.setMode = function setMode(mode) {
 var setColor = exports.setColor = function setColor(color) {
   return {
     type: types.SET_COLOR,
+    color: color
+  };
+};
+
+var setBackground = exports.setBackground = function setBackground(color) {
+  return {
+    type: types.SET_BACKGROUND,
     color: color
   };
 };
@@ -3138,6 +3174,7 @@ var store = (0, _redux.createStore)(_reducers2.default, {
   },
   mode: 'DRAW',
   color: '#000',
+  background: 'rgba(0, 0, 0, 0)',
   moves: {
     past: [],
     future: []
@@ -3150,6 +3187,110 @@ var store = (0, _redux.createStore)(_reducers2.default, {
   { store: store },
   _react2.default.createElement(_PixelArt2.default, null)
 ), document.getElementById('root'));
+
+/***/ },
+
+/***/ 469:
+/***/ function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(1);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactRedux = __webpack_require__(21);
+
+var _reactColor = __webpack_require__(95);
+
+var _actions = __webpack_require__(23);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var BackgroundPicker = function (_React$Component) {
+  _inherits(BackgroundPicker, _React$Component);
+
+  function BackgroundPicker(props) {
+    _classCallCheck(this, BackgroundPicker);
+
+    var _this = _possibleConstructorReturn(this, (BackgroundPicker.__proto__ || Object.getPrototypeOf(BackgroundPicker)).call(this, props));
+
+    _this.state = {
+      picking: false
+    };
+
+    _this.setBackground = _this.setBackground.bind(_this);
+    _this.togglePicking = _this.togglePicking.bind(_this);
+    return _this;
+  }
+
+  _createClass(BackgroundPicker, [{
+    key: 'togglePicking',
+    value: function togglePicking() {
+      this.setState({ picking: !this.state.picking });
+    }
+  }, {
+    key: 'setBackground',
+    value: function setBackground(color) {
+      var _color$rgb = color.rgb,
+          r = _color$rgb.r,
+          g = _color$rgb.g,
+          b = _color$rgb.b,
+          a = _color$rgb.a;
+
+      this.props.setBackground('rgba(' + r + ',' + g + ',' + b + ',' + a + ')');
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var color = this.props.color;
+      var picking = this.state.picking;
+
+      return _react2.default.createElement(
+        'div',
+        { style: { position: 'relative' } },
+        _react2.default.createElement('div', {
+          style: {
+            width: 25,
+            height: 25,
+            background: color,
+            border: '1px solid #ccc',
+            marginRight: 5
+          },
+          onClick: this.togglePicking,
+          title: 'Click to change background color' }),
+        picking ? _react2.default.createElement(
+          'div',
+          { style: { position: 'absolute' } },
+          _react2.default.createElement(_reactColor.ChromePicker, { color: color, onChangeComplete: this.setBackground })
+        ) : null
+      );
+    }
+  }]);
+
+  return BackgroundPicker;
+}(_react2.default.Component);
+
+exports.default = (0, _reactRedux.connect)(function (state) {
+  return {
+    color: state.background
+  };
+}, {
+  setBackground: _actions.setBackground
+})(BackgroundPicker);
 
 /***/ },
 
@@ -3310,6 +3451,7 @@ var CLEAR = exports.CLEAR = 'CLEAR';
 
 var SET_MODE = exports.SET_MODE = 'SET_MODE';
 var SET_COLOR = exports.SET_COLOR = 'SET_COLOR';
+var SET_BACKGROUND = exports.SET_BACKGROUND = 'SET_BACKGROUND';
 var SET_WIDTH = exports.SET_WIDTH = 'SET_WIDTH';
 var SET_HEIGHT = exports.SET_HEIGHT = 'SET_HEIGHT';
 var SET_ZOOM = exports.SET_ZOOM = 'SET_ZOOM';

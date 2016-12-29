@@ -154,13 +154,14 @@ class PixelCanvas extends React.Component {
   }
 
   render() {
-    const { width, height, pixelSize, pixels } = this.props;
+    const { width, height, pixelSize, pixels, background } = this.props;
     return (
       <div>
         <canvas
           ref={node => this.canvas = node}
           width={width*pixelSize}
           height={height*pixelSize}
+          style={{ background }}
           onMouseDown={this.startPaint}
           onMouseMove={this.midPaint}
           onMouseUp={this.endPaint} >
@@ -187,6 +188,7 @@ export default connect(
     return {
       mode: state.mode,
       color: state.color,
+      background: state.background,
       width: width !== '' && !isNaN(width) ? width : 0,
       height: height !== '' && !isNaN(height) ? height : 0,
       // generate the pixels array using the past moves

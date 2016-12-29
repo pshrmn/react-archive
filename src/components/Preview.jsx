@@ -19,14 +19,14 @@ class Preview extends React.Component {
   }
 
   draw() {
-    const { pixels, zoom } = this.props;
+    const { pixels, zoom, background } = this.props;
     if (!pixels.length) {
       return;
     }
     for (let r=0; r<pixels.length; r++) {
       const row = pixels[r];
       for (let c=0; c<row.length; c++) {
-        const color = row[c] || 'rgba(0, 0, 0, 0)';
+        const color = row[c] || background;
         this.context.fillStyle = color;
         this.context.fillRect(c*zoom, r*zoom, zoom, zoom);
       }
@@ -67,7 +67,8 @@ class Preview extends React.Component {
 
 export default connect(
   state => ({
-    zoom: state.zoom
+    zoom: state.zoom,
+    background: state.background
   }),
   {
     setZoom
