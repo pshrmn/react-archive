@@ -920,7 +920,7 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRedux = __webpack_require__(21);
 
-var _actions = __webpack_require__(29);
+var _actions = __webpack_require__(23);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -959,7 +959,7 @@ var _reactRedux = __webpack_require__(21);
 
 var _reactColor = __webpack_require__(95);
 
-var _actions = __webpack_require__(29);
+var _actions = __webpack_require__(23);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1103,7 +1103,7 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRedux = __webpack_require__(21);
 
-var _actions = __webpack_require__(29);
+var _actions = __webpack_require__(23);
 
 var _modes = __webpack_require__(97);
 
@@ -1176,7 +1176,7 @@ var _Preview2 = _interopRequireDefault(_Preview);
 
 var _helpers = __webpack_require__(98);
 
-var _actions = __webpack_require__(29);
+var _actions = __webpack_require__(23);
 
 var _modes = __webpack_require__(97);
 
@@ -1488,7 +1488,7 @@ var _reactRedux = __webpack_require__(21);
 
 var _helpers = __webpack_require__(98);
 
-var _actions = __webpack_require__(29);
+var _actions = __webpack_require__(23);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1520,17 +1520,16 @@ var Preview = function (_React$Component) {
     value: function clear() {
       var _props = this.props,
           width = _props.width,
-          height = _props.height;
+          height = _props.height,
+          zoom = _props.zoom;
 
-      this.context.clearRect(0, 0, width, height);
+      this.context.clearRect(0, 0, width * zoom, height * zoom);
     }
   }, {
     key: 'draw',
     value: function draw() {
       var _props2 = this.props,
           pixels = _props2.pixels,
-          width = _props2.width,
-          height = _props2.height,
           zoom = _props2.zoom;
 
       if (!pixels.length) {
@@ -1544,11 +1543,6 @@ var Preview = function (_React$Component) {
           this.context.fillRect(c * zoom, r * zoom, zoom, zoom);
         }
       }
-    }
-  }, {
-    key: 'setRefs',
-    value: function setRefs(node) {
-      this.canvas = node;
     }
   }, {
     key: 'setZoom',
@@ -1633,7 +1627,7 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRedux = __webpack_require__(21);
 
-var _actions = __webpack_require__(29);
+var _actions = __webpack_require__(23);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1726,7 +1720,7 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRedux = __webpack_require__(21);
 
-var _actions = __webpack_require__(29);
+var _actions = __webpack_require__(23);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2131,7 +2125,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 
 /***/ },
 
-/***/ 29:
+/***/ 23:
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";

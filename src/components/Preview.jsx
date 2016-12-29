@@ -14,12 +14,12 @@ class Preview extends React.Component {
   }
 
   clear() {
-    const { width, height } = this.props;
-    this.context.clearRect(0, 0, width, height);
+    const { width, height, zoom } = this.props;
+    this.context.clearRect(0, 0, width*zoom, height*zoom);
   }
 
   draw() {
-    const { pixels, width, height, zoom } = this.props;
+    const { pixels, zoom } = this.props;
     if (!pixels.length) {
       return;
     }
@@ -31,10 +31,6 @@ class Preview extends React.Component {
         this.context.fillRect(c*zoom, r*zoom, zoom, zoom);
       }
     }
-  }
-
-  setRefs(node) {
-    this.canvas = node;
   }
 
   setZoom(event) {
