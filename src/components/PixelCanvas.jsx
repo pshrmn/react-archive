@@ -117,9 +117,15 @@ class PixelCanvas extends React.Component {
     const width = maxX - minX;
     const height = maxY - minY;
     this.refresh();
-    this.context.strokeStyle = '#666';
+    
     this.context.fillStyle = mode === 'DRAW' ? color : background;
     this.context.fillRect(minX, minY, width, height);
+
+    if ( mode === 'ERASE' ) {
+      this.context.strokeStyle = '#FFF';
+      this.context.lineWidth = 2;
+      this.context.strokeRect(minX, minY, width, height);
+    }
   }
 
   endPaint(event) {
