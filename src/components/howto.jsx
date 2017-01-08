@@ -1,21 +1,29 @@
 import React from 'react';
 
-export default React.createClass({
-  getInitialState: function() {
-    return {
+class HowTo extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
       visible: true
     };
-  },
-  shouldComponentUpdate: function(nextProps, nextState) {
+
+    this.toggleVisible = this.toggleVisible.bind(this);
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
     return nextState.visible !== this.state.visible;
-  },
-  toggleVisible: function(event) {
+  }
+
+  toggleVisible(event) {
     event.preventDefault();
-    this.setState({
-      visible: !this.state.visible
+    this.setState((prevState) => {
+      return {
+        visible: !prevState.visible
+      }
     });
-  },
-  render: function() {
+  }
+
+  render() {
     let buttonText = this.state.visible ? "Hide Help" : "Show Help";
     let visibleClass = this.state.visible ? "" : "hidden";
     return (
@@ -50,4 +58,6 @@ export default React.createClass({
       </div>
     );
   }
-});
+}
+
+export default HowTo;

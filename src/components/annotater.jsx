@@ -1,9 +1,9 @@
 import React from 'react';
 import { observer } from 'mobx-react';
 
-import LiveEditor from './liveeditor';
-import Recipe from './recipe';
-import Video from './video';
+import LiveEditor from './LiveEditor';
+import Recipe from './Recipe';
+import Video from './Video';
 
 const Annotater = (props) => {
   const { recipe } = props;

@@ -1,7 +1,8 @@
 import React from 'react';
 import { observer } from 'mobx-react';
-import Ingredients from './ingredients';
-import Instructions from './instructions';
+
+import Ingredients from './Ingredients';
+import Instructions from './Instructions';
 
 const Recipe = ({ recipe }) => (
   <div className='recipe'>
