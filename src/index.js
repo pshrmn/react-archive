@@ -1,20 +1,26 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { createStore, applyMiddleware } from "redux";
-import { Provider } from "react-redux";
-import App from "./components/app";
-import reducer from './reducers';
-import { StorageAPI } from "./middleware/storage";
-import { SetupStorage } from "./helpers";
+import { observable, asMap, autorun } from "mobx";
+import { Provider } from "mobx-react";
 
-let initialState = SetupStorage();
-var store = applyMiddleware(
-  StorageAPI
-)(createStore)(reducer, initialState);
+import App from "./components/App";
+import { load, save } from "./helpers";
 
-ReactDOM.render(
-  <Provider store={store}>
-    <App />
-  </Provider>,
-  document.getElementById("content")
-);
+let recipes = load('recipes');
+if (recipes === null) {
+  recipes = [];
+}
+
+const store = observable({
+  recipes,
+  index: null
+});
+
+// write all recipe changes to localStorage
+autorun(() => {
+  save('recipes', store.recipes.filter(r => r !== null))
+})
+
+ReactDOM.render((
+  <App recipes={store} />
+), document.getElementById("content"));

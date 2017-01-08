@@ -1,21 +1,15 @@
 import React from 'react';
+import { observer } from 'mobx-react';
 import Ingredients from './ingredients';
 import Instructions from './instructions';
 
-export default function recipe(props) {
-  const {
-    name = '',
-    ytID = '',
-    ingredients = [],
-    instructions = []
-  } = props;
-  const url = ytID !== '' ? `https://youtu.be/${ytID}` : null;
-  return (
-    <div className='recipe'>
-      <h2>{name}</h2>
-      <h3>{url}</h3>
-      <Ingredients values={ingredients} />
-      <Instructions values={instructions} />
-    </div>
-  );
-}
+const Recipe = ({ recipe }) => (
+  <div className='recipe'>
+    <h2>{recipe.name}</h2>
+    <h3>{recipe.ytID !== '' ? `https://youtu.be/${recipe.ytID}` : null}</h3>
+    <Ingredients values={recipe.ingredients || []} />
+    <Instructions values={recipe.instructions || []} />
+  </div>
+)
+
+export default observer(Recipe);

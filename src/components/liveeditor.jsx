@@ -1,11 +1,5 @@
 import React from 'react';
-import { connect } from 'react-redux';
-
-import {
-  setName,
-  setIngredients,
-  setInstructions
-} from '../actions';
+import { observer } from 'mobx-react';
 
 const LiveEditor = React.createClass({
   render: function() {
@@ -16,60 +10,49 @@ const LiveEditor = React.createClass({
       setName,
       setIngredients,
       setInstructions
-    } = this.props;
+    } = this.props.recipe;
     return (
       <div className="live-editor">
-        <UserInput name="name"
-                   submit={ (val) => { setName(val); } }
-                   value={name} />
-        <UserTextarea name="ingredients"
-                      submit={ (val) => { setIngredients(val); } }
-                      value={ingredients.join("\n")} />
-        <UserTextarea name="instructions"
-                      submit={ (val) => { setInstructions(val); } }
-                      value={instructions.join("\n")} />
+        <UserInput
+          name="name"
+          change={(val) => {
+            this.props.recipe.name = val;
+          }}
+          value={name} />
+        <UserTextarea
+          name="ingredients"
+          change={(val) => {
+            this.props.recipe.ingredients = val;
+          }}
+          value={ingredients.join("\n")} />
+        <UserTextarea
+          name="instructions"
+          change={(val) => {
+            this.props.recipe.instructions = val;
+          }}
+          value={instructions.join("\n")} />
       </div>
     );    
   }
 });
 
+export default observer(LiveEditor);
 
-export default connect(
-  null,
-  {
-    setName,
-    setIngredients,
-    setInstructions
-  }
-)(LiveEditor);
-
-var UserInput = React.createClass({
+var UserInput = observer(React.createClass({
   propTypes: {
     value: React.PropTypes.string.isRequired,
     name: React.PropTypes.string.isRequired,
-    submit: React.PropTypes.func.isRequired
-  },
-  getInitialState: function() {
-    return {
-      value: this.props.value || ""
-    };
-  },
-  componentWillReceiveProps: function(nextProps) {
-    this.setState({
-      value: nextProps.value
-    });
+    change: React.PropTypes.func.isRequired
   },
   handleChange: function(event) {
-    this.setState({
-      value: event.target.value
-    });
+    this.props.change(event.target.value);
   },
   handleBlur: function(event) {
-    this.props.submit(this.state.value);
+    this.props.change(event.target.value);
   },
   handleSubmit: function(event) {
     if ( event.which === 13 ) {
-      this.props.submit(this.state.value);
+      this.props.change(event.target.value);
     }
   },
   render: function() {
@@ -78,7 +61,7 @@ var UserInput = React.createClass({
         <label>
           {this.props.name}
           <input type="text"
-                 value={this.state.value}
+                 value={this.props.value}
                  onChange={this.handleChange}
                  onBlur={this.handleBlur}
                  onKeyDown={this.handleSubmit} />
@@ -86,44 +69,28 @@ var UserInput = React.createClass({
       </div>
     );
   }
-});
+}));
 
-function nonBlankLines(text) {
-  return text.split("\n").filter((line) => {
-    return line !== "";
-  });
-}
+const splitLines = text => text.split('\n');
 
-var UserTextarea = React.createClass({
-  getInitialState: function() {
-    return {
-      value: this.props.value || ""
-    };
-  },
-  componentWillReceiveProps: function(nextProps) {
-    this.setState({
-      value: nextProps.value
-    });
-  },
+var UserTextarea = observer(React.createClass({
   handleChange: function(event) {
-    this.setState({
-      value: event.target.value
-    });
-  },
-  handleBlur: function(event) {
-    this.props.submit(nonBlankLines(this.state.value));
+    this.set(event.target.value);
   },
   handleSubmit: function(event) {
     if ( event.which === 13 ) {
-      this.props.submit(nonBlankLines(this.state.value));
+      this.set(event.target.value);
     }
+  },
+  set: function(text) {
+    this.props.change(splitLines(text));
   },
   render: function() {
     return (
       <div>
         <label>
           {this.props.name}
-          <textarea value={this.state.value}
+          <textarea value={this.props.value}
                     onChange={this.handleChange}
                     onBlur={this.handleBlur}
                     onKeyDown={this.handleSubmit} />
@@ -131,4 +98,4 @@ var UserTextarea = React.createClass({
       </div>
     );
   }
-});
+}));

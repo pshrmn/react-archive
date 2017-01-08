@@ -1,31 +1,9 @@
-/*
- * returns the recipes stored in localStorage or null
- */
-export function LoadRecipes() {
-  return JSON.parse(localStorage.getItem("recipes"));
+export function save(key, object) {
+  localStorage.setItem(key, JSON.stringify(object));
 }
 
-/*
- * store the recipes in localStorage
- */
-export function StoreRecipes(recipes) {
-  localStorage.setItem("recipes", JSON.stringify(recipes));
-}
-
-/*
- * Returns the initial store values. "recipes" is loaded from localStorage. If it doesn't
- * currently exist, an empty array value is set as default. The default "index" value is -1
- */
-export function SetupStorage() {
-  let recipes = LoadRecipes();
-  if ( recipes === null) {
-    recipes = [];
-    StoreRecipes(recipes);
-  }
-  return {
-    recipes: recipes,
-    index: null
-  };
+export function load(key) {
+  return JSON.parse(localStorage.getItem(key));
 }
 
 export function VideoID(url) {

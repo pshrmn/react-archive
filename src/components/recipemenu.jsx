@@ -1,64 +1,42 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import { observer } from 'mobx-react';
 
 import { VideoID } from '../helpers';
 
-import {
-  deleteRecipe,
-  loadRecipe,
-  createRecipe
-} from '../actions';
-
-const RecipeMenu = React.createClass({
-  propTypes: {
-    recipes: React.PropTypes.array.isRequired,
-    index: React.PropTypes.number
-  },
-  render: function() {
-    let recipes = this.props.recipes.map((r, i) =>
-      r === null ? null : (
-        <Thumbnail
-          key={i}
-          index={i}
-          active={i===this.props.index}
-          delete={this.props.deleteRecipe}
-          load={this.props.loadRecipe}
-          {...r} />
-      )
-    );
-    return (
-      <div className='recipe-menu'>
-        Saved Recipes:
-        <ul className='saved-recipes'>
-          {recipes}
-        </ul>
-        <RecipeCreator createRecipe={this.props.createRecipe} />
-      </div>
-    );
-  }
-});
-
-export default connect(
-  state => ({
-    recipes: state.recipes,
-    index: state.index
-  }),
-  {
-    deleteRecipe,
-    loadRecipe,
-    createRecipe
-  }
-)(RecipeMenu);
-
-const Thumbnail = React.createClass({
-  shouldComponentUpdate: function(nextProps, nextState) {
-    return (
-      this.props.ytID !== nextProps.ytID ||
-      this.props.name !== nextProps.name ||
-      this.props.index !== nextProps.index ||
-      this.props.active !== nextProps.active
+const RecipeMenu = (props) => {
+  const { recipes, index } = props.recipes;
+  let thumbnails = recipes.map((r, i) =>
+    r === null ? null : (
+      <Thumbnail
+        key={i}
+        index={i}
+        active={i===index}
+        delete={() => {
+          // don't actually delete, just set to null
+          // so that the other indices do not get
+          // messed up. Only non-null recipes are saved
+          // to localStorage, so this will not exist on the
+          // next page load.
+          props.recipes.recipes[i] = null
+        }}
+        load={() => { props.recipes.index = i; }}
+        {...r} />
     )
-  },
+  );
+  return (
+    <div className='recipe-menu'>
+      Saved Recipes:
+      <ul className='saved-recipes'>
+        {thumbnails}
+      </ul>
+      <RecipeCreator recipes={props.recipes} />
+    </div>
+  );
+}
+
+export default observer(RecipeMenu);
+
+const Thumbnail = observer(React.createClass({
   handleDelete: function(event) {
     event.stopPropagation();
     this.props.delete(this.props.index);
@@ -93,9 +71,9 @@ const Thumbnail = React.createClass({
       </li>
     );
   }
-});
+}));
 
-let RecipeCreator = React.createClass({
+let RecipeCreator = observer(React.createClass({
   getInitialState: function() {
     return {
       value: ''
@@ -106,7 +84,15 @@ let RecipeCreator = React.createClass({
     // try to find the id of the url, otherwise create a recipe
     // that doesn't have an associated youtube video
     let ytID = VideoID(this.state.value);
-    this.props.createRecipe(ytID);
+    
+    let { recipes, index } = this.props.recipes;
+    recipes.push({
+      name: '',
+      ytID: ytID,
+      ingredients: [],
+      instructions: []
+    });
+    index = recipes.length - 1;
     this.setState({
       value: ''
     });
@@ -126,4 +112,4 @@ let RecipeCreator = React.createClass({
       </div>
     );
   }
-});
+}));

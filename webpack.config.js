@@ -5,7 +5,7 @@ const config = {
   context: path.join(__dirname, 'src'),
   entry: {
     bundle: './index.js',
-    vendor: ['react', 'react-dom', 'redux', 'react-redux']
+    vendor: ['react', 'react-dom', 'mobx', 'mobx-react']
   },
   resolve: {
     extensions: ['', '.js', '.jsx']

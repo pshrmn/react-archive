@@ -1,17 +1,20 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import Annotater from './annotater';
+import { observer, inject } from 'mobx-react';
+
+import Annotater from './Annotater';
 import RecipeMenu from './recipemenu';
 import Header from './header';
 
-export default function App(props) {
+export default observer(function App(props) {
+  const { recipes, index } = props.recipes
+  const recipe = index !== null ? recipes[index] : null;
   return (
     <div className='app'>
       <Header />
       <div>
-        <RecipeMenu />
-        <Annotater />
+        <RecipeMenu recipes={props.recipes} />
+        <Annotater recipe={recipe} />
       </div>
     </div>
   );
-}
+});
