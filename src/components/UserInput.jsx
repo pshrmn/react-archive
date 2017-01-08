@@ -6,7 +6,7 @@ const UserInput = ({ change, name, value }) => (
     <label>
       {name}
       <input
-        type="text"
+        type='text'
         value={value}
         onChange={(event) => {
           change(event.target.value);

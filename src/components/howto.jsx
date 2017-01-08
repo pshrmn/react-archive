@@ -24,10 +24,10 @@ class HowTo extends React.Component {
   }
 
   render() {
-    let buttonText = this.state.visible ? "Hide Help" : "Show Help";
-    let visibleClass = this.state.visible ? "" : "hidden";
+    let buttonText = this.state.visible ? 'Hide Help' : 'Show Help';
+    let visibleClass = this.state.visible ? '' : 'hidden';
     return (
-      <div className="help">
+      <div className='help'>
         <h3>
           How to: 
         </h3>

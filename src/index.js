@@ -1,10 +1,10 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import { observable, asMap, autorun } from "mobx";
-import { Provider } from "mobx-react";
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { observable, asMap, autorun } from 'mobx';
+import { Provider } from 'mobx-react';
 
-import App from "./components/App";
-import { load, save } from "./helpers";
+import App from './components/App';
+import { load, save } from './helpers';
 
 let recipes = load('recipes');
 if (recipes === null) {
@@ -23,4 +23,4 @@ autorun(() => {
 
 ReactDOM.render((
   <App recipes={store} />
-), document.getElementById("content"));
+), document.getElementById('content'));

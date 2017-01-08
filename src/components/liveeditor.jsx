@@ -5,25 +5,25 @@ import UserInput from './UserInput';
 import UserTextarea from './UserTextarea';
 
 const LiveEditor = ({ recipe }) => (
-  <div className="live-editor">
+  <div className='live-editor'>
     <UserInput
-      name="name"
+      name='name'
       change={(val) => {
         recipe.name = val;
       }}
       value={recipe.name} />
     <UserTextarea
-      name="ingredients"
+      name='ingredients'
       change={(val) => {
         recipe.ingredients = val;
       }}
-      value={recipe.ingredients.join("\n")} />
+      value={recipe.ingredients.join('\n')} />
     <UserTextarea
-      name="instructions"
+      name='instructions'
       change={(val) => {
         recipe.instructions = val;
       }}
-      value={recipe.instructions.join("\n")} />
+      value={recipe.instructions.join('\n')} />
   </div>
 )
 

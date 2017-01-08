@@ -1,7 +1,7 @@
 import React from 'react';
 import { observer } from 'mobx-react';
 
-import { VideoID } from '../helpers';
+import { parseVidID } from '../helpers';
 
 class RecipeCreator extends React.Component {
 
@@ -18,7 +18,7 @@ class RecipeCreator extends React.Component {
   createRecipe(event) {
     // try to find the id of the url, otherwise create a recipe
     // that doesn't have an associated youtube video
-    let ytID = VideoID(this.state.value);
+    let ytID = parseVidID(this.state.value);
     
     let { recipes, index } = this.props.recipes;
     recipes.push({
