@@ -28,7 +28,10 @@ const Thumbnail = (props) => {
         <button
           title='delete recipe'
           type='button'
-          onClick={() => props.delete(props.index) }>
+          onClick={(event) => {
+            event.stopPropagation();
+            props.delete(props.index)
+          }}>
           {String.fromCharCode(215)}
         </button>
       </div>

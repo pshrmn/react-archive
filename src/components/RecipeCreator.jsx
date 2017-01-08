@@ -19,15 +19,7 @@ class RecipeCreator extends React.Component {
     // try to find the id of the url, otherwise create a recipe
     // that doesn't have an associated youtube video
     let ytID = parseVidID(this.state.value);
-    
-    let { recipes, index } = this.props.recipes;
-    recipes.push({
-      name: '',
-      ytID: ytID,
-      ingredients: [],
-      instructions: []
-    });
-    index = recipes.length - 1;
+    this.props.recipes.addRecipe(ytID)
     this.setState({
       value: ''
     });

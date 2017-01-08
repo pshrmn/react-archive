@@ -13,12 +13,7 @@ const RecipeMenu = (props) => {
         index={i}
         active={i === index}
         delete={() => {
-          // don't actually delete, just set to null
-          // so that the other indices do not get
-          // messed up. Only non-null recipes are saved
-          // to localStorage, so this will not exist on the
-          // next page load.
-          props.recipes.recipes[i] = null
+          props.recipes.removeRecipe(i);
         }}
         load={() => {
           props.recipes.index = i;
