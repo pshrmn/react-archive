@@ -16,7 +16,7 @@ const RecipeMenu = (props) => {
           props.recipes.removeRecipe(i);
         }}
         load={() => {
-          props.recipes.index = i;
+          props.recipes.index = index === i ? null : i;
         }}
         {...r} />
     )
