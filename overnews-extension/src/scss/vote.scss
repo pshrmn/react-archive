@@ -1,0 +1,10 @@
+@import 'variables';
+
+.vote {
+  text-align: center;
+  cursor: pointer;
+
+  &:hover {
+    color: $hn-orange;
+  }
+}

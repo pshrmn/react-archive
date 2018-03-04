@@ -1,0 +1,176 @@
+body {
+  margin: 0; }
+
+.hidden {
+  display: none; }
+
+.hacker-news {
+  display: flex;
+  min-height: 100vh;
+  font-size: 16px;
+  color: #444444;
+  background: #efefef;
+  font-family: "Oxygen", sans-serif; }
+  .hacker-news a, .hacker-news a:visited {
+    color: #000000; }
+  .hacker-news input[type=text], .hacker-news textarea {
+    font-family: "Oxygen"; }
+  .hacker-news header {
+    padding: 5px;
+    box-sizing: border-box;
+    background: #F26522;
+    min-width: 200px;
+    width: 200px;
+    color: #000000;
+    overflow-wrap: break-word; }
+    .hacker-news header nav {
+      margin-bottom: 15px;
+      text-align: center;
+      border-bottom: 1px solid #ffffff;
+      padding-bottom: 15px;
+      list-style: none; }
+      .hacker-news header nav:last-child {
+        border-bottom: 0; }
+      .hacker-news header nav.user.logged-out a {
+        text-decoration: underline; }
+      .hacker-news header nav p {
+        margin: 2px 0; }
+      .hacker-news header nav form {
+        margin: 0; }
+    .hacker-news header input, .hacker-news header button {
+      width: 100%;
+      font-size: 16px; }
+    .hacker-news header .home {
+      font-weight: bold;
+      font-size: 20px;
+      padding: 5px 0; }
+    .hacker-news header .points {
+      background: #ffffff;
+      color: #F26522;
+      font-weight: bold;
+      border-radius: 3px; }
+  .hacker-news .story a:visited {
+    color: #A24C31; }
+
+.content {
+  padding-bottom: 100px; }
+
+.story-page .story:hover {
+  border-color: #444444;
+  background: #ddd; }
+
+.story-page .more {
+  margin: 0 0 15px 15px; }
+
+.story {
+  margin: 10px 0;
+  display: flex;
+  border-left: 5px solid transparent; }
+  .story a.more {
+    color: #999;
+    text-shadow: 1px 1px #ffffff;
+    margin-left: 15px; }
+  .story .byline {
+    font-size: 0.75em;
+    line-height: 1.5em; }
+    .story .byline a {
+      text-decoration: underline; }
+  .story .story-controls {
+    margin-left: auto;
+    align-self: center; }
+
+.voting {
+  width: 50px;
+  margin-right: 10px;
+  text-align: center;
+  font-size: 0.75em; }
+  .voting .points {
+    width: 100%;
+    background: transparent;
+    color: #444444; }
+  .voting .filler {
+    height: 15px; }
+
+.vote {
+  text-align: center;
+  cursor: pointer; }
+  .vote:hover {
+    color: #F26522; }
+
+.comments-main {
+  margin-bottom: 25px;
+  border-bottom: 2px solid #444444; }
+  .comments-main form {
+    padding: 15px 25px; }
+    .comments-main form textarea, .comments-main form button {
+      display: block;
+      margin: 5px 0; }
+  .comments-main .story-controls {
+    align-self: flex-start; }
+
+.comment {
+  display: flex;
+  margin: 15px 0 5px 0; }
+  .comment .children {
+    margin-left: 20px; }
+  .comment .user {
+    font-size: 14px; }
+  .comment .message {
+    font-family: "Noto Serif", serif;
+    font-size: 14px;
+    padding: 5px;
+    background: #ddd;
+    max-width: 650px; }
+  .comment button {
+    background: transparent;
+    border: 0;
+    text-decoration: underline;
+    cursor: pointer;
+    padding: 0; }
+
+.saved-stories {
+  position: fixed;
+  padding: 15px;
+  /* left: 0; */
+  background: white;
+  left: 25%;
+  width: 50%;
+  top: 25%;
+  border: 1px solid #444444;
+  box-shadow: 2px 2px #444444; }
+  .saved-stories section {
+    padding-bottom: 15px; }
+  .saved-stories h2, .saved-stories h3, .saved-stories h4, .saved-stories h5, .saved-stories h6, .saved-stories p, .saved-stories ul {
+    margin: 2px 0; }
+  .saved-stories h2 {
+    font-size: 1.1em; }
+  .saved-stories p {
+    font-size: 0.9em; }
+  .saved-stories ul {
+    list-style: none;
+    padding-left: 0; }
+  .saved-stories .story .comments {
+    text-decoration: underline;
+    font-size: 0.9em;
+    margin-left: 5px; }
+  .saved-stories button.hide {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: transparent;
+    border: 0;
+    font-size: 1.5em; }
+
+blockquote {
+  margin: 0 0 0 3px;
+  border-left: 2px solid #444444;
+  padding-left: 5px; }
+
+/* fontawesome related css */
+i.fa {
+  margin: 0 5px;
+  cursor: pointer; }
+  i.fa.fa-star-o:hover, i.fa.fa-star {
+    color: #BDA211; }
+  i.fa.fa-times:hover, i.fa.fa-ban:hover {
+    color: #C14242; }

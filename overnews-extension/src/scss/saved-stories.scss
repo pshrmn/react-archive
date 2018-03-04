@@ -1,0 +1,51 @@
+@import 'variables';
+
+.saved-stories {
+  position: fixed;
+  padding: 15px;
+  /* left: 0; */
+  background: white;
+  left: 25%;
+  width: 50%;
+  top: 25%;
+  border: 1px solid $dark-gray;
+  box-shadow: 2px 2px $dark-gray;
+
+  section {
+    padding-bottom: 15px;
+  }
+
+  h2, h3, h4, h5, h6, p, ul {
+    margin: 2px 0;
+  }
+
+  h2 {
+    font-size: 1.1em;
+  }
+
+  p {
+    font-size: 0.9em;
+  }
+
+  ul {
+    list-style: none;
+    padding-left: 0;
+  }
+
+  .story {
+    .comments {
+      text-decoration: underline;
+      font-size: 0.9em;
+      margin-left: 5px;
+    }
+  }
+
+  button.hide {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: transparent;
+    border: 0;
+    font-size: 1.5em;
+  }
+}

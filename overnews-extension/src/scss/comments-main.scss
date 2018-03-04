@@ -1,0 +1,47 @@
+@import 'variables';
+
+.comments-main {
+  margin-bottom: 25px;
+  border-bottom: 2px solid $dark-gray;
+
+  form {
+    padding: 15px 25px;
+
+    textarea, button {
+      display: block;
+      margin: 5px 0;
+    }
+  }
+  .story-controls {
+    align-self: flex-start;
+  }
+}
+
+.comment {
+  display: flex;
+  margin: 15px 0 5px 0;
+
+  .children {
+    margin-left: 20px;
+  }
+
+  .user {
+    font-size: 16px;
+  }
+
+  .message {
+    font-family: "Noto Serif", serif;
+    font-size: 16px;
+    padding: 5px;
+    background: #ddd;
+    max-width: 650px;
+  }
+
+  button {
+    background: transparent;
+    border: 0;
+    text-decoration: underline;
+    cursor: pointer;
+    padding: 0;
+  }
+}

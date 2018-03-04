@@ -1,0 +1,13 @@
+@import 'variables';
+
+.story-page {
+
+  .story:hover {
+    border-color: $dark-gray;
+    background: #ddd;
+  }
+
+  .more {
+    margin: 0 0 15px 15px;
+  }
+}

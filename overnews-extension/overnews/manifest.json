@@ -1,0 +1,25 @@
+{
+  "manifest_version": 2,
+  "name": "Overnews",
+  "description": "Rebuild Hacker News with React",
+  "version": "0.9.2",
+  "permissions": [
+    "activeTab",
+    "storage"
+  ],
+  "background": {
+    "scripts": ["eventPage.js"],
+    "persistent": false
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://news.ycombinator.com/*"],
+      "js": ["overnews.js"]
+    }
+  ],
+  "icons": {
+    "16": "img/icon16.png",
+    "48": "img/icon48.png",
+    "128": "img/icon128.png"
+  }
+}
