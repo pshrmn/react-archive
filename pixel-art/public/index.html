@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Pixel Art</title>
+  <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <style type="text/css">
+
+    .pixel-art {
+      display: flex;
+    }
+
+    canvas {
+      border: 1px solid #666;
+    }
+
+    .color-picker {
+      position: relative;
+      display: inline-block;
+    }
+
+    .controls {
+      display: inline-flex;
+      flex-flow: column nowrap;
+      align-items: flex-start;
+      padding: 5px;
+      background: #efefef;
+      margin-left: 15px;
+      align-self: flex-start;
+    }
+
+    .controls h2, .controls h3 {
+      padding: 0;
+      margin: 0;
+      font-size: 1em;
+    }
+
+    .controls h3 {
+      font-size: 0.9em;
+    }
+
+    .controls > * {
+      margin-right: 5px;
+      margin-bottom: 5px;
+    }
+
+    .controls input[type=text] {
+      width: 30px;
+    }
+  </style>
+</head>
+<body>
+  <div id='root'></div>
+  <script src='./js/vendor.js'></script>
+  <script src='./js/bundle.js'></script>
+</body>
+</html>
