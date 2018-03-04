@@ -1,0 +1,139 @@
+html, body {
+  font-family: "Noto Serif", serif;
+  position: relative; }
+
+#content {
+  width: 80vw;
+  margin: 0 auto; }
+
+.app {
+  position: relative; }
+
+header {
+  margin-bottom: 15px; }
+  header h1, header p {
+    margin: 0; }
+
+footer {
+  position: absolute;
+  bottom: -35px;
+  left: 0;
+  text-align: center;
+  padding: 5px 0;
+  width: 100vw; }
+  footer a {
+    color: #222233; }
+
+.help {
+  margin: 5px 0; }
+  .help h3, .help ol {
+    margin: 3px 0; }
+
+.hidden {
+  display: none; }
+
+.recipe-menu {
+  box-sizing: border-box;
+  padding: 15px; }
+
+.saved-recipes {
+  list-style: none;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  margin: 15px 0; }
+  .saved-recipes .thumbnail {
+    cursor: pointer;
+    box-sizing: border-box;
+    width: 200px;
+    margin-right: 10px;
+    background: #fff;
+    border: 1px solid #666;
+    position: relative;
+    box-shadow: 3px 3px #999; }
+    .saved-recipes .thumbnail.active {
+      box-shadow: 3px 3px green; }
+    .saved-recipes .thumbnail img {
+      width: 198px; }
+    .saved-recipes .thumbnail .empty-thumb {
+      width: 198px;
+      height: 111px;
+      background: #ccc;
+      color: #fff;
+      text-align: center;
+      font-size: 4em;
+      text-shadow: 2px 2px #666; }
+  .saved-recipes .thumb-info {
+    box-sizing: border-box;
+    padding: 5px; }
+  .saved-recipes .thumb-controls {
+    position: absolute;
+    right: 0;
+    top: 0; }
+    .saved-recipes .thumb-controls button {
+      font-size: 1.25em;
+      color: #fff;
+      background: transparent;
+      font-weight: bold;
+      border: 0;
+      vertical-align: top;
+      cursor: pointer; }
+    .saved-recipes .thumb-controls button:hover {
+      color: #f00; }
+
+.edit-view label {
+  text-transform: capitalize; }
+
+.edit-view input {
+  width: 560px; }
+
+.edit-view textarea {
+  min-width: 560px;
+  max-width: 100%;
+  min-height: 150px; }
+
+.edit-view input, .edit-view textarea {
+  display: block; }
+
+.annotater {
+  margin: 25px auto; }
+
+.print-view, .edit-view {
+  display: inline-block;
+  box-sizing: border-box;
+  vertical-align: top;
+  min-width: 600px;
+  max-width: 50%; }
+
+.recipe {
+  padding: 10px;
+  border: 1px solid #ccc; }
+  .recipe h2 {
+    margin: 3px 0; }
+
+.recipe-name {
+  font-size: 1.5em; }
+
+@media print {
+  .edit-view, header, .recipe-menu, footer {
+    display: none; }
+  html, body {
+    /*
+      prevent chrome from printing very narrow
+      there should be a better fix, but this will do for now
+      */ }
+    html *, body * {
+      min-width: 100%; }
+  .annotater {
+    margin: 0; }
+  .recipe {
+    width: 100%;
+    display: block;
+    border: 0; }
+    .recipe * {
+      min-width: 100%; }
+  /* make sure recipe is left-aligned */
+  #content {
+    width: 100vw;
+    margin: 0; } }
